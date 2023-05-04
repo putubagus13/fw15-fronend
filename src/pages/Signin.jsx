@@ -8,7 +8,7 @@ import Twitter from "../assets/bx_bxl-twitter.png"
 
 function Signin(){
     return(
-        <div className="bg-white">
+        <div>
          <main className="flex h-[1024px]">
                 <div className="hidden md:block md:flex-1 bg-primary relative">
                     <img className="absolute top-[367px] right-[157px]" src={ToyFace2} alt="ToyFaces2"/>
