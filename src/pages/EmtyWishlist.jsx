@@ -1,10 +1,10 @@
+import {Link} from "react-router-dom"
 import Fill from "../assets/Fill-1.png"
 import Image1 from "../assets/pexels-jack-winbow-1559486.jpg"
 import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
-import {Link} from "react-router-dom"
 import {FiMenu} from "react-icons/fi"
 import {FiUser} from "react-icons/fi"
 import {AiFillCreditCard} from "react-icons/ai"
@@ -14,11 +14,10 @@ import {AiOutlinePlusCircle} from "react-icons/ai"
 import {AiOutlineUnorderedList} from "react-icons/ai"
 import {AiOutlineHeart} from "react-icons/ai"
 import {AiOutlineSetting} from "react-icons/ai"
-import {BiChevronDown} from "react-icons/bi"
 
-function Profile(){
+function EmtyWishlist(){
     return(
-        <div>
+        <>
             <nav className="flex w-full items-center justify-between px-10 py-4">
                 <div className="flex items-center justify-between w-full md:w-0">
                     <button id="tongler" className="md:hidden bg-primary p-2 rounded-[5px] shadow-lg"><FiMenu className="text-white" size={30}/></button>
@@ -57,89 +56,30 @@ function Profile(){
                             <li className="mx-5 py-3 text-primary">
                                 <ul>
                                     <li className="flex gap-3 py-3 text-primary"><AiFillCreditCard size={20}/><a href="payment metode.html">Card</a></li>
-                                    <li className="flex gap-3 py-3 text-accent"><AiFillEdit size={20}/>Edit Profil</li>
+                                    <li className="flex gap-3 py-3 text-primary"><AiFillEdit size={20}/>Edit Profil</li>
                                     <li className="flex gap-3 py-3 text-primary"><FiUnlock size={20}/><a href="change-password.html">Change Password</a></li>
                                 </ul>
                             </li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlinePlusCircle size={20}/><a href="creat-event.html">Creat Event</a></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineUnorderedList size={20}/><a href="my-booking1.html">My Booking</a></li>
-                            <li className="flex gap-3 py-3 text-primary"><AiOutlineHeart size={20}/><a href="my-wishlist1.html">My Wishlist</a></li>
+                            <li className="flex gap-3 py-3 text-accent"><AiOutlineHeart size={20}/><a href="my-wishlist1.html">My Wishlist</a></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineSetting size={20}/>Seting</li>
                         </ul>
                     </div>
-                </aside> 
+                </aside>  
 
-                <article className="flex flex-col-reverse md:flex-row inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl">
-                <div id="leftside" className="flex-1 ">
-                        <div className="mb-[50px] font-bold text-[20px] text-secondary">Profile</div>
-                        <div className="w-full text-center">
-                            <div className="md:hidden relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-primary to-secondary hover:from-primary hover:to-accent w-[137px] h-[137px]">
-                                <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={Image1} alt="change-photo"/>
-                                <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
-                            </div>
-                        </div>
-                        <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Nama</div>
-                            <div className="border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">Jhon Tomson</div>
-                        </div>
-                        <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px] font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Username</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] border-neutral ">@jhont0 <a href=" " className="text-accent">Edit</a></div>
-                        </div>
-                        <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Email</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">jhont0@mail.com <a href=" " className="text-accent">Edit</a></div>
-                        </div>
-                        <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Phone Number</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">08123456789 <a href=" " className="text-accent">Edit</a></div>
-                        </div>
-                        <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Gender</div>
-                            <div className="flex gap-10 h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">
-                                <div className="flex gap-1">
-                                    <input type="radio" name="radio-2" className="radio radio-primary w-4 h-4"/><p className="pl-[5px]">Male</p>
-                                </div>
-                                <div className="flex gap-1">
-                                    <input type="radio" name="radio-2" className="radio radio-primary w-4 h-4"/><p className="pl-[5px]">Famale</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Profession</div>
-                            <div className="flex justify-between border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">Enterpreneur
-                                <div><BiChevronDown size={20}/></div>
-                            </div>
-                        </div>
-                        <div className="my-[30px] md:my-3 block md:flex items-center font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Nationality</div>
-                            <div className="flex justify-between border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">Indonesia
-                                <div><BiChevronDown size={20}/></div>
-                            </div>
-                        </div>
-                        <div className="my-[30px] block md:flex items-center font-[400] text-[14px]">
-                            <div className="w-[153px] text-secondary">Birthday Date</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] "><a href=" ">24</a>/<a href=" " className="underline-offset-1">10</a>/<a href=" ">2000</a> <a href=" " className="text-yellow-600 px-[10px]">Edit</a></div>
-                        </div>
-                        <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg" type="input">Save</button>
-                </div>
+        <article className="inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl flex-1">
+            <div className="md:flex md:justify-between mb-6">
+                <div className="mb-[30px] font-bold text-[20px] text-secondary">My Wishlist</div>
+            </div>
+            <div className="flex flex-col text-center h-full py-[100px] md:py-auto md:px-auto">
+                <div className="font-bold text-[26px] text-secondary">No tickets bought</div>
+                <div className="text-primary justify-center font-[400] text-[16px]">It appears you haven’t bought any tickets yet. Maybe try searching these?</div>
+            </div>
 
-                <hr className="hidden md:block h-[314px] border-2 rounded-2xl mx-[50px]"/>
-
-                <div id="rightside" className="text-center hidden md:block">
-                        <div className="relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-yellow-500 to-blue-400 hover:from-yellow-500 hover:to-blue-800 truncate w-[137px] h-[137px]">
-                            <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={Image1} alt="change-photo"/>
-                            <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
-                        </div>
-                        <button className="hidden md:block mt-[50px] border-2 w-full h-[40px] rounded-2xl btn btn-outline btn-primary rounded-2xl" type="submit">Choose Photo</button>
-                        <ul className="hidden md:block my-[25px] text-left">
-                            <li>Image size: max, 2 MB</li>
-                            <li>Image formats: .JPG, .JPEG, .PNG</li>
-                        </ul>
-                </div>
-                </article>
-            </main>
-            <footer className="h-[476px] px-[30px] md:px-[330px] w-full  md:pt-[100px] md:px-[218px] md:bg-[#F4F7FF]">
+        </article>
+    </main>
+    <footer className="h-[476px] px-[30px] md:px-[330px] w-full  md:pt-[100px] md:px-[218px] md:bg-[#F4F7FF]">
                 <div className="md:flex md:justify-between">
                 <div className="mb-10">
                     <div className="flex items-center">
@@ -189,8 +129,8 @@ function Profile(){
                 </div>
                 <p className="flex pb-[68px] pt-[130px] color-[#5A7184] text-[#C1C5D0]">© 2020 Wetick All Rights Reserved</p>
             </footer>
-        </div>
+        </>
     )
 }
 
-export default Profile;
+export default EmtyWishlist

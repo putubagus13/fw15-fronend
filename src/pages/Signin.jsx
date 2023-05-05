@@ -1,11 +1,11 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
 import Fill from "../assets/Fill-1.png"
-import Facebook from "../assets/bx_bxl-facebook-square.png"
-import WhatsApp from "../assets/bx_bxl-whatsapp-square.png"
-import Instagram from "../assets/bx_bxl-instagram-alt.png"
-import Twitter from "../assets/bx_bxl-twitter.png"
-
+import {Link} from "react-router-dom"
+import { BsFacebook } from "react-icons/Bs"
+import { BsWhatsapp } from "react-icons/Bs"
+import { AiFillInstagram } from "react-icons/ai"
+import { AiFillTwitterCircle } from "react-icons/ai"
 function Signin(){
     return(
         <div>
@@ -18,11 +18,11 @@ function Signin(){
                 </div>
                 <div className="px-[30px] w-full md:flex-initial md:pt-[214px] md:w-[516px] md:px-[100px]">
                     <div className="flex items-center pb-[57px]">
-                        <a href="index.html"><img src={Fill} alt="logo"/></a>
-                        <div className="text-sky-600 text-[24px] font-bold" >We</div><div className="text-amber-500 text-[24px] font-bold" >tick</div>
+                        <Link to="/Home"><img src={Fill} alt="logo"/></Link>
+                        <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
                     </div>
-                    <h1 className="text-[24px] font-bold" >Sign Up</h1>
-                    <p className="flex gap-2 pb-11 pt-3">Already have an account?<a className="text-yellow-600"  href="login.html">Log in</a></p>
+                    <h1 className="text-[24px] font-bold text-secondary" >Sign Up</h1>
+                    <p className="flex gap-2 pb-11 pt-3 text-secondary">Already have an account?<Link to="/Login" className="text-accent font-bold">Log in</Link></p>
                     <form id="form">
                         <input type="text" placeholder="Fullname" className="input input-bordered input-primary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
                         <input type="email" placeholder="email" className="input input-bordered input-primary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
@@ -36,7 +36,7 @@ function Signin(){
                         </div>
                         <div id="alertSignin" className="text-red-600"></div>
                         <div className="py-4">
-                            <div className="flex"><input type="checkbox" className="checkbox checkbox-primary w-6 h-6" /><p className="px-2">Accept terms and condition</p></div>
+                            <div className="flex"><input type="checkbox" className="checkbox checkbox-primary w-6 h-6" /><p className="px-2 text-primary">Accept terms and condition</p></div>
                             <div id="accbox" className="text-zinc-400"></div>
                         </div>
                         <button className="my-2 h-14 w-full btn btn-primary rounded-2xl shadow-lg" type="submit">Sign in</button>
@@ -49,21 +49,21 @@ function Signin(){
                 <div className="mb-10">
                     <div className="flex items-center">
                         <img src={Fill} alt="logo"/>
-                        <div className="text-sky-600 text-[24px] font-bold" >We</div><div className="text-amber-500 text-[24px] font-bold" >tick</div>
+                        <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
                     </div>
                     <div className="flex gap-2 py-3">Find events you love with our</div>
                     <div>
                         <ul className="flex gap-6">
-                            <li><img src={Facebook}/></li>
-                            <li><img src={WhatsApp}/></li>
-                            <li><img src={Instagram}/></li>
-                            <li><img src={Twitter}/></li>
+                            <BsFacebook size={20}/>
+                            <BsWhatsapp size={20}/>
+                            <AiFillInstagram size={25}/>
+                            <AiFillTwitterCircle size={25}/>
                         </ul>
                     </div>
                 </div>
                 <div>
                     <ul className="pb-[10px] text-[#C1C5D0]">
-                        <li className="color-[#373A42] pb-[10px] text-black" >Wetick</li>
+                        <li className="color-[#373A42] pb-[10px] text-primary font-bold" >Wetick</li>
                         <li className="color-[#373A42] pb-[10px]" >About Us</li>
                         <li className="color-[#373A42] pb-[10px]" >Features</li>
                         <li className="color-[#373A42] pb-[10px]" >Blog</li>
@@ -73,7 +73,7 @@ function Signin(){
                 </div>
                 <div>
                     <ul className="pb-[10px] text-[#C1C5D0]">
-                        <li className="color-[#373A42] pb-[10px] text-black" >Features</li>
+                        <li className="color-[#373A42] pb-[10px] text-primary font-bold" >Features</li>
                         <li className="color-[#373A42] pb-[10px]" >Booking</li>
                         <li className="color-[#373A42] pb-[10px]" >Create Event</li>
                         <li className="color-[#373A42] pb-[10px]" >Discover</li>
@@ -82,7 +82,7 @@ function Signin(){
                 </div>
                 <div>
                     <ul className="pb-[10px] text-[#C1C5D0]">
-                        <li className="color-[#373A42] pb-[10px] text-black" >Company</li>
+                        <li className="color-[#373A42] pb-[10px] text-primary font-bold" >Company</li>
                         <li className="color-[#373A42] pb-[10px]" >Partnership</li>
                         <li className="color-[#373A42] pb-[10px]" >Help</li>
                         <li className="color-[#373A42] pb-[10px]" >Terms of Service</li>
