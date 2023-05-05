@@ -87,7 +87,7 @@ function CreateEvent(){
                                                 <label className="label">
                                                     <span className="label-text font-bold text-[16px] text-primary">Name</span>
                                                 </label>
-                                                <input type="text" placeholder="Input event name" className="text-[12px] text-neutral border-neutral input input-bordered w-full max-w-xs" />
+                                                <input type="text" placeholder="Input event name" className="text-[14px] text-secondary border-neutral input input-bordered w-full max-w-xs" />
                                             </div>
                                         </div>
                                         <div className="flex-1">
@@ -95,7 +95,7 @@ function CreateEvent(){
                                                 <label className="label">
                                                     <span className="label-text font-bold text-[16px] text-primary">Category</span>
                                                 </label>
-                                                <input type="text" placeholder="Input event category" className="text-[12px] text-neutral border-neutral input input-bordered w-full max-w-xs" />
+                                                <input type="text" placeholder="Input event category" className="text-[14px] text-secondary border-neutral input input-bordered w-full max-w-xs" />
                                             </div>
                                         </div>
                                     </div>
@@ -105,7 +105,7 @@ function CreateEvent(){
                                                 <label className="label">
                                                     <span className="label-text font-bold text-[16px] text-primary">Location</span>
                                                 </label>
-                                                <input type="text" placeholder="Input event location" className="text-[12px] text-neutral border-neutral input input-bordered w-full max-w-xs" />
+                                                <input type="text" placeholder="Input event location" className="text-[14px] text-secondary border-neutral input input-bordered w-full max-w-xs" />
                                             </div>
                                         </div>
                                         <div className="flex-1">
@@ -113,7 +113,7 @@ function CreateEvent(){
                                                 <label className="label">
                                                     <span className="label-text font-bold text-[16px] text-primary">Date time show</span>
                                                 </label>
-                                                <input type="text" placeholder="Input dat time show" className="text-[12px] text-neutral border-neutral input input-bordered w-full max-w-xs" />
+                                                <input type="date" placeholder="YYYY-MM-DD" className="text-[14px] text-secondary border-neutral input input-bordered w-full max-w-xs" />
                                             </div>
                                         </div>
                                     </div>
@@ -123,7 +123,7 @@ function CreateEvent(){
                                                 <label className="label">
                                                     <span className="label-text font-bold text-[16px] text-primary">Price</span>
                                                 </label>
-                                                <input type="text" placeholder="Input event price" className="text-[12px] text-neutral border-neutral input input-bordered w-full max-w-xs" />
+                                                <input type="text" placeholder="Input event price" className="text-[14px] text-secondary border-neutral input input-bordered w-full max-w-xs" />
                                             </div>
                                         </div>
                                         <div className="flex-1">
@@ -131,7 +131,7 @@ function CreateEvent(){
                                                 <label className="label">
                                                     <span className="label-text font-bold text-[16px] text-primary">Image</span>
                                                 </label>
-                                                <input type="text" placeholder="Input image event" className="text-[12px] text-neutral border-neutral input input-bordered w-full max-w-xs" />
+                                                <input type="file" className="file-input w-full max-w-xs input-neutral" />
                                             </div>
                                         </div>
                                     </div>
@@ -141,7 +141,7 @@ function CreateEvent(){
                                         <label className="label">
                                             <span className="label-text font-bold text-[16px] text-primary">Detail</span>
                                         </label>
-                                        <input type="text" placeholder="Input detail event" className="text-[12px] text-neutral border-neutral input input-bordered w-full" />
+                                        <input type="text" placeholder="Input detail event" className="text-[14px] text-secondary border-neutral input input-bordered w-full" />
                                     </div>
                                 </div>
 
