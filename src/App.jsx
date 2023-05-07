@@ -9,18 +9,20 @@ import EmtyWishlist from "./pages/EmtyWishlist";
 import Wishlist from "./pages/Wishlist";
 import MyBooking from "./pages/MyBooking";
 import CreateEvent from "./pages/CreateEvent";
+import Home from "./pages/Home";
 
 function App(){
   return(
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<CreateEvent/>} />
+        <Route path="/" element={<Home/>}/>
+        <Route path="/CreateEvent" element={<CreateEvent/>} />
         <Route path="/Booking" element={<MyBooking/>} />
         <Route path="/Wishlist" element={<Wishlist/>} />
         <Route path="/Wishlist0" element={<EmtyWishlist/>} />
         <Route path="/Booking0" element={<EmtyBooking/>} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />
-        <Route path="/Profile" element={<Profile/>} />
+        <Route path="/Pofile" element={<Profile/>} />
         <Route path="/Signin" element={<Signin/>} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/ForgotPassword" element={<ForgotPassword/>} />

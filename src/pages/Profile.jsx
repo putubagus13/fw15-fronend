@@ -1,4 +1,3 @@
-import Fill from "../assets/Fill-1.png"
 import Image1 from "../assets/pexels-jack-winbow-1559486.jpg"
 import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
@@ -15,6 +14,7 @@ import {AiOutlineUnorderedList} from "react-icons/ai"
 import {AiOutlineHeart} from "react-icons/ai"
 import {AiOutlineSetting} from "react-icons/ai"
 import {BiChevronDown} from "react-icons/bi"
+import {IoTicketSharp} from "react-icons/io5"
 
 function Profile(){
     return(
@@ -22,16 +22,18 @@ function Profile(){
             <nav className="flex w-full items-center justify-between px-10 py-4">
                 <div className="flex items-center justify-between w-full md:w-0">
                     <button id="tongler" className="md:hidden bg-primary p-2 rounded-[5px] shadow-lg"><FiMenu className="text-white" size={30}/></button>
-                    <div className="flex">
-                        <img className="w-11 h-11" src={Fill} alt="logo"/>
-                        <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
-                    </div>
+                    <Link to="/">
+                        <div className="flex items-center">
+                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                        </div>
+                    </Link>
                 </div>
                 <div>
                     <ul className="hidden md:flex gap-x-10 font-bold text-[16px]">
-                        <li className="text-primary hover:text-secondary"><Link to="/Home"/>Home</li>
-                        <li className="text-primary hover:text-secondary"><Link to="/CreateEvent"/>Create Event</li>
-                        <li className="text-primary hover:text-secondary"><Link to="/Location"/>Location</li>
+                        <li className="text-primary hover:text-accent"><Link to="/">Home</Link></li>
+                        <li className="text-primary hover:text-accent"><Link to="/CreateEvent">Create Event</Link></li>
+                        <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
                     </ul>
                 </div>
                 <Link to="/Profile">
@@ -56,14 +58,14 @@ function Profile(){
                             <li className="flex gap-3 py-3 text-primary "><FiUser size={20}/>Profile</li>
                             <li className="mx-5 py-3 text-primary">
                                 <ul>
-                                    <li className="flex gap-3 py-3 text-primary"><AiFillCreditCard size={20}/><a href="payment metode.html">Card</a></li>
-                                    <li className="flex gap-3 py-3 text-accent"><AiFillEdit size={20}/>Edit Profil</li>
-                                    <li className="flex gap-3 py-3 text-primary"><FiUnlock size={20}/><a href="change-password.html">Change Password</a></li>
+                                    <li className="flex gap-3 py-3 text-primary"><AiFillCreditCard size={20}/><Link to="/PaymentMethod">Card</Link></li>
+                                    <li className="flex gap-3 py-3 text-accent"><AiFillEdit size={20}/><Link to="/Pofile">Edit Profil</Link></li>
+                                    <li className="flex gap-3 py-3 text-primary"><FiUnlock size={20}/><Link to="/ChangePassword">Change Password</Link></li>
                                 </ul>
                             </li>
-                            <li className="flex gap-3 py-3 text-primary"><AiOutlinePlusCircle size={20}/><a href="creat-event.html">Creat Event</a></li>
-                            <li className="flex gap-3 py-3 text-primary"><AiOutlineUnorderedList size={20}/><a href="my-booking1.html">My Booking</a></li>
-                            <li className="flex gap-3 py-3 text-primary"><AiOutlineHeart size={20}/><a href="my-wishlist1.html">My Wishlist</a></li>
+                            <li className="flex gap-3 py-3 text-primary"><AiOutlinePlusCircle size={20}/><Link to="/CreateEvent">Creat Event</Link></li>
+                            <li className="flex gap-3 py-3 text-primary"><AiOutlineUnorderedList size={20}/><Link to="/Booking">My Booking</Link></li>
+                            <li className="flex gap-3 py-3 text-primary"><AiOutlineHeart size={20}/><Link to="/Wishlist">My Wishlist</Link></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineSetting size={20}/>Seting</li>
                         </ul>
                     </div>
@@ -139,13 +141,15 @@ function Profile(){
                 </div>
                 </article>
             </main>
-            <footer className="h-[476px] px-[30px] md:px-[330px] w-full  md:pt-[100px] md:px-[218px] md:bg-[#F4F7FF]">
+            <footer className="h-[476px] px-[30px] md:px-[20%] w-full md:py-10 md:bg-[#F4F7FF]">
                 <div className="md:flex md:justify-between">
                 <div className="mb-10">
-                    <div className="flex items-center">
-                        <img src={Fill} alt="logo"/>
-                        <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
-                    </div>
+                <Link to="/">
+                        <div className="flex items-center">
+                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                        </div>
+                    </Link>
                     <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>
                     <div>
                         <ul className="flex gap-6">
@@ -158,36 +162,36 @@ function Profile(){
                     
                 </div>
                 <div>
-                    <ul className="pb-[10px] text-[#C1C5D0]">
-                        <li className="color-[#373A42] pb-[10px] text-black">Wetick</li>
-                        <li className="color-[#373A42] pb-[10px]">About Us</li>
-                        <li className="color-[#373A42] pb-[10px]">Features</li>
-                        <li className="color-[#373A42] pb-[10px]">Blog</li>
-                        <li className="color-[#373A42] pb-[10px]">Payments</li>
-                        <li className="color-[#373A42] pb-[10px]">Mobile App</li>
+                    <ul className="pb-[10px] ">
+                        <li className="text-primary font-bold pb-[10px]">Wetick</li>
+                        <li className="text-neutral pb-[10px]">About Us</li>
+                        <li className="text-neutral pb-[10px]">Features</li>
+                        <li className="text-neutral pb-[10px]">Blog</li>
+                        <li className="text-neutral pb-[10px]">Payments</li>
+                        <li className="text-neutral pb-[10px]">Mobile App</li>
                     </ul>
                 </div>
                 <div>
-                    <ul className="pb-[10px] text-[#C1C5D0]">
-                        <li className="color-[#373A42] pb-[10px] text-black">Features</li>
-                        <li className="color-[#373A42] pb-[10px]">Booking</li>
-                        <li className="color-[#373A42] pb-[10px]">Create Event</li>
-                        <li className="color-[#373A42] pb-[10px]">Discover</li>
-                        <li className="color-[#373A42] pb-[10px]">Register</li>
+                    <ul className="pb-[10px] ">
+                        <li className="text-primary font-bold pb-[10px]">Features</li>
+                        <li className="text-neutral pb-[10px]">Booking</li>
+                        <li className="text-neutral pb-[10px]">Create Event</li>
+                        <li className="text-neutral pb-[10px]">Discover</li>
+                        <li className="text-neutral pb-[10px]">Register</li>
                     </ul>
                 </div>
                 <div>
-                    <ul className="pb-[10px] text-[#C1C5D0]">
-                        <li className="color-[#373A42] pb-[10px] text-black">Company</li>
-                        <li className="color-[#373A42] pb-[10px]">Partnership</li>
-                        <li className="color-[#373A42] pb-[10px]">Help</li>
-                        <li className="color-[#373A42] pb-[10px]">Terms of Service</li>
-                        <li className="color-[#373A42] pb-[10px]">Privacy Policy</li>
-                        <li className="color-[#373A42] pb-[10px]">Sitemap</li>
+                    <ul className="pb-[10px] ">
+                        <li className="text-primary font-bold pb-[10px]">Company</li>
+                        <li className="text-neutral pb-[10px]">Partnership</li>
+                        <li className="text-neutral pb-[10px]">Help</li>
+                        <li className="text-neutral pb-[10px]">Terms of Service</li>
+                        <li className="text-neutral pb-[10px]">Privacy Policy</li>
+                        <li className="text-neutral pb-[10px]">Sitemap</li>
                     </ul>
                 </div>
                 </div>
-                <p className="flex pb-[68px] pt-[130px] color-[#5A7184] text-[#C1C5D0]">© 2020 Wetick All Rights Reserved</p>
+                <p className="flex pt-[130px] text-neutral ">© 2020 Wetick All Rights Reserved</p>
             </footer>
         </div>
     )
