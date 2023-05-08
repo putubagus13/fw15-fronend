@@ -10,12 +10,14 @@ import Wishlist from "./pages/Wishlist";
 import MyBooking from "./pages/MyBooking";
 import CreateEvent from "./pages/CreateEvent";
 import Home from "./pages/Home";
+import EventDetail from "./pages/EventDetail";
 
 function App(){
   return(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home/>}/>
+        <Route path="/EventDetail" element={<EventDetail/>} />
         <Route path="/CreateEvent" element={<CreateEvent/>} />
         <Route path="/Booking" element={<MyBooking/>} />
         <Route path="/Wishlist" element={<Wishlist/>} />
