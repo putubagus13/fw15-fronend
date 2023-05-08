@@ -1,7 +1,6 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
 import {Link} from "react-router-dom"
-import {FiMenu} from "react-icons/fi"
 import {HiOutlineLocationMarker} from "react-icons/hi"
 import {RiSearch2Line} from "react-icons/ri"
 import {AiOutlineArrowRight} from "react-icons/ai"
@@ -22,6 +21,7 @@ import Elips6 from "../assets/top-right.png"
 import axios from "axios"
 import React from "react"
 import moment from "moment"
+import MenuBar from "../components/MenuBar"
 
 
 
@@ -62,28 +62,7 @@ function Home(){
     },[])
     return(
         <>
-            <nav className="flex w-full items-center justify-between px-10 py-4">
-                <div className="flex-1 flex items-center justify-between w-full md:w-0">
-                    <div className="flex-1 md:hidden">
-                        <button id="tongler" className=" bg-primary p-2 rounded-[5px] shadow-lg"><FiMenu className="text-white" size={30}/></button>
-                    </div>
-                    <div className="flex-1 flex justify-end items-center md:justify-start">
-                        <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                        <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
-                    </div>
-                </div>
-                <div className="hidden md:block md:flex-1 md:flex md:justify-center">
-                    <ul className="hidden md:flex gap-x-10 font-bold text-[16px]">
-                        <li className="text-primary hover:text-accent"><Link to="/">Home</Link></li>
-                        <li className="text-primary hover:text-accent"><Link to="/CreateEvent">Create Event</Link></li>
-                        <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
-                    </ul>
-                </div>
-                <div className="hidden flex-1 md:flex md:gap-10 md:justify-center md:block">
-                    <p className="flex items-center text-primary hover:text-neutral text-[16px] font-bold"><Link to="/Login">Log In</Link></p>
-                    <button className="bg-primary text-white rounded-2xl h-[40px] px-10 shadow-lg font-bold text-[16px] hover:bg-secondary lg-shadow" type="submit"><Link to="/Signin">Sign Up</Link></button>
-                </div>
-            </nav>
+            <MenuBar/>
             <header>
                 <div className="flex h-[660px] w-full bg-primary md:items-center px-20 relative overflow-hidden">
                     <div className="">
@@ -149,13 +128,17 @@ function Home(){
                     <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 gap-4">
                         {events.map(event =>{
                             return(
-                                <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative" key={event.id}>
-                                    <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
-                                    <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
-                                        <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
-                                        <div className="font-bold text-2xl text-white">{event.title}</div>
+                                <>
+                                <Link to="/EventDetail">
+                                    <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative" key={event.id}>
+                                        <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
+                                        <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
+                                            <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
+                                            <div className="font-bold text-2xl text-white">{event.title}</div>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
+                                </>
                             )
                         })}
                     </div>
@@ -191,7 +174,7 @@ function Home(){
                             </div>
                             {/* bottom side location */}
                             <div className="hidden md:flex h-48 items-center justify-between gap-6">
-                                {cities.map((event,  i)=>{
+                                {cities.map((event, i)=>{
                                     if( i > 2){
                                         return(
                                             <div className=" flex flex-col justify-between items-center" key={event.id}>
@@ -216,13 +199,14 @@ function Home(){
                     <div className="flex gap-2 py-1 px-10 rounded-2xl font-bold text-[16px] bg-accent text-white"><AiOutlineMinus size={30} className="text-white"/>Category</div>
                 </div>
                 <h1 className="w-full flex justify-center text-center py-[25px] text-primary font-bold text-[36px]">Browse Event By Category</h1>
-                <div className="w-full flex gap-10 justify-center">
+                <div className="w-full flex gap-10 justify-center overflow-hidden">
                     {category.map(event =>{
                         return(
                             <div className="flex justify-center" key={event.id}>
                                 <button type="submit" className="h-10 text-neutral font-[500] hover:text-accent hover:border-2 border-white hover:border-b-accent">{event.category}</button>
                             </div>
                         )
+                        
                     })}
                 </div>
                 

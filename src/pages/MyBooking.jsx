@@ -20,8 +20,10 @@ function MyBooking(){
     return(
         <>
             <nav className="flex w-full items-center justify-between px-10 py-4">
-                <div className="flex items-center justify-between w-full md:w-0">
-                    <button id="tongler" className="md:hidden bg-primary p-2 rounded-[5px] shadow-lg"><FiMenu className="text-white" size={30}/></button>
+                <div className="flex-1 flex items-center justify-between w-full md:w-0">
+                    <button className="lg:hidden btn btn-square rounded-1xl btn-primary">
+                        <FiMenu className="text-white" size={30}/>
+                    </button>
                     <Link to="/">
                         <div className="flex items-center">
                             <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
@@ -29,15 +31,15 @@ function MyBooking(){
                         </div>
                     </Link>
                 </div>
-                <div>
-                    <ul className="hidden md:flex gap-x-10 font-bold text-[16px]">
+                <div className="flex-1 hidden lg:block">
+                    <ul className="hidden lg:flex gap-x-10 font-bold text-[16px]">
                         <li className="text-primary hover:text-accent"><Link to="/">Home</Link></li>
                         <li className="text-primary hover:text-accent"><Link to="/CreateEvent">Create Event</Link></li>
                         <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
                     </ul>
                 </div>
-                <Link to="/Profile">
-                    <div className="hidden md:flex">
+                <Link to="/Profile" className="hidden lg:flex">
+                    <div className="hidden lg:flex flex-1">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
                             <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
                         </div>

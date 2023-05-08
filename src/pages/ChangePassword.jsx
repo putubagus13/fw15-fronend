@@ -19,8 +19,10 @@ function ChangePassword(){
     return(
         <>
             <nav className="flex w-full items-center justify-between px-10 py-4">
-                <div className="flex items-center justify-between w-full md:w-0">
-                    <button id="tongler" className="md:hidden bg-primary p-2 rounded-[5px] shadow-lg"><FiMenu className="text-white" size={30}/></button>
+                <div className="flex-1 flex items-center justify-between w-full md:w-0">
+                    <button className="lg:hidden btn btn-square rounded-1xl btn-primary">
+                        <FiMenu className="text-white" size={30}/>
+                    </button>
                     <Link to="/">
                         <div className="flex items-center">
                             <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
@@ -28,15 +30,15 @@ function ChangePassword(){
                         </div>
                     </Link>
                 </div>
-                <div>
-                    <ul className="hidden md:flex gap-x-10 font-bold text-[16px]">
+                <div className="flex-1 hidden lg:block">
+                    <ul className="hidden lg:flex gap-x-10 font-bold text-[16px]">
                         <li className="text-primary hover:text-accent"><Link to="/">Home</Link></li>
                         <li className="text-primary hover:text-accent"><Link to="/CreateEvent">Create Event</Link></li>
                         <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
                     </ul>
                 </div>
-                <Link to="/Profile">
-                    <div className="hidden md:flex">
+                <Link to="/Profile" className="hidden lg:flex">
+                    <div className="hidden lg:flex flex-1">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
                             <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
                         </div>
@@ -45,7 +47,7 @@ function ChangePassword(){
                 </Link>
             </nav>
             <main className="px-[30px] md:flex md:bg-[#F4F7FF] p-[20px] md:px-[75px] md:py-[75px]">
-                <aside id="menuBar" className="bg-white relative md:block rounded-2xl px-[20px] md:px-0 md:bg-none md:static md:block w-[300px] md:w-[370px] md:flex-initial shadow-lg md:shadow-none hidden md:bg-[#F4F7FF]">
+                <aside id="menuBar" className="hidden bg-white relative md:block rounded-2xl px-[20px] md:px-0 md:bg-none md:static md:block w-[300px] md:w-[370px] md:flex-initial shadow-lg md:shadow-none md:bg-[#F4F7FF]">
                     <div className="flex items-center gap-3 mb-[56px]">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
                             <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
@@ -70,24 +72,24 @@ function ChangePassword(){
                     </div>
                 </aside> 
 
-        <form className="inline-block md:h-[900px] w-full bg-white px-[20px] md:px-[100px] py-[50px] md:py-[70px] rounded-2xl flex-1">
-            <h1 className="font-bold text-[20px] text-secondary">Change Password</h1>
-            <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
-                <div className="w-[230px] flex-initial font-[400] text-secondary">Old Password</div>
-                <div className="flex-1"><input type="password" placeholder="Old Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
-            </div>
-            <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
-                <div className="w-[230px] flex-initial font-[400] text-secondary">New Password</div>
-                <div className="flex-1"><input type="password" placeholder="New Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
-            </div>
-            <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
-                <div className="w-[230px] flex-initial font-[400] text-secondary">Confirm New Password</div>
-                <div className="flex-1"><input type="password" placeholder="Confirm New Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
-            </div>
-            <button className="w-full h-[55px] rounded-2xl md:my-[30px] btn btn-primary shadow-lg my-3" type="input">Update</button>
+                <form className="inline-block md:h-[900px] w-full bg-white px-[20px] md:px-[100px] py-[50px] md:py-[70px] rounded-2xl flex-1">
+                    <h1 className="font-bold text-[20px] text-secondary">Change Password</h1>
+                    <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
+                        <div className="w-[230px] flex-initial font-[400] text-secondary">Old Password</div>
+                        <div className="flex-1"><input type="password" placeholder="Old Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
+                    </div>
+                    <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
+                        <div className="w-[230px] flex-initial font-[400] text-secondary">New Password</div>
+                        <div className="flex-1"><input type="password" placeholder="New Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
+                    </div>
+                    <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
+                        <div className="w-[230px] flex-initial font-[400] text-secondary">Confirm New Password</div>
+                        <div className="flex-1"><input type="password" placeholder="Confirm New Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
+                    </div>
+                    <button className="w-full h-[55px] rounded-2xl md:my-[30px] btn btn-primary shadow-lg my-3" type="input">Update</button>
 
-        </form>
-    </main>
+                </form>
+            </main>
     <footer className="h-[476px] px-[30px] md:px-[20%] w-full md:py-10 md:bg-[#F4F7FF]">
                 <div className="md:flex md:justify-between">
                 <div className="mb-10">
