@@ -4,7 +4,6 @@ import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
-import {FiMenu} from "react-icons/fi"
 import {FiUser} from "react-icons/fi"
 import {AiFillCreditCard} from "react-icons/ai"
 import {AiFillEdit} from "react-icons/ai"
@@ -14,15 +13,17 @@ import {AiOutlineUnorderedList} from "react-icons/ai"
 import {AiOutlineHeart} from "react-icons/ai"
 import {AiOutlineSetting} from "react-icons/ai"
 import {IoTicketSharp} from "react-icons/io5"
+import {FiLogOut} from "react-icons/fi"
+import MenuBar1 from "../components/MenuBar1"
+import React from "react"
 
 function Wishlist(){
+    const [menuBar, setMenuBar] = React.useState('')
     return(
         <>
             <nav className="flex w-full items-center justify-between px-10 py-4">
                 <div className="flex-1 flex items-center justify-between w-full md:w-0">
-                    <button className="lg:hidden btn btn-square rounded-1xl btn-primary">
-                        <FiMenu className="text-white" size={30}/>
-                    </button>
+                    <MenuBar1 showMenuBarFunc ={setMenuBar} />
                     <Link to="/">
                         <div className="flex items-center">
                             <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
@@ -47,7 +48,7 @@ function Wishlist(){
                 </Link>
             </nav>
             <main className="px-[30px] md:flex md:bg-[#F4F7FF] p-[20px] md:px-[75px] md:py-[75px]">
-                <aside id="menuBar" className="bg-white relative md:block rounded-2xl px-[20px] md:px-0 md:bg-none md:static md:block w-[300px] md:w-[370px] md:flex-initial shadow-lg md:shadow-none hidden md:bg-[#F4F7FF]">
+                <aside id="menuBar" className={menuBar}>
                     <div className="flex items-center gap-3 mb-[56px]">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
                             <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
@@ -68,6 +69,7 @@ function Wishlist(){
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineUnorderedList size={20}/><Link to="/Booking">My Booking</Link></li>
                             <li className="flex gap-3 py-3 text-accent"><AiOutlineHeart size={20}/><Link to="/Wishlist">My Wishlist</Link></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineSetting size={20}/>Seting</li>
+                            <li className="flex gap-3 py-3 text-primary pb-10"><FiLogOut size={20}/>Log out</li>
                         </ul>
                     </div>
                 </aside>  

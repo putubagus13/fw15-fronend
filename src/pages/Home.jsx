@@ -30,7 +30,8 @@ function Home(){
     const [cities, setCities] = React.useState([])
     const [partners, setPartners] = React.useState([])
     const [category, setcategory] = React.useState([])
-    
+    // const Categories = [music, movie, Art, Culture, Festival]
+
     React.useEffect(()=>{
         async function getDataEvent(){
             const {data} = await axios.get('http://localhost:8888/events?limit=7')
@@ -73,10 +74,10 @@ function Home(){
                     </div>
                     <div className="relative flex justify-around md:justify-center flex-col gap-10 w-[700px] h-full">
                         <div className="text-white font-bold text-6xl text-center md:text-left">Find events you <br/>love with our</div>
-                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:bg-white rounded-2xl items-center px-6 py-3 sm:py-0">
+                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:bg-white rounded-2xl items-center px-6 sm:py-0">
                             <RiSearch2Line size={100} className="hidden sm:block"/>
                             <input type="text" placeholder="Search Event" className="text-secondary rounded-2xl input w-full max-w-xs h-12" />
-                            <hr className="hidden sm:block h-12 border-[1.5px] rounded-2xl my-2 mx-6"/>
+                            <hr className="hidden sm:block h-12 border-[1.5px] rounded-2xl mx-6"/>
                             <HiOutlineLocationMarker size={100} className="hidden sm:block"/>
                             <input type="text" placeholder="Where?" className="text-secondary rounded-2xl input w-full max-w-xs h-12" />
                             <button className="btn btn-square rounded-2xl btn-accent">
@@ -130,7 +131,7 @@ function Home(){
                             return(
                                 <>
                                 <Link to="/EventDetail">
-                                    <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative" key={event.id}>
+                                    <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative" key={`events${event.id}`}>
                                         <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
                                         <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
                                             <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
@@ -149,7 +150,7 @@ function Home(){
 
                 {/* section Cities */}
                 <div className="flex w-full justify-center pt-36">
-                    <div className="relative w-11/12 h-auto bg-primary rounded-[50px] px-[20%] md:px-[10%] py-16 flex flex-col gap-6 items-center overflow-hidden">
+                    <div className="relative w-11/12 h-auto bg-primary rounded-[50px] py-16 flex flex-col gap-6 items-center overflow-hidden">
                         <img src={Elips1} className="absolute bottom-0 right-0 w-96 h-auto" />
                         <img src={Elips2} className="absolute bottom-0 right-80 w-72 h-auto" />
                         <img src={Elips3} className="absolute top-0 left-0 w-70 h-auto" />
@@ -158,33 +159,17 @@ function Home(){
                                 <p className="flex bg-neutral/[0.5] w-48 rounded-2xl text-xl text-white font-bold gap-2 items-center justify-start font-[500]"><AiOutlineMinus size={40} className="text-white"/>Location</p>
                             </div>
                             {/* Top side location */}
-                            <div className="flex flex-col md:flex md:flex-row items-center gap-6 md:gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-6">
                                 <h1 className="w-60 font-bold text-white text-4xl ">Discover <br/> Events Near <br/> You</h1>
-                                {cities.map((event,  i) =>{
-                                    if ( i < 3) {
-                                        return (
-                                        <div className="flex flex-col justify-between items-center" key={event.id}>
+                                {cities.map(event =>{
+                                    return (
+                                        <div className="flex flex-col justify-between items-center" key={`cities${event.id}`}>
                                             <div className="w-60 h-36 overflow-hidden rounded-2xl">
                                                 <img src={`http://localhost:8888/uploads/${event.picture}`} className="object-cover"/>
                                             </div>
                                             <p className="text-white">{event.name}</p>
                                         </div>
-                                    )}
-                                })}
-                            </div>
-                            {/* bottom side location */}
-                            <div className="hidden md:flex h-48 items-center justify-between gap-6">
-                                {cities.map((event, i)=>{
-                                    if( i > 2){
-                                        return(
-                                            <div className=" flex flex-col justify-between items-center" key={event.id}>
-                                                <div className="w-60 h-36 overflow-hidden rounded-2xl">
-                                                    <img src={`http://localhost:8888/uploads/${event.picture}`} className="object-cover"/>
-                                                </div>
-                                                <p className="text-white">{event.name}</p>
-                                            </div>
-                                        )
-                                    }
+                                    )
                                 })}
                             </div>
                             <div className="w-full flex justify-center">
@@ -202,8 +187,8 @@ function Home(){
                 <div className="w-full flex gap-10 justify-center overflow-hidden">
                     {category.map(event =>{
                         return(
-                            <div className="flex justify-center" key={event.id}>
-                                <button type="submit" className="h-10 text-neutral font-[500] hover:text-accent hover:border-2 border-white hover:border-b-accent">{event.category}</button>
+                            <div className="flex justify-center" key={`categories${event.id}`}>
+                                <button type="submit" className="h-10 text-neutral font-[500] hover:text-accent hover:border-2 border-white hover:border-b-accent">{event.name}</button>
                             </div>
                         )
                         
@@ -212,17 +197,21 @@ function Home(){
                 
                 <div className="List-Event flex justify-center py-16">
                     <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 gap-4">
-                        {category.map(event =>{
+                        {events.map(event =>{
                             return(
-                                <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden" key={event.id}>
-                                    <div className="flex-1 overflow-hidden">
-                                        <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
-                                    </div>
-                                    <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
-                                        <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
-                                        <div className="font-bold text-2xl">{event.title}</div>
-                                    </div>
-                                </div>
+                                <>
+                                    <Link to="/EventDetail">
+                                        <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden" key={`eventssection${event.id}`}>
+                                            <div className="flex-1 overflow-hidden">
+                                                <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/> 
+                                            </div>
+                                            <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
+                                                <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
+                                                <div className="font-bold text-2xl">{event.title}</div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </>
                             )
                          })}
                     </div>
@@ -241,28 +230,13 @@ function Home(){
                         <p className="text-[14px] text-neutral">By companies like :</p>
                     </div>
                     <div className="flex flex-row gap-10 justify-center">
-                        {/* left side */}
-                        <div className="flex flex-col md:flex-row items-center gap-10 ">
-                            {partners.map((event, i)=>{
-                                if( i < 3){
-                                    return(
-                                        <div className="w-[83px] h-[63px] overflow-hidden " key={event.id}>
-                                            <img className="object-cover" src={`http://localhost:8888/uploads/${event.picture}`} />
-                                        </div>
-                                    )
-                                }
-                            })}
-                        </div>
-                        {/* right side */}
-                        <div className="flex flex-col md:flex-row items-center gap-10 ">
-                            {partners.map((event, i)=>{
-                                if( i > 2){
-                                    return(
-                                        <div className="w-[83px] h-[63px] overflow-hidden " key={event.id}>
-                                            <img className="object-cover" src={`http://localhost:8888/uploads/${event.picture}`} />
-                                        </div>
-                                    )
-                                }
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+                            {partners.map(event=>{
+                                return(
+                                    <div className="w-[83px] h-[63px] overflow-hidden " key={`partners${event.id}`}>
+                                        <img className="object-cover" src={`http://localhost:8888/uploads/${event.picture}`} />
+                                    </div>
+                                )
                             })}
                         </div>
                     </div>

@@ -116,7 +116,9 @@ function EventDetail(){
                                 <img src={Location1} className="w-full h-auto object-cover" />
                             </div>
                         </div>
-                        <button className="btn btn-primary w-80">Buy Ticket</button>
+                        <Link to="/Payment">
+                            <button className="btn btn-primary w-80">Buy Ticket</button>
+                        </Link>
                     </div>
                 </div>
             </main>
