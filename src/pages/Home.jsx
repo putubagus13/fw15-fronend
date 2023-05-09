@@ -129,9 +129,8 @@ function Home(){
                     <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 gap-4">
                         {events.map(event =>{
                             return(
-                                <>
-                                <Link to="/EventDetail">
-                                    <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative" key={`events${event.id}`}>
+                                <Link to="/EventDetail" key={`events${event.id}`}>
+                                    <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
                                         <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
                                         <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
                                             <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
@@ -139,7 +138,6 @@ function Home(){
                                         </div>
                                     </div>
                                 </Link>
-                                </>
                             )
                         })}
                     </div>
@@ -199,19 +197,17 @@ function Home(){
                     <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 gap-4">
                         {events.map(event =>{
                             return(
-                                <>
-                                    <Link to="/EventDetail">
-                                        <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden" key={`eventssection${event.id}`}>
-                                            <div className="flex-1 overflow-hidden">
-                                                <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/> 
-                                            </div>
-                                            <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
-                                                <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
-                                                <div className="font-bold text-2xl">{event.title}</div>
-                                            </div>
+                                <Link to="/EventDetail" key={`eventssection${event.id}`}>
+                                    <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden">
+                                        <div className="flex-1 overflow-hidden">
+                                            <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/> 
                                         </div>
-                                    </Link>
-                                </>
+                                        <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
+                                            <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
+                                            <div className="font-bold text-2xl">{event.title}</div>
+                                        </div>
+                                    </div>
+                                </Link>
                             )
                          })}
                     </div>

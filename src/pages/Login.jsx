@@ -7,8 +7,44 @@ import { AiFillTwitterCircle } from "react-icons/ai"
 import {FcGoogle} from "react-icons/fc"
 import {Link} from "react-router-dom"
 import {IoTicketSharp} from "react-icons/io5"
+import {MdError} from "react-icons/md"
+import axios from "axios"
+import React from "react"
+import { useNavigate } from "react-router-dom"
 
 function Login(){
+    const navigate = useNavigate()
+    const [errorMessage, setErorMessage] = React.useState("")
+    const [token, setToken] = React.useState("")
+    const doLogin = async (event)=>{
+        event.preventDefault();
+        setErorMessage("")
+        try {
+            const {value: email} = event.target.email
+            const {value: password} = event.target.password
+            const body = new URLSearchParams({email, password}).toString()
+            const {data} = await axios.post("http://localhost:8888/auth/login", body)
+            console.log(data)
+            window.localStorage.setItem("token", data.results)
+            setToken(data)
+
+        } catch (error) {
+            const message = error?.response?.data?.message
+            if(message){
+                setErorMessage(message)
+            }
+        }
+        
+   }
+    React.useEffect(()=>{
+        console.log(token)
+        if(token){
+            console.log("test")
+            navigate("/")
+        }
+    },[token, navigate]) 
+    
+    
     return(
         <div>
          <main className="flex h-full">
@@ -26,11 +62,14 @@ function Login(){
                     </div></Link>
                     <h1 className="text-[24px] font-bold text-secondary" >Sign In</h1>
                     <p className="flex gap-2 pb-11 pt-3 text-secondary">Hi, Welcome back to Urticket!</p>
-                    <form id="form">
-                        <input type="email" placeholder="email" className="input input-bordered input-primary text-secondary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
-                        <div className="flex relative">
-                            <input id="password" name="password" type="password" placeholder="Password" className="input input-bordered input-primary text-secondary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
-                            <button id="reveal" type="button" className="absolute right-[15px] top-[25px]"><i className="text-black" data-feather="eye"></i></button>
+                    <div>
+                        {errorMessage && (<div className="flex flex-row justify-center alert alert-error shadow-lg"><MdError size={30}/>{errorMessage}</div>)}
+                    </div>
+                    <form onSubmit={doLogin} >
+                        <input type="email" name="email" placeholder="email" className="input input-bordered input-primary text-secondary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
+                        <div className="flex">
+                            <input type="password" name="password" placeholder="Password" className="input input-bordered input-primary text-secondary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
+                            <button type="button" className="absolute right-[15px] top-[25px]"><i className="text-black" data-feather="eye"></i></button>
                         </div>
                         <div id="alertSignin" className="text-red-600"></div>
                         <div className="py-4 text-right">
