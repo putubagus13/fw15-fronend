@@ -1,4 +1,3 @@
-import Image1 from "../assets/pexels-jack-winbow-1559486.jpg"
 import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
