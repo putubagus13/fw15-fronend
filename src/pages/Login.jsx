@@ -10,7 +10,7 @@ import {IoTicketSharp} from "react-icons/io5"
 import {MdError} from "react-icons/md"
 import http from "../helper/http"
 import React from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate} from "react-router-dom"
 
 function Login(){
     const navigate = useNavigate()
