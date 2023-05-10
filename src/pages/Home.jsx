@@ -158,7 +158,7 @@ function Home(){
                     <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 gap-4">
                         {events.map(event =>{
                             return(
-                                <Link to="/EventDetail" key={`events${event.id}`}>
+                                <Link to={`/EventDetail/${event.id}`} key={`events${event.id}`}>
                                     <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
                                         <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
                                         <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
