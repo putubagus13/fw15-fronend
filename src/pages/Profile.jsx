@@ -3,7 +3,7 @@ import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {FiUser} from "react-icons/fi"
 import {AiFillCreditCard} from "react-icons/ai"
 import {AiFillEdit} from "react-icons/ai"
@@ -17,9 +17,47 @@ import {IoTicketSharp} from "react-icons/io5"
 import {FiLogOut} from "react-icons/fi"
 import MenuBar1 from "../components/MenuBar1"
 import React from "react"
+import http from "../helper/http"
+import moment from "moment"
 
 function Profile(){
+    const navigate = useNavigate
     const [menuBar, setMenuBar] = React.useState('')
+    const [profile, setProfile] = React.useState({})
+    const [token, setToken] = React.useState("")
+    const [initToken, setInitToken] = React.useState('')
+    
+    React.useEffect(()=>{
+        if(window.localStorage.getItem("token")){
+            setToken(window.localStorage.getItem("token"))
+        }
+        setInitToken(true)
+
+        async function getProfileUser(){
+            try {
+                const token = window.localStorage.getItem("token")
+                console.log(token)
+                const {data} = await http(token).get("/profile")
+                setProfile(data.results)
+                console(data)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                    console.log(message)
+                }
+            }
+        }
+        getProfileUser()
+    },[])
+
+    React.useEffect(()=>{
+        if(initToken){
+            if(!token){
+                navigate("/login")
+            }
+        }
+    },[token, initToken, navigate])
+    
     return(
         <div>
             <nav className="flex w-full items-center justify-between px-10 py-4">
@@ -42,9 +80,9 @@ function Profile(){
                 <Link to="/Profile" className="hidden lg:flex">
                     <div className="hidden lg:flex flex-1">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
-                            <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
+                            <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>
                         </div>
-                        <div className="text-secondary self-center font-bold text-[16px]">Jhon Tomson</div>
+                        <div className="text-secondary self-center font-bold text-[16px]">{profile?.fullName}</div>
                     </div>
                 </Link>
             </nav>
@@ -52,9 +90,9 @@ function Profile(){
                 <aside id="menuBar" className={menuBar}>
                     <div className="flex flex-col xl:flex-row items-center gap-3 mb-[56px]">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-                            <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
+                            <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>
                         </div>
-                        <div><h1  className="font-bold text-[14px] text-secondary">Jhon Thomson</h1><p className="text-secondary">Entrepreneur, ID</p></div>
+                        <div><h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, {profile?.id}</p></div>
                     </div>
                     <div className="font-[500] text-[14p x]">
                         <ul className="cursor-pointer">
@@ -80,25 +118,25 @@ function Profile(){
                         <div className="mb-[50px] font-bold text-[20px] text-secondary">Profile</div>
                         <div className="w-full text-center">
                             <div className="md:hidden relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-primary to-secondary hover:from-primary hover:to-accent w-[137px] h-[137px]">
-                                <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={Image1} alt="change-photo"/>
+                                <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={`http://localhost:8888/uploads/${profile.picture}`} alt="change-photo"/>
                                 <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
                             </div>
                         </div>
                         <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Nama</div>
-                            <div className="border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">Jhon Tomson</div>
+                            <div className="border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">{profile?.fullName}</div>
                         </div>
                         <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px] font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Username</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] border-neutral ">@jhont0 <a href=" " className="text-accent">Edit</a></div>
+                            <div className="flex flex-row gap-3 h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] border-neutral ">{profile?.username}<a href=" " className="text-accent">Edit</a></div>
                         </div>
                         <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Email</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">jhont0@mail.com <a href=" " className="text-accent">Edit</a></div>
+                            <div className="flex flex-row gap-3 h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">{profile?.email} <a href=" " className="text-accent">Edit</a></div>
                         </div>
                         <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Phone Number</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">08123456789 <a href=" " className="text-accent">Edit</a></div>
+                            <div className="flex flex-row gap-3 h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">{profile?.phoneNumbe}<a href=" " className="text-accent">Edit</a></div>
                         </div>
                         <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Gender</div>
@@ -113,19 +151,19 @@ function Profile(){
                         </div>
                         <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Profession</div>
-                            <div className="flex justify-between border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">Enterpreneur
+                            <div className="flex justify-between border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">{profile?.profession}
                                 <div><BiChevronDown size={20}/></div>
                             </div>
                         </div>
                         <div className="my-[30px] md:my-3 block md:flex items-center font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Nationality</div>
-                            <div className="flex justify-between border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">Indonesia
+                            <div className="flex justify-between border-2 rounded-2xl h-[55px] text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral ">{profile?.nasionality}
                                 <div><BiChevronDown size={20}/></div>
                             </div>
                         </div>
                         <div className="my-[30px] block md:flex items-center font-[400] text-[14px]">
                             <div className="w-[153px] text-secondary">Birthday Date</div>
-                            <div className="h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] "><a href=" ">24</a>/<a href=" " className="underline-offset-1">10</a>/<a href=" ">2000</a> <a href=" " className="text-yellow-600 px-[10px]">Edit</a></div>
+                            <div className="flex flex-row gap-3 h-[55px] text-left w-full md:px-[20px] py-[17px] text-[#777777] ">{moment(profile?.birtDate).format('DD/MM/YYYY')}<a href=" " className="text-yellow-600 px-[10px]">Edit</a></div>
                         </div>
                         <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg" type="input">Save</button>
                 </div>
@@ -134,7 +172,7 @@ function Profile(){
 
                 <div id="rightside" className="text-center hidden md:block">
                         <div className="relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-yellow-500 to-blue-400 hover:from-yellow-500 hover:to-blue-800 truncate w-[137px] h-[137px]">
-                            <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={Image1} alt="change-photo"/>
+                            <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={`http://localhost:8888/uploads/${profile.picture}`} alt="change-photo"/>
                             <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
                         </div>
                         <button className="hidden md:block mt-[50px] border-2 w-full h-[40px] rounded-2xl btn btn-outline btn-primary rounded-2xl" type="submit">Choose Photo</button>
