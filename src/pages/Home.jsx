@@ -18,10 +18,10 @@ import Elips3 from "../assets/top-elips.png"
 import Elips4 from "../assets/left-bottom.png"
 import Elips5 from "../assets/bottom-center.png"
 import Elips6 from "../assets/top-right.png"
-import axios from "axios"
 import React from "react"
 import moment from "moment"
 import MenuBar from "../components/MenuBar"
+import http from "../helper/http"
 
 
 
@@ -30,37 +30,66 @@ function Home(){
     const [cities, setCities] = React.useState([])
     const [partners, setPartners] = React.useState([])
     const [category, setcategory] = React.useState([])
-    // const Categories = [music, movie, Art, Culture, Festival]
 
     React.useEffect(()=>{
         async function getDataEvent(){
-            const {data} = await axios.get('http://localhost:8888/events?limit=7')
-            console.log(data)
-            setEvents(data.results)
+            try {
+                const {data} = await http().get('/events?limit=7')
+                console.log(data)
+                setEvents(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                console.log(message)
+                }
+            }
         }
         getDataEvent()
 
         async function getDataCities(){
-            const {data} = await axios.get('http://localhost:8888/cities?limit=7')
-            console.log(data)
-            setCities(data.results)
+            try {
+                const {data} = await http().get('/cities?limit=7')
+                console.log(data)
+                setCities(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                console.log(message)
+                }
+            }
         }
         getDataCities()
 
         async function getCategory(){
-            const {data} = await axios.get('http://localhost:8888/categories?limit=7')
-            console.log(data)
-            setcategory(data.results)
+           try {
+                const {data} = await http().get('/categories?limit=7')
+                console.log(data)
+                setcategory(data.results)
+           } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                console.log(message)
+            }
+           }
         }
         getCategory()
 
         async function getDataPartners(){
-            const {data} = await axios.get('http://localhost:8888/partners?limit=7')
-            console.log(data)
-            setPartners(data.results)
+            try {
+                const {data} = await http().get('/partners?limit=7')
+                console.log(data)
+                setPartners(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                console.log(message)
+            }
+        }
         }
         getDataPartners()
+
     },[])
+
     return(
         <>
             <MenuBar/>

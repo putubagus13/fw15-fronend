@@ -8,7 +8,7 @@ import {FcGoogle} from "react-icons/fc"
 import {Link} from "react-router-dom"
 import {IoTicketSharp} from "react-icons/io5"
 import {MdError} from "react-icons/md"
-import axios from "axios"
+import http from "../helper/http"
 import React from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -23,7 +23,7 @@ function Login(){
             const {value: email} = event.target.email
             const {value: password} = event.target.password
             const body = new URLSearchParams({email, password}).toString()
-            const {data} = await axios.post("http://localhost:8888/auth/login", body)
+            const {data} = await http().post("http://localhost:8888/auth/login", body)
             console.log(data)
             window.localStorage.setItem("token", data.results)
             setToken(data)

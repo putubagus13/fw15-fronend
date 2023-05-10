@@ -26,7 +26,7 @@ function App(){
         <Route path="/Wishlist0" element={<EmtyWishlist/>} />
         <Route path="/Booking0" element={<EmtyBooking/>} />
         <Route path="/ChangePassword" element={<ChangePassword/>} />
-        <Route path="/Pofile" element={<Profile/>} />
+        <Route path="/Profile" element={<Profile/>} />
         <Route path="/Signin" element={<Signin/>} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/ForgotPassword" element={<ForgotPassword/>} />

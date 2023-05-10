@@ -62,7 +62,7 @@ function EmtyBooking(){
                             <li className="mx-5 py-3 text-primary">
                                 <ul>
                                     <li className="flex gap-3 py-3 text-primary"><AiFillCreditCard size={20}/><Link to="/PaymentMethod">Card</Link></li>
-                                    <li className="flex gap-3 py-3 text-primary"><AiFillEdit size={20}/><Link to="/Pofile">Edit Profil</Link></li>
+                                    <li className="flex gap-3 py-3 text-primary"><AiFillEdit size={20}/><Link to="/Profile">Edit Profil</Link></li>
                                     <li className="flex gap-3 py-3 text-primary"><FiUnlock size={20}/><Link to="/ChangePassword">Change Password</Link></li>
                                 </ul>
                             </li>
