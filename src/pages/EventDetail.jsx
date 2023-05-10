@@ -1,5 +1,4 @@
-import {Link} from "react-router-dom"
-import Image1 from "../assets/pexels-jack-winbow-1559486.jpg"
+import {Link, useNavigate} from "react-router-dom"
 import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
@@ -9,11 +8,68 @@ import {AiOutlineHeart} from "react-icons/ai"
 import {IoTicketSharp} from "react-icons/io5"
 import {AiOutlineClockCircle} from "react-icons/ai"
 import {HiOutlineLocationMarker} from "react-icons/hi"
-import Event1 from "../assets/Bitmap.png"
 import Profile1 from "../assets/pexels-pixabay-220453.jpg"
 import Location1 from "../assets/Rectangle.png"
+import { useParams } from "react-router-dom"
+import React from "react"
+import http from "../helper/http"
+import moment from "moment"
+import {FiLogOut} from "react-icons/fi"
 
 function EventDetail(){
+    const navigate = useNavigate()
+    const {id} = useParams()
+    const [events, setEvent] = React.useState({})
+    const [profile, setProfile] = React.useState({})
+    const [token, setToken] = React.useState({})
+
+    React.useEffect(()=>{
+        async function getProfileUser(){
+            try {
+                const token = window.localStorage.getItem("token")
+                const {data} = await http(token).get("/profile")
+                console.log(data)
+                setProfile(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                    console.log(message)
+                }
+            }
+        }
+        getProfileUser()
+
+        async function getDataEvent(){
+            try {
+                const {data} = await http().get(`/events/detail/${id}`)
+                console.log(data)
+                setEvent(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                console.log(message)
+                }
+            }
+        }
+        getDataEvent()
+
+        if(window.localStorage.getItem("token")){
+            setToken(window.localStorage.getItem("token"))
+         }
+    },[])
+
+    function doLogout(){
+        window.localStorage.removeItem("token")
+        navigate("/")
+    }
+
+    function doBuyTicket(){
+        if(window.localStorage.getItem("token")){
+            navigate("/Payment")
+        }else{
+            navigate("/login")
+        }
+    }
     return(
         <>
             <nav className="flex w-full items-center justify-between px-10 py-4">
@@ -35,26 +91,30 @@ function EventDetail(){
                         <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
                     </ul>
                 </div>
-                <Link to="/Profile" className="hidden lg:flex">
-                    <div className="hidden lg:flex flex-1">
-                        <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
-                            <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
-                        </div>
-                        <div className="text-secondary self-center font-bold text-[16px]">Jhon Tomson</div>
-                    </div>
-                </Link>
+                {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
+                    <div className="flex items-center gap-3">
+                    <Link to="/Profile"><div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
+                            {profile?.picture && <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>}
+                        </div></Link>
+                        <div>
+                            <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>
+                            <button onClick={doLogout} className="flex gap-1 items-center text-secondary font-bold text-[14px] hover:text-accent" type="submit"><FiLogOut size={15}/>Log Out</button>
+                        </div></div></div> : <div className="lg:flex gap-6 hidden flex-row items-center">
+                    <p className="flex items-center text-primary hover:text-neutral text-[16px] font-bold"><Link to="/Login">Log In</Link></p>
+                    <button className="bg-primary text-white rounded-2xl h-[40px] px-10 shadow-lg font-bold text-[16px] hover:bg-secondary lg-shadow" type="submit"><Link to="/Signin">Sign Up</Link></button>
+                </div>}
             </nav>
             <main className="w-full flex justify-center items-center py-12 px-[5%] md:bg-[#F4F7FF]">
                 <div className="sm:flex sm:py-24 px-[3%] sm:px-24 bg-white rounded-2xl sm:drop-shadow-lg gap-10">
                     {/* left side */}
                     <div className="flex-[0.7] flex flex-col gap-10 items-center">
                         <div className="Relative w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden">
-                            <img src={Event1} className="w-full h-full object-cover" alt="Event1"/>
+                            {events?.picture && <img src={`http://localhost:8888/uploads/${events?.picture}`} className="w-full h-full object-cover" alt="Event1"/>}
                             <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-80 sm:h-60 w-full px-6 py-10 gap-2">
-                                <h1 className="sm:hidden font-bold text-2xl text-white">Sights & Sounds Exhibition</h1>
+                                <h1 className="sm:hidden font-bold text-2xl text-white">{events?.title}</h1>
                                 <div className="sm:hidden flex gap-2 flex flex-col">
-                                    <p className="flex gap-1 text-white items-center"><HiOutlineLocationMarker size={20} className="text-accent"/>Jakarta, Indonesia</p>
-                                    <p className="flex gap-1 text-white items-center"><AiOutlineClockCircle size={20} className="text-accent"/>Wed, 15 Nov, 4:00 PM</p>
+                                    <p className="flex gap-1 text-white items-center"><HiOutlineLocationMarker size={20} className="text-accent"/>{events.location}</p>
+                                    <p className="flex gap-1 text-white items-center"><AiOutlineClockCircle size={20} className="text-accent"/>{moment(events.date).format('MMMM Do YYYY, h:mm')}</p>
                                 </div>
                                 <div className="flex sm:hidden text-white font-[500] justify-between gap-1 items-center">
                                     <div className="flex flex-col gap-1">
@@ -82,10 +142,10 @@ function EventDetail(){
                     </div>
                     {/* right side */}
                     <div className="flex-1 flex flex-col gap-6 px-[2%] sm:px-0">
-                        <h1 className="hidden sm:block font-bold text-2xl text-secondary mr-[30%]">Sights & Sounds Exhibition</h1>
+                        <h1 className="hidden sm:block font-bold text-2xl text-secondary mr-[30%]">{events?.title}</h1>
                         <div className="hidden sm:flex gap-6 flex flex-col md:flex-row">
-                            <p className="flex gap-1 text-secondary items-center"><HiOutlineLocationMarker size={20} className="text-accent"/>Jakarta, Indonesia</p>
-                            <p className="flex gap-1 text-secondary items-center"><AiOutlineClockCircle size={20} className="text-accent"/>Wed, 15 Nov, 4:00 PM</p>
+                            <p className="flex gap-1 text-secondary items-center"><HiOutlineLocationMarker size={20} className="text-accent"/>{events?.location}</p>
+                            <p className="flex gap-1 text-secondary items-center"><AiOutlineClockCircle size={20} className="text-accent"/>{moment(events.date).format('MMMM Do YYYY, h:mm')}</p>
                         </div>
                         <div className="hidden sm:flex text-secondary font-[500] flex-col gap-1">
                             <p>Attendees</p>
@@ -104,10 +164,10 @@ function EventDetail(){
                                 </div>
                             </div>
                         </div>
-                        <hr className="border-1 h-[0.5px] w-full rounded-2xl"/>
+                        <hr className="hidden md:block border-[1.5px] h-[0.5px] w-full rounded-2xl"/>
                         <div className="flex flex-col gap-2">
-                            <h1 className="font-bold text-2xl text-secondary">Event Detail</h1>
-                            <p className="text-secondary">After his controversial art exhibition Tear and Consume back in November 2018, in which guests were invited to tear up…</p>
+                            <h1 className="pt-10 sm:pt-0 font-bold text-2xl text-secondary">Event Detail</h1>
+                            <p className="text-secondary">{events?.detail}</p>
                             <Link to=""><p className="text-neutral font-[450] hover:text-accent">Read more</p></Link>
                         </div>
                         <div className="flex flex-col gap-2"> 
@@ -116,9 +176,7 @@ function EventDetail(){
                                 <img src={Location1} className="w-full h-auto object-cover" />
                             </div>
                         </div>
-                        <Link to="/Payment">
-                            <button className="btn btn-primary w-80">Buy Ticket</button>
-                        </Link>
+                        <button onClick={doBuyTicket} className="btn btn-primary w-80">Buy Ticket</button>
                     </div>
                 </div>
             </main>
