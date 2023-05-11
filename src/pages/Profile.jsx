@@ -52,7 +52,7 @@ function Profile(){
     React.useEffect(()=>{
         if(initToken){
             if(!token){
-                navigate("/login")
+                navigate("/login", {state: {warningMessage: "you have to login first"}})
             }
         }
     },[token, initToken, navigate])
