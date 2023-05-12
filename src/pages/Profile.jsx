@@ -18,24 +18,19 @@ import MenuBar1 from "../components/MenuBar1"
 import React from "react"
 import http from "../helper/http"
 import moment from "moment"
+import { useDispatch, useSelector } from "react-redux"
+import { logout} from "../redux/reducers/auth"
 
 function Profile(){
-    const navigate = useNavigate
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.token)
     const [menuBar, setMenuBar] = React.useState('')
     const [profile, setProfile] = React.useState({})
-    const [token, setToken] = React.useState("")
-    const [initToken, setInitToken] = React.useState('')
     
     React.useEffect(()=>{
-        if(window.localStorage.getItem("token")){
-            setToken(window.localStorage.getItem("token"))
-        }
-        setInitToken(true)
-
         async function getProfileUser(){
             try {
-                const token = window.localStorage.getItem("token")
-                console.log(token)
                 const {data} = await http(token).get("/profile")
                 setProfile(data.results)
                 console(data)
@@ -49,13 +44,10 @@ function Profile(){
         getProfileUser()
     },[])
 
-    React.useEffect(()=>{
-        if(initToken){
-            if(!token){
-                navigate("/login", {state: {warningMessage: "you have to login first"}})
-            }
-        }
-    },[token, initToken, navigate])
+    function doLogout(){
+        dispatch(logout())
+        navigate("/")
+    }
     
     return(
         <div>
@@ -107,7 +99,7 @@ function Profile(){
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineUnorderedList size={20}/><Link to="/Booking">My Booking</Link></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineHeart size={20}/><Link to="/Wishlist">My Wishlist</Link></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineSetting size={20}/>Seting</li>
-                            <li className="flex gap-3 py-3 text-primary pb-10"><FiLogOut size={20}/>Log out</li>
+                            <button onClick={doLogout} className="flex gap-3 py-3 text-primary pb-10"><FiLogOut size={20}/>Log out</button>
                         </ul>
                     </div>
                 </aside> 

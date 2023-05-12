@@ -5,27 +5,31 @@ import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import {FcGoogle} from "react-icons/fc"
-import {Link, useLocation} from "react-router-dom"
+import {Link} from "react-router-dom"
 import {IoTicketSharp} from "react-icons/io5"
 import {MdError} from "react-icons/md"
-import http from "../helper/http"
 import React from "react"
 import { useNavigate} from "react-router-dom"
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import { useDispatch, useSelector } from "react-redux"
+import { clearMessage } from "../redux/reducers/auth"
+import propTypes from 'prop-types'
+import { asyncLoginAction } from "../redux/actions/auth"
 
 const validationSchema = Yup.object({
     email: Yup.string().email("Email is invalid").required("Email is invalid"),
     password: Yup.string().required("Password is invalid")
 })
 
- function FormLogin({values, errors, touched, handleChange,handleBlur,handleSubmit, warningMessage, errorMessage, isSubmitting}){
-    
+ const FormLogin = ({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) =>{
+    const errorMessage = useSelector(state => state.auth.errorMessage)
+    const warningMessage = useSelector(state => state.auth.warningMessage)
     return(
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 py-4" >
             <div>
-                {errorMessage && (<div className="flex flex-row justify-center alert alert-error shadow-lg"><MdError size={30}/>{errorMessage}</div>)}
-                {warningMessage && (<div className="flex flex-row justify-center alert alert-warning shadow-lg"><MdError size={30}/>{warningMessage}</div>)}
+                {errorMessage && (<div className="flex flex-row justify-center alert alert-error shadow-lg text-white text-lg"><MdError size={30}/>{errorMessage}</div>)}
+                {warningMessage && (<div className="flex flex-row justify-center alert alert-warning shadow-lg text-white text-lg"><MdError size={30}/>{warningMessage}</div>)}
             </div>
             <div className="form-control flex flex-col">
                 <input 
@@ -67,49 +71,41 @@ const validationSchema = Yup.object({
         </form>
     )}
 
+FormLogin.propTypes = {
+    values: propTypes.objectOf(propTypes.string),
+    errors: propTypes.objectOf(propTypes.string), 
+    touched: propTypes.objectOf(propTypes.bool), 
+    handleChange: propTypes.func,
+    handleBlur: propTypes.func,
+    handleSubmit: propTypes.func,  
+    isSubmitting: propTypes.bool
+}
+
 
 function Login(){ 
-    const location = useLocation()
-    console.log(location)
+    const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [token, setToken] = React.useState("")
-    const [warningMessage, setWarningMessage] = React.useState(location.state?.warningMessage)
-    const [errorMessage, setErrorMessage] = React.useState("")
-    
+    const token = useSelector(state => state.auth.token)
+    const formError = useSelector(state => state.auth.formError)
+
+    const doLogin = async (values, {setSubmitting, setErrors})=>{
+        dispatch(clearMessage())
+        dispatch(asyncLoginAction(values))
+        if(formError.length){
+            setErrors({
+                email: formError.filter(item => item.param === "email")[0].message,
+                password: formError.filter(item => item.param === "password")[0].message
+            })
+        }
+        setSubmitting(false)
+    }
     React.useEffect(()=>{
         console.log(token)
         if(token){
             navigate("/")
         }
     },[token, navigate]) 
-
-    const doLogin = async (values, {setSubmitting, setErrors})=>{
-        setWarningMessage("")
-        setErrorMessage("")
-        try {
-            const {email, password} = values
-            const body = new URLSearchParams({email, password}).toString()
-            const {data} = await http().post("http://localhost:8888/auth/login", body)
-            console.log(data)
-            window.localStorage.setItem("token", data.results)
-            setSubmitting(false)
-            setToken(data)
-
-        } catch (error) {
-            const message = error?.response?.data?.message
-            if(message){
-               if(error?.response?.data?.results){
-                setErrors({
-                    email: error.response.data.results.filter(item => item.param === "email")[0].message,
-                    password: error.response.data.results.filter(item => item.param === "password")[0].message
-                })
-               }else{
-                setErrorMessage(message)
-               }
-            }
-        }
-        
-    }
+    
     return(
         <div>
         <main className="flex h-full">
@@ -136,7 +132,7 @@ function Login(){
                     onSubmit={doLogin}
                 >
                     {(props)=>(
-                        <FormLogin {...props} warningMessage={warningMessage} errorMessage={errorMessage} />
+                        <FormLogin {...props}/>
                     )}
                 </Formik>
                 <p className="text-secondary text-center pt-[30px]">or sign in with</p>

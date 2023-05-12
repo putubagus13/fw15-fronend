@@ -1,12 +1,34 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import {IoTicketSharp} from "react-icons/io5"
+import { useDispatch, useSelector } from "react-redux"
+import { asyncRegisterAction } from "../redux/actions/auth"
+import { clearMessage } from "../redux/reducers/auth"
+
+
 function Signin(){
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const token = useSelector(state => state.auth.token)
+    const formError = useSelector(state => state.auth.formError)
+
+    const doRegister = async (values, {setSubmitting, setErrors})=>{
+        dispatch(clearMessage())
+        dispatch(asyncRegisterAction(values))
+        if(formError.length){
+            setErrors({
+                email: formError.filter(item => item.param === "email")[0].message,
+                password: formError.filter(item => item.param === "password")[0].message,
+                fullName: formError.filter(item => item.param === "fullName")[0].message,
+            })
+        }
+        setSubmitting(false)
+    }
     return(
         <div>
          <main className="flex h-[1024px]">

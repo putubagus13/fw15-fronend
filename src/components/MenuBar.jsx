@@ -12,13 +12,15 @@ import {AiOutlineUnorderedList} from "react-icons/ai"
 import {AiOutlineHeart} from "react-icons/ai"
 import {AiOutlineSetting} from "react-icons/ai"
 import {FiLogOut} from "react-icons/fi"
+import { useDispatch, useSelector } from "react-redux"
+import { logout as logoutAction } from "../redux/reducers/auth"
 
 function MenuBar(){
     const navigate = useNavigate()
-
+    const dispatch = useDispatch()
+    const token = useSelector(state =>state.auth.token)
     const [hiddened, setHiddened] = React.useState("hidden lg:hidden w-full h-auto flex flex-col gap-1 pl-10 bg-white py-3")
     const [profile, setProfile] = React.useState({})
-    const [token, setToken] = React.useState('')
     function clickBtn(){
         if(hiddened === "hidden lg:hidden w-full h-auto flex flex-col gap-1 pl-10 bg-white py-3"){
             setHiddened("lg:hidden w-full h-auto flex flex-col gap-1 pl-10 bg-white py-3")
@@ -30,7 +32,6 @@ function MenuBar(){
     React.useEffect(()=>{
         async function getProfileUser(){
             try {
-                const token = window.localStorage.getItem("token")
                 const {data} = await http(token).get("/profile")
                 console.log(data)
                 setProfile(data.results)
@@ -43,15 +44,10 @@ function MenuBar(){
         }
         getProfileUser()
 
-        if(window.localStorage.getItem("token")){
-            console.log(window.localStorage.getItem("token"))
-            setToken(window.localStorage.getItem("token"))
-        }
-
     },[])
    
     function doLogout(){
-        window.localStorage.removeItem("token")
+        dispatch(logoutAction())
         navigate("/login")
          
     }
