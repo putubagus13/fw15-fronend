@@ -74,7 +74,7 @@ function AllEvents(){
                 {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
                     <div className="flex items-center gap-3">
                     <Link to="/Profile"><div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-                            {profile?.picture && <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>}
+                        {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
                         </div></Link>
                         <div>
                             <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>
@@ -91,7 +91,8 @@ function AllEvents(){
                         return(
                             <Link to={`/EventDetail/${event.id}`} key={`events${event.id}`}>
                                 <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
-                                    <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
+                                    {event?.picture && (<img className="w-full h-full object-cover" src={event?.picture.startsWith('https')? event?.picture : `http://localhost:8888/uploads/${event?.picture}`} alt={event?.fullName} />)}
+                                    {/* <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/> */}
                                     <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
                                         <div className="text-white">{moment(event.date).format('MMMM Do YYYY, h:mm')}</div>
                                         <div className="font-bold text-2xl text-white">{event.title}</div>
