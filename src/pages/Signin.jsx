@@ -9,6 +9,7 @@ import {IoTicketSharp} from "react-icons/io5"
 import { useDispatch, useSelector } from "react-redux"
 import { asyncRegisterAction } from "../redux/actions/auth"
 import { clearMessage } from "../redux/reducers/auth"
+import React from "react"
 
 
 function Signin(){
@@ -25,10 +26,17 @@ function Signin(){
                 email: formError.filter(item => item.param === "email")[0].message,
                 password: formError.filter(item => item.param === "password")[0].message,
                 fullName: formError.filter(item => item.param === "fullName")[0].message,
+                username: formError.filter(item => item.param === "username")[0].message
             })
         }
         setSubmitting(false)
     }
+    React.useEffect(()=>{
+        console.log(token)
+        if(token){
+            navigate("/")
+        }
+    },[token, navigate]) 
     return(
         <div>
          <main className="flex h-[1024px]">
