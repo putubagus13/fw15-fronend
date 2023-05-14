@@ -1,5 +1,4 @@
 import {Link} from "react-router-dom"
-import Image1 from "../assets/pexels-jack-winbow-1559486.jpg"
 import { BsFacebook } from "react-icons/Bs"
 import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
@@ -16,9 +15,38 @@ import {IoTicketSharp} from "react-icons/io5"
 import {FiLogOut} from "react-icons/fi"
 import MenuBar1 from "../components/MenuBar1"
 import React from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { logout} from "../redux/reducers/auth"
+import http from "../helper/http"
+import { useNavigate } from "react-router-dom"
 
 function CreateEvent(){
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.token)
     const [menuBar, setMenuBar] = React.useState('')
+    const [profile, setProfile] = React.useState({})
+    
+    React.useEffect(()=>{
+        async function getProfileUser(){
+            try {
+                const {data} = await http(token).get("/profile")
+                setProfile(data.results)
+                console(data)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                    console.log(message)
+                }
+            }
+        }
+        getProfileUser()
+    },[])
+
+    function doLogout(){
+        dispatch(logout())
+        navigate("/")
+    }
     return(
         <>
             <nav className="flex w-full items-center justify-between px-10 py-4">
@@ -41,19 +69,19 @@ function CreateEvent(){
                 <Link to="/Profile" className="hidden lg:flex">
                     <div className="hidden lg:flex flex-1">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
-                            <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
+                            <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>
                         </div>
-                        <div className="text-secondary self-center font-bold text-[16px]">Jhon Tomson</div>
+                        <div className="text-secondary self-center font-bold text-[16px]">{profile?.fullName}</div>
                     </div>
                 </Link>
             </nav>
             <main className="px-[30px] md:flex md:bg-[#F4F7FF] p-[20px] md:px-[75px] md:py-[75px]">
                 <aside id="menuBar" className={menuBar}>
-                    <div className="flex items-center gap-3 mb-[56px]">
+                    <div className="flex flex-col xl:flex-row items-center gap-3 mb-[56px]">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-                            <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={Image1} alt="photo-profile"/>
+                            <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>
                         </div>
-                        <div><h1  className="font-bold text-[14px] text-secondary">Jhon Thomson</h1><p className="text-secondary">Entrepreneur, ID</p></div>
+                        <div><h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, {profile?.id}</p></div>
                     </div>
                     <div className="font-[500] text-[14p x]">
                         <ul className="cursor-pointer">
@@ -69,7 +97,7 @@ function CreateEvent(){
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineUnorderedList size={20}/><Link to="/Booking">My Booking</Link></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineHeart size={20}/><Link to="/Wishlist">My Wishlist</Link></li>
                             <li className="flex gap-3 py-3 text-primary"><AiOutlineSetting size={20}/>Seting</li>
-                            <li className="flex gap-3 py-3 text-primary pb-10"><FiLogOut size={20}/>Log out</li>
+                            <button onClick={doLogout} className="flex gap-3 py-3 text-primary pb-10"><FiLogOut size={20}/>Log out</button>
                         </ul>
                     </div>
                 </aside>  
