@@ -1,6 +1,6 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {HiOutlineLocationMarker} from "react-icons/hi"
 import {RiSearch2Line} from "react-icons/ri"
 import {AiOutlineArrowRight} from "react-icons/ai"
@@ -22,20 +22,38 @@ import React from "react"
 import moment from "moment"
 import MenuBar from "../components/MenuBar"
 import http from "../helper/http"
+import { Formik } from "formik"
 
 
 
 
 function Home(){
+    const navigate = useNavigate()
     const [events, setEvents] = React.useState([])
     const [cities, setCities] = React.useState([])
     const [partners, setPartners] = React.useState([])
     const [category, setcategory] = React.useState([])
+    const [eventCategory, setEventCategory] = React.useState([])
+
+
+    async function getEventCategory(name){
+        try {
+            const {data} = await http().get('/events', {params: {category: name}})
+            console.log(data)
+            setEventCategory(data.results)
+        } catch (error) {
+            const message = error?.response?.data?.message
+            if(message){
+            console.log(message)
+            }
+        }
+    }
 
     React.useEffect(()=>{
+        getEventCategory()
         async function getDataEvent(){
             try {
-                const {data} = await http().get('/events?limit=7')
+                const {data} = await http().get('/events?limit=10')
                 console.log(data)
                 setEvents(data.results)
             } catch (error) {
@@ -91,6 +109,18 @@ function Home(){
 
     },[])
 
+    function doSearch(values){
+        const query = new URLSearchParams(values).toString()
+        navigate(`/Search?${query}`)
+    }
+
+    function doAllEvents(){
+        navigate("/allEvents")
+    }
+    function doAllCities(){
+        navigate("/allCities")
+    }
+
     return(
         <>
             <MenuBar/>
@@ -104,16 +134,47 @@ function Home(){
                     </div>
                     <div className="relative flex justify-around md:justify-center flex-col gap-10 w-[700px] h-full">
                         <div className="text-white font-bold text-6xl text-center md:text-left">Find events you <br/>love with our</div>
-                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:bg-white rounded-2xl items-center px-6 sm:py-0">
-                            <RiSearch2Line size={100} className="hidden sm:block"/>
-                            <input type="text" placeholder="Search Event" className="text-secondary rounded-2xl input w-full max-w-xs h-12" />
-                            <hr className="hidden sm:block h-12 border-[1.5px] rounded-2xl mx-6"/>
-                            <HiOutlineLocationMarker size={100} className="hidden sm:block"/>
-                            <input type="text" placeholder="Where?" className="text-secondary rounded-2xl input w-full max-w-xs h-12" />
-                            <button className="btn btn-square rounded-2xl btn-accent">
-                                <AiOutlineArrowRight size={20} className="text-white"/>
-                            </button>
-                        </div>
+                        <Formik initialValues={
+                            {search: '',
+                            location:''}
+                        }onSubmit={doSearch}
+                        >{({
+                            values,
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                          }) => (
+                            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:bg-white rounded-2xl items-center px-6 sm:py-0">
+                                <RiSearch2Line size={100} className="hidden sm:block"/>
+                                <input 
+                                    name="search" 
+                                    type="text" 
+                                    placeholder="Search Event" 
+                                    className="text-secondary rounded-2xl input w-full max-w-xs h-12"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.search} />
+                                <hr className="hidden sm:block h-12 border-[1.5px] rounded-2xl mx-6"/>
+                                <HiOutlineLocationMarker size={100} className="hidden sm:block"/>
+                                <select 
+                                    name="location" 
+                                    className="select w-full max-w-xs"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.location}>
+                                    <option disabled value="">Pick location</option>
+                                    {cities.map(event =>{
+                                        return(
+                                            <option className="text-secondary" key={`citySearch${event.id}`} value={event.name}>{event.name}</option>
+                                        )
+                                    })}   
+                                </select>
+                                <button type="submit" className="btn btn-square rounded-2xl btn-accent">
+                                    <AiOutlineArrowRight size={20} className="text-white"/>
+                                </button>
+                            </form>
+                          )}
+                        </Formik>
                     </div>
                 </div>
                 <div className="h-[196px] w-full flex justify-center items-end">
@@ -163,7 +224,7 @@ function Home(){
                                     <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
                                         <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
                                         <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
-                                            <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
+                                            <div className="text-white">{moment(event.date).format('MMMM Do YYYY, h:mm')}</div>
                                             <div className="font-bold text-2xl text-white">{event.title}</div>
                                         </div>
                                     </div>
@@ -173,12 +234,12 @@ function Home(){
                     </div>
                 </section>
                 <div className="flex w-full justify-center py-10">
-                    <button type="submit" className="font-bold text-accent hover:text-white h-9 px-16 py-1 border border-accent rounded-2xl hover:bg-accent">See All</button>
+                    <button onClick={doAllEvents} type="submit" className="font-bold text-accent hover:text-white h-9 px-16 py-1 border border-accent rounded-2xl hover:bg-accent">See All</button>
                 </div>
 
                 {/* section Cities */}
-                <div className="flex w-full justify-center pt-36">
-                    <div className="relative w-11/12 h-auto bg-primary rounded-[50px] py-16 flex flex-col gap-6 items-center overflow-hidden">
+                <div id="location" className="flex w-full justify-center pt-36 px-3">
+                    <div className="relative w-full h-auto bg-primary rounded-[50px] py-16 px-10 flex flex-col gap-6 items-center overflow-hidden">
                         <img src={Elips1} className="absolute bottom-0 right-0 w-96 h-auto" />
                         <img src={Elips2} className="absolute bottom-0 right-80 w-72 h-auto" />
                         <img src={Elips3} className="absolute top-0 left-0 w-70 h-auto" />
@@ -187,21 +248,23 @@ function Home(){
                                 <p className="flex bg-neutral/[0.5] w-48 rounded-2xl text-xl text-white font-bold gap-2 items-center justify-start font-[500]"><AiOutlineMinus size={40} className="text-white"/>Location</p>
                             </div>
                             {/* Top side location */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-6">
                                 <h1 className="w-60 font-bold text-white text-4xl ">Discover <br/> Events Near <br/> You</h1>
                                 {cities.map(event =>{
                                     return (
-                                        <div className="flex flex-col justify-between items-center" key={`cities${event.id}`}>
-                                            <div className="w-60 h-36 overflow-hidden rounded-2xl">
-                                                <img src={`http://localhost:8888/uploads/${event.picture}`} className="object-cover"/>
+                                        <Link to={`/Search?location=${event.name}`} key={`cities${event.id}`}>
+                                            <div className="flex flex-col justify-between items-center" >
+                                                <div className="w-60 h-36 overflow-hidden rounded-2xl">
+                                                    <img src={`http://localhost:8888/uploads/${event.picture}`} className="object-cover"/>
+                                                </div>
+                                                <p className="text-white">{event.name}</p>
                                             </div>
-                                            <p className="text-white">{event.name}</p>
-                                        </div>
+                                        </Link>
                                     )
                                 })}
                             </div>
                             <div className="w-full flex justify-center">
-                                <button type="submit" className="font-bold bg-white text-accent hover:text-white h-9 px-6 md:w-48 py-1 border border-accent rounded-2xl hover:bg-accent">See All</button>
+                                <button onClick={doAllCities} type="submit" className="font-bold bg-white text-accent hover:text-white h-9 px-6 md:w-48 py-1 border border-accent rounded-2xl hover:bg-accent">See All</button>
                             </div>
                         </div>
                     </div>
@@ -216,7 +279,7 @@ function Home(){
                     {category.map(event =>{
                         return(
                             <div className="flex justify-center" key={`categories${event.id}`}>
-                                <button type="submit" className="h-10 text-neutral font-[500] hover:text-accent hover:border-2 border-white hover:border-b-accent">{event.name}</button>
+                                <button onClick={()=>getEventCategory(event.name)} type="submit" className="h-10 text-neutral font-[500] hover:text-accent hover:border-2 border-white hover:border-b-accent">{event.name}</button>
                             </div>
                         )
                         
@@ -224,10 +287,10 @@ function Home(){
                 </div>
                 
                 <div className="List-Event flex justify-center py-16">
-                    <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 gap-4">
-                        {events.map(event =>{
+                    <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 justify-center gap-4">
+                        {eventCategory.map(event =>{
                             return(
-                                <Link to="/EventDetail" key={`eventssection${event.id}`}>
+                                <Link to={`/EventDetail/${event.id}`} key={`eventssection${event.id}`}>
                                     <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden">
                                         <div className="flex-1 overflow-hidden">
                                             <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/> 
