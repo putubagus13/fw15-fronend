@@ -222,7 +222,7 @@ function Home(){
                             return(
                                 <Link to={`/EventDetail/${event.id}`} key={`events${event.id}`}>
                                     <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
-                                        <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>
+                                        {event.picture && <img src={event.picture.startsWith('https')? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover" alt={event.fullName}/>}
                                         <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
                                             <div className="text-white">{moment(event.date).format('MMMM Do YYYY, h:mm')}</div>
                                             <div className="font-bold text-2xl text-white">{event.title}</div>
@@ -293,7 +293,7 @@ function Home(){
                                 <Link to={`/EventDetail/${event.id}`} key={`eventssection${event.id}`}>
                                     <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden">
                                         <div className="flex-1 overflow-hidden">
-                                            <img src={`http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/> 
+                                            {event.picture && <img src={event.picture.startsWith('https')? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover" alt={event.fullName}/>}
                                         </div>
                                         <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
                                             <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>

@@ -71,7 +71,7 @@ function Profile(){
                 <Link to="/Profile" className="hidden lg:flex">
                     <div className="hidden lg:flex flex-1">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
-                            <img className="w-11 h-11 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>
+                            {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
                         </div>
                         <div className="text-secondary self-center font-bold text-[16px]">{profile?.fullName}</div>
                     </div>
@@ -81,7 +81,7 @@ function Profile(){
                 <aside id="menuBar" className={menuBar}>
                     <div className="flex flex-col xl:flex-row items-center gap-3 mb-[56px]">
                         <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-                            <img className="w-14 h-14 object-cover rounded-full border-2 border-white" src={`http://localhost:8888/uploads/${profile.picture}`} alt="photo-profile"/>
+                        {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
                         </div>
                         <div><h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, {profile?.id}</p></div>
                     </div>
@@ -109,7 +109,8 @@ function Profile(){
                         <div className="mb-[50px] font-bold text-[20px] text-secondary">Profile</div>
                         <div className="w-full text-center">
                             <div className="md:hidden relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-primary to-secondary hover:from-primary hover:to-accent w-[137px] h-[137px]">
-                                <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={`http://localhost:8888/uploads/${profile.picture}`} alt="change-photo"/>
+                                {profile?.picture && (<img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt="change-photo" />)}
+                                {/* <img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={`http://localhost:8888/uploads/${profile.picture}`} alt="change-photo"/> */}
                                 <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
                             </div>
                         </div>
