@@ -48,8 +48,18 @@ function MenuBar(){
    
     function doLogout(){
         dispatch(logoutAction())
-        navigate("/login")
-         
+        navigate("/login")    
+    }
+    function doSignUp(){
+        navigate("/Signin")
+    }
+
+    function doCreateEvent(){
+        if(token){
+            navigate("/CreateEvent")
+        }else{
+            navigate("/Login")
+        }
     }
 
     return(
@@ -69,8 +79,8 @@ function MenuBar(){
                 <div className="flex-1 hidden lg:block">
                     <ul className="flex gap-x-10 font-bold text-[16px]">
                         <li className="text-primary hover:text-accent"><Link to="/">Home</Link></li>
-                        <li className="text-primary hover:text-accent"><Link to="/CreateEvent">Create Event</Link></li>
-                        <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
+                        <button onClick={doCreateEvent} type="submit" className="text-primary hover:text-accent">Create Event</button>
+                        <a href="#location" className="text-primary hover:text-accent">Location</a>
                     </ul>
                 </div>
                 {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
@@ -83,7 +93,7 @@ function MenuBar(){
                             <button onClick={doLogout} className="flex gap-1 items-center text-secondary font-bold text-[14px] hover:text-accent" type="submit"><FiLogOut size={15}/>Log Out</button>
                         </div></div></div> : <div className="lg:flex gap-6 hidden flex-row items-center">
                     <p className="flex items-center text-primary hover:text-neutral text-[16px] font-bold"><Link to="/Login">Log In</Link></p>
-                    <button className="bg-primary text-white rounded-2xl h-[40px] px-10 shadow-lg font-bold text-[16px] hover:bg-secondary lg-shadow" type="submit"><Link to="/Signin">Sign Up</Link></button>
+                    <button onClick={doSignUp} className="bg-primary text-white rounded-2xl h-[40px] px-10 shadow-lg font-bold text-[16px] hover:bg-secondary lg-shadow" type="submit">Sign Up</button>
                 </div>}
             </nav>
             <div className={hiddened}>
