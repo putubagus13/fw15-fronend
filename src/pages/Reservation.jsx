@@ -4,29 +4,31 @@ import { BsWhatsapp } from "react-icons/Bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import {FiMenu} from "react-icons/fi"
-import {AiOutlineHeart} from "react-icons/ai"
 import {IoTicketSharp} from "react-icons/io5"
-import {AiOutlineClockCircle} from "react-icons/ai"
-import {HiOutlineLocationMarker} from "react-icons/hi"
-import Profile1 from "../assets/pexels-pixabay-220453.jpg"
-import Location1 from "../assets/Rectangle.png"
-import { useParams } from "react-router-dom"
+import {ImPriceTags} from "react-icons/im"
+import {FiLogOut} from "react-icons/fi"
+import Place from "../assets/place.png"
 import React from "react"
 import http from "../helper/http"
-import moment from "moment"
-import {FiLogOut} from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../redux/reducers/auth"
 
-function EventDetail(){
+function Reservation(){
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.token)
-    const {id} = useParams()
-    const [events, setEvent] = React.useState({})
+    const [reservation, getReservation] = React.useState([])
     const [profile, setProfile] = React.useState({})
 
     React.useEffect(()=>{
+        async function getReservationData(){
+            const {data} = await http(token).get("/reservation/section")
+            console.log(data)
+            getReservation(data.results)
+            
+        }
+        getReservationData()
+
         async function getProfileUser(){
             try {
                 const {data} = await http(token).get("/profile")
@@ -40,42 +42,17 @@ function EventDetail(){
             }
         }
         getProfileUser()
-
-        async function getDataEvent(){
-            try {
-                const {data} = await http().get(`/events/detail/${id}`)
-                console.log(data)
-                setEvent(data.results)
-            } catch (error) {
-                const message = error?.response?.data?.message
-                if(message){
-                console.log(message)
-                }
-            }
-        }
-        getDataEvent()
-
     },[])
-
     function doLogout(){
         dispatch(logout())
         navigate("/")
     }
-
-    function doBuyTicket(){
-        if(token){
-            navigate("/Reservation")
-        }else{
-            navigate("/login")
-        }
-    }
-
     function doSignUp(){
         navigate("/Signin")
     }
     return(
         <>
-            <nav className="flex w-full items-center justify-between px-10 py-4">
+             <nav className="flex w-full items-center justify-between px-10 py-4">
                 <div className="flex-1 flex items-center justify-between w-full md:w-0">
                     <button className="lg:hidden btn btn-square rounded-1xl btn-primary">
                         <FiMenu className="text-white" size={30}/>
@@ -108,78 +85,59 @@ function EventDetail(){
                 </div>}
             </nav>
             <main className="w-full flex justify-center items-center py-12 px-[5%] md:bg-[#F4F7FF]">
-                <div className="sm:flex sm:py-24 px-[3%] sm:px-24 bg-white rounded-2xl sm:drop-shadow-lg gap-10">
+                <div className="lg:flex sm:py-24 px-[3%] sm:px-24 bg-white rounded-2xl sm:drop-shadow-lg gap-10">
                     {/* left side */}
-                    <div className="flex-[0.7] flex flex-col gap-10 items-center">
-                        <div className="Relative w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden">
-                            {events?.picture && <img src={`http://localhost:8888/uploads/${events?.picture}`} className="w-full h-full object-cover" alt="Event1"/>}
-                            <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-80 sm:h-60 w-full px-6 py-10 gap-2">
-                                <h1 className="sm:hidden font-bold text-2xl text-white">{events?.title}</h1>
-                                <div className="sm:hidden flex gap-2 flex flex-col">
-                                    <p className="flex gap-1 text-white items-center"><HiOutlineLocationMarker size={20} className="text-accent"/>{events.location}</p>
-                                    <p className="flex gap-1 text-white items-center"><AiOutlineClockCircle size={20} className="text-accent"/>{moment(events.date).format('MMMM Do YYYY, h:mm')}</p>
-                                </div>
-                                <div className="flex sm:hidden text-white font-[500] justify-between gap-1 items-center">
-                                    <div className="flex flex-col gap-1">
-                                        <p>Attendees</p>
-                                        <div className="flex">
-                                            <div className="w-6 h-6 rounded-full overflow-hidden ml:[-5px]">
-                                                <img src={Profile1} className="w-full h-full object-cover" />
-                                            </div>
-                                            <div className="w-6 h-6 rounded-full overflow-hidden drop-shadow-lg ml-[-7px]">
-                                                <img src={Profile1} className="w-full h-full object-cover" />
-                                            </div>
-                                            <div className="w-6 h-6 rounded-full overflow-hidden drop-shadow-lg ml-[-7px]">
-                                                <img src={Profile1} className="w-full h-full object-cover" />
-                                            </div>
-                                            <div className="w-6 h-6 rounded-full overflow-hidden drop-shadow-lg ml-[-7px] bg-accent">
-                                                <p className="pt-[4px] text-white text-[10px] text-center">+99</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <AiOutlineHeart size={25} className="text-white hover:text-[#f43f5e]"/>
-                                </div>
-                            </div>
-                        </div>
-                        <p className="hidden sm:flex w-full justify-center gap-3 items-center text-secondary"><AiOutlineHeart size={30} className="text-neutral hover:text-[#f43f5e]"/>Add to Wishlist</p>
+                    <div className="flex-[0.95] flex-col items-center overflow-hidden">
+                        <img src={Place} className="w-full h-auto" alt="place"/>
                     </div>
                     {/* right side */}
-                    <div className="flex-1 flex flex-col gap-6 px-[2%] sm:px-0">
-                        <h1 className="hidden sm:block font-bold text-2xl text-secondary mr-[30%]">{events?.title}</h1>
-                        <div className="hidden sm:flex gap-6 flex flex-col md:flex-row">
-                            <p className="flex gap-1 text-secondary items-center"><HiOutlineLocationMarker size={20} className="text-accent"/>{events?.location}</p>
-                            <p className="flex gap-1 text-secondary items-center"><AiOutlineClockCircle size={20} className="text-accent"/>{moment(events.date).format('MMMM Do YYYY, h:mm')}</p>
+                    <div className="flex-1 flex flex-col gap-8 px-[2%] sm:px-0">
+                        <div className="flex justify-between items-center">
+                            <p className="font-bold text-[30px] text-secondary text-sm">Ticket</p>
+                            <p className="text-accent flex gap-2"><ImPriceTags className="drop-shadow-lg" size={20}/>By Price</p>
                         </div>
-                        <div className="hidden sm:flex text-secondary font-[500] flex-col gap-1">
-                            <p>Attendees</p>
-                            <div className="flex">
-                                <div className="w-6 h-6 rounded-full overflow-hidden ml:[-5px]">
-                                    <img src={Profile1} className="w-full h-full object-cover" />
+                        {reservation.map(event=>{
+                            return(
+                                <div className="flex flex-col gap-2" key={`reservation${event.id}`}>
+                                    <div className="flex gap-6 justify-between">
+                                        <div className="flex rounded-xl bg-neutral p-2 w-10 h-10 items-center justify-center"><IoTicketSharp className="text-secondary" size={25}/></div>
+                                        <div className="">
+                                            <h1 className="font-bold text-sm text-secondary">{event.name}</h1>
+                                            <p className="text-neutral text-[13px]">12 Seats available</p>
+                                        </div>
+                                        <div className="flex flex-col justify-center">
+                                            <p className="text-secondary font-bold text-sm text-center">{event.price}</p>
+                                            <p className="text-neutral text-[13px]">per person</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex">
+                                        <div className="flex-1 text-[14px] text-secondary flex items-center justify-center">Quantity</div>
+                                        <div className="flex gap-3 justify-end">
+                                            <button className="h-8 w-8 rounded-lg border-[2px] border-neutral hover:bg-neutral hover:border-primary h-10 text-lg font-bold text-neutral hover:text-primary">-</button>
+                                            <div className="flex-1 text-bold text-[14px] flex items-center">0</div>
+                                            <button className="h-8 w-8 rounded-lg border-[2px] border-neutral hover:bg-neutral hover:border-primary h-10 text-lg font-bold text-neutral hover:text-primary">+</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="w-6 h-6 rounded-full overflow-hidden drop-shadow-lg ml-[-7px]">
-                                    <img src={Profile1} className="w-full h-full object-cover" />
-                                </div>
-                                <div className="w-6 h-6 rounded-full overflow-hidden drop-shadow-lg ml-[-7px]">
-                                    <img src={Profile1} className="w-full h-full object-cover" />
-                                </div>
-                                <div className="w-6 h-6 rounded-full overflow-hidden drop-shadow-lg ml-[-7px] bg-accent">
-                                    <p className="pt-[4px] text-white text-[10px] text-center">+99</p>
-                                </div>
+                            )
+                        })}
+                        
+                        <hr className="h-[0.5px] w-full border"/>
+                        <div className="flex flex-col gap-3">
+                            <div className="flex justify-between">
+                                <p className="font-[600] text-lg text-secondary">Ticket Section</p>
+                                <p className="font-[600] text-lg text-accent">VIP</p>
+                            </div>
+                            <div className="flex justify-between">
+                                <p className="font-[600] text-lg text-secondary">Quantity</p>
+                                <p className="font-[600] text-lg text-accent">2</p>
+                            </div>
+                            <div className="flex justify-between">
+                                <p className="font-[600] text-lg text-secondary">Total Payment</p>
+                                <p className="font-[600] text-lg text-accent">$70</p>
                             </div>
                         </div>
-                        <hr className="hidden md:block border-[1.5px] h-[0.5px] w-full rounded-2xl"/>
-                        <div className="flex flex-col gap-2">
-                            <h1 className="pt-10 sm:pt-0 font-bold text-2xl text-secondary">Event Detail</h1>
-                            <p className="text-secondary">{events?.detail}</p>
-                            <Link to=""><p className="text-neutral font-[450] hover:text-accent">Read more</p></Link>
-                        </div>
-                        <div className="flex flex-col gap-2"> 
-                            <h1 className="font-bold text-2xl text-secondary">Location</h1>
-                            <div className="w-80 h-auto rounded-2xl overflow-hidden">
-                                <img src={Location1} className="w-full h-auto object-cover" />
-                            </div>
-                        </div>
-                        <button onClick={doBuyTicket} className="btn btn-primary w-80">Buy Ticket</button>
+                        <button className="btn w-full lg:w-[60%] btn-primary">Checkout</button>
                     </div>
                 </div>
             </main>
@@ -239,4 +197,4 @@ function EventDetail(){
     )
 }
 
-export default EventDetail
+export default Reservation
