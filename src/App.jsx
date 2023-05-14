@@ -13,11 +13,14 @@ import MyBooking from "./pages/MyBooking";
 import CreateEvent from "./pages/CreateEvent";
 import Home from "./pages/Home";
 import EventDetail from "./pages/EventDetail";
-import Payment from "./pages/Payment";
+import Search from "./pages/Search";
 
 import {persistor, store} from "./redux/store"
 import { PersistGate } from 'redux-persist/integration/react'
 import PrivateRouter from "./components/PrivateRoute";
+import AllEvents from "./pages/AllEvents";
+import AllLocation from "./pages/AllCities";
+import Reservation from "./pages/Reservation";
 
 function App(){
   return(
@@ -26,7 +29,7 @@ function App(){
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home/>}/>
-            <Route path="/Payment" element={<Payment/>} />
+            <Route path="/Reservation" element={<Reservation/>} />
             <Route path="/EventDetail/:id" element={<EventDetail/>} />
             <Route path="/CreateEvent" element={<CreateEvent/>} />
             <Route path="/Booking" element={<MyBooking/>} />
@@ -38,6 +41,9 @@ function App(){
             <Route path="/Signin" element={<Signin/>} />
             <Route path="/Login" element={<Login/>} />
             <Route path="/ForgotPassword" element={<ForgotPassword/>} />
+            <Route path="/Search" element={<Search/>} />
+            <Route path="/allEvents" element={<AllEvents/>} />
+            <Route path="/allcities" element={<AllLocation/>} />
           </Routes>
         </BrowserRouter>
       </PersistGate>
