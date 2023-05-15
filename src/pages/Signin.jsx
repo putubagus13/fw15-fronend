@@ -1,6 +1,6 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
-import {Link, } from "react-router-dom"
+import {Link } from "react-router-dom"
 import { BsFacebook } from "react-icons/bs"
 import { BsWhatsapp } from "react-icons/bs"
 import { AiFillInstagram } from "react-icons/ai"
