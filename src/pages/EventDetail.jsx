@@ -1,12 +1,11 @@
 import {Link, useNavigate} from "react-router-dom"
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
-import {FiMenu} from "react-icons/fi"
-import {AiOutlineHeart} from "react-icons/ai"
+import { BsFacebook, BsWhatsapp } from "react-icons/bs"
+import { AiFillInstagram,
+        AiFillTwitterCircle, 
+        AiOutlineHeart,
+        AiOutlineClockCircle } from "react-icons/ai"
+import {FiMenu, FiLogOut} from "react-icons/fi"
 import {IoTicketSharp} from "react-icons/io5"
-import {AiOutlineClockCircle} from "react-icons/ai"
 import {HiOutlineLocationMarker} from "react-icons/hi"
 import Profile1 from "../assets/pexels-pixabay-220453.jpg"
 import Location1 from "../assets/Rectangle.png"
@@ -14,7 +13,6 @@ import { useParams } from "react-router-dom"
 import React from "react"
 import http from "../helper/http"
 import moment from "moment"
-import {FiLogOut} from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../redux/reducers/auth"
 

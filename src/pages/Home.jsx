@@ -3,14 +3,13 @@ import ToyFace1 from "../assets/ToyFaces1.png"
 import {Link, useNavigate} from "react-router-dom"
 import {HiOutlineLocationMarker} from "react-icons/hi"
 import {RiSearch2Line} from "react-icons/ri"
-import {AiOutlineArrowRight} from "react-icons/ai"
-import {AiOutlineMinus} from "react-icons/ai"
-import {AiOutlineArrowLeft} from "react-icons/ai"
+import {AiOutlineMinus,
+        AiOutlineArrowLeft,
+        AiFillInstagram,
+        AiFillTwitterCircle,
+        AiOutlineArrowRight} from "react-icons/ai"
 import {RxDotFilled} from "react-icons/rx"
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
+import { BsWhatsapp, BsFacebook } from "react-icons/bs"
 import {IoTicketSharp} from "react-icons/io5"
 import Elips1 from "../assets/Ellipse-right-1.png"
 import Elips2 from "../assets/center-elips.png"

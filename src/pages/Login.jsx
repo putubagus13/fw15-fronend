@@ -1,15 +1,13 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
+import { BsWhatsapp, BsFacebook } from "react-icons/bs"
+import { AiFillTwitterCircle,
+        AiFillInstagram } from "react-icons/ai"
 import {FcGoogle} from "react-icons/fc"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {IoTicketSharp} from "react-icons/io5"
 import {MdError} from "react-icons/md"
 import React from "react"
-import { useNavigate} from "react-router-dom"
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch, useSelector } from "react-redux"

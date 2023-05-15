@@ -1,19 +1,16 @@
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
+import { BsWhatsapp, BsFacebook } from "react-icons/bs"
+import {AiOutlinePlusCircle,
+        AiFillEdit, 
+        AiFillCreditCard, 
+        AiFillTwitterCircle, 
+        AiFillInstagram,
+        AiOutlineHeart,
+        AiOutlineSetting,
+        AiOutlineUnorderedList, } from "react-icons/ai"
 import {Link, useNavigate} from "react-router-dom"
-import {FiUser} from "react-icons/fi"
-import {AiFillCreditCard} from "react-icons/ai"
-import {AiFillEdit} from "react-icons/ai"
-import {FiUnlock} from "react-icons/fi"
-import {AiOutlinePlusCircle} from "react-icons/ai"
-import {AiOutlineUnorderedList} from "react-icons/ai"
-import {AiOutlineHeart} from "react-icons/ai"
-import {AiOutlineSetting} from "react-icons/ai"
+import {FiUnlock, FiUser, FiLogOut} from "react-icons/fi"
 import {BiChevronDown} from "react-icons/bi"
 import {IoTicketSharp} from "react-icons/io5"
-import {FiLogOut} from "react-icons/fi"
 import MenuBar1 from "../components/MenuBar1"
 import React from "react"
 import http from "../helper/http"

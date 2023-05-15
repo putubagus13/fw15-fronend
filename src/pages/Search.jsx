@@ -3,13 +3,12 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import http from "../helper/http"
 import { Link } from "react-router-dom"
 import moment from "moment"
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
-import {FiMenu} from "react-icons/fi"
+import {  BsWhatsapp , BsFacebook } from "react-icons/bs"
+import {
+        AiFillTwitterCircle, 
+        AiFillInstagram } from "react-icons/ai"
+import {FiMenu, FiLogOut} from "react-icons/fi"
 import {IoTicketSharp} from "react-icons/io5"
-import {FiLogOut} from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../redux/reducers/auth"
 

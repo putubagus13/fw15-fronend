@@ -1,19 +1,18 @@
 import {Link} from "react-router-dom"
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
-import {FiUser} from "react-icons/fi"
-import {AiFillCreditCard} from "react-icons/ai"
-import {AiFillEdit} from "react-icons/ai"
-import {FiUnlock} from "react-icons/fi"
-import {AiOutlinePlusCircle} from "react-icons/ai"
-import {AiOutlineUnorderedList} from "react-icons/ai"
-import {AiOutlineHeart} from "react-icons/ai"
-import {AiOutlineSetting} from "react-icons/ai"
-import {AiTwotoneCalendar} from "react-icons/ai"
+import { BsWhatsapp, BsFacebook } from "react-icons/bs"
+import { AiFillTwitterCircle,
+            AiFillCreditCard,
+            AiFillEdit,
+            AiOutlinePlusCircle,
+            AiOutlineUnorderedList,
+            AiOutlineHeart,
+            AiOutlineSetting,
+            AiTwotoneCalendar,
+            AiFillInstagram } from "react-icons/ai"
+import {  } from "react-icons/ai"
+import {FiLogOut, FiUnlock, FiUser} from "react-icons/fi"
 import {IoTicketSharp} from "react-icons/io5"
-import {FiLogOut} from "react-icons/fi"
+import {} from "react-icons/fi"
 import MenuBar1 from "../components/MenuBar1"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
