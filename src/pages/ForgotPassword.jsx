@@ -1,13 +1,44 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
+import { BsWhatsapp, BsFacebook } from "react-icons/bs"
+import { AiFillTwitterCircle, AiFillInstagram } from "react-icons/ai"
 import {Link} from "react-router-dom"
 import {IoTicketSharp} from "react-icons/io5"
+import React from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup'
+import http from "../helper/http"
+import {MdError} from "react-icons/md"
+
+const validationSchema = Yup.object({
+    email: Yup.string().email("Email is invalid").required("Email is invalid"),
+    password: Yup.string().required("Password is invalid")
+})
 
 function ForgotPassword(){
+    const [message, setMessage] = React.useState([])
+    const [showMessage, setShowMessage] = React.useState("")
+    React.useEffect(()=>{
+        const RequestForgotPass = async()=>{
+            try {
+                const {data} = await http().post("/forgotRequest")
+                console.log(data)
+                setMessage(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                console.log(message)
+                }
+            }
+        }
+        RequestForgotPass()
+    })
+
+    function ShowRequest(){
+        if(message){
+            setShowMessage(message)
+        }
+    }
     return(
         <div>
          <main className="flex h-[1024px]">
@@ -25,12 +56,42 @@ function ForgotPassword(){
                     </div></Link>
                     <h1 className="text-[24px] font-bold text-secondary" >Forgot Password</h1>
                     <p className="flex pb-6 pt-3 text-secondary">You’ll get mail soon on your email</p>
-                    <form id="form">
-                        <input type="email" placeholder="email" className="input input-bordered input-primary text-secondary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
-                        <div id="emtyEmail" className="text-red-600"></div>
-                        <button className="my-2 h-14 w-full btn btn-primary rounded-2xl shadow-lg" type="submit">Send</button>
-                    </form>
-                    
+                    <Formik
+                        initialValues={{ email: '', password: '' }}
+                        validationSchema = {validationSchema}
+                        onSubmit={ ShowRequest}
+                        >
+                        {({
+                            values,
+                            errors,
+                            touched,
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                            isSubmitting,
+                        }) => (
+                            <form id="form" onSubmit={handleSubmit}>
+                                {showMessage && (<div className="flex flex-row justify-center alert alert-error shadow-lg text-white text-lg"><MdError size={30}/>{showMessage}</div>)}
+                                <div className="form-control flex flex-col">
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        placeholder="email" 
+                                        className= {`input input-bordered ${errors.email && touched.email && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.email}
+                                    />
+                                    {errors.email && touched.email && (
+                                        <label className="label">
+                                            <span className="label-text-alt text-error">{errors.email}</span>
+                                        </label>)
+                                    }
+                                </div>
+                                <button className="my-2 h-14 w-full btn btn-primary rounded-2xl shadow-lg" type="submit" disabled={isSubmitting}>Send</button>
+                            </form>
+                        )}
+                        </Formik>
                 </div>
             </main>
             <footer className="h-[476px] px-[30px] md:px-[20%] w-full md:py-[60px]">
