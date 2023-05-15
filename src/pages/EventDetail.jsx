@@ -1,6 +1,6 @@
 import {Link, useNavigate} from "react-router-dom"
-import { BsFacebook } from "react-icons/Bs"
-import { BsWhatsapp } from "react-icons/Bs"
+import { BsFacebook } from "react-icons/bs"
+import { BsWhatsapp } from "react-icons/bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import {FiMenu} from "react-icons/fi"
