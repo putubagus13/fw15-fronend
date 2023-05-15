@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { asyncLoginAction } from "../actions/auth"
+import { asyncLoginAction, asyncRegisterAction } from "../actions/auth"
 
 
 const initialState = {
@@ -37,6 +37,17 @@ const authSlice = createSlice({
         })
 
         builder.addCase(asyncLoginAction.fulfilled, (state, action)=>{
+            state.token = action.payload
+        })
+        builder.addCase(asyncRegisterAction.rejected, (state, action)=>{
+            if(typeof action.payload === "string"){
+                state.errorMessage = action.payload
+            }else{
+                state.formError = action.payload
+            }
+        })
+
+        builder.addCase(asyncRegisterAction.fulfilled, (state, action)=>{
             state.token = action.payload
         })
     }
