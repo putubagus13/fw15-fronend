@@ -1,42 +1,156 @@
 import ToyFace2 from "../assets/ToyFaces2.png"
 import ToyFace1 from "../assets/ToyFaces1.png"
-import {Link } from "react-router-dom"
-import { BsFacebook } from "react-icons/bs"
-import { BsWhatsapp } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
+import {Link, useNavigate } from "react-router-dom"
+import { BsWhatsapp, BsFacebook } from "react-icons/bs"
+import { AiFillTwitterCircle,
+        AiFillInstagram } from "react-icons/ai"
 import {IoTicketSharp} from "react-icons/io5"
-// import { useDispatch, useSelector } from "react-redux"
-// import { asyncRegisterAction } from "../redux/actions/auth"
-// import { clearMessage } from "../redux/reducers/auth"
-// import React from "react"
+import propTypes from "prop-types"
+import * as Yup from "yup"
+import { Formik } from "formik"
+import { useDispatch, useSelector } from "react-redux"
+import {MdError} from "react-icons/md"
+import { asyncRegisterAction } from "../redux/actions/auth"
+import React from "react"
+import { clearMessage } from "../redux/reducers/auth"
+import http from "../helper/http"
 
 
-function Signin(){
-    // const dispatch = useDispatch()
-    // const navigate = useNavigate()
-    // const token = useSelector(state => state.auth.token)
-    // const formError = useSelector(state => state.auth.formError)
 
-    // // const doRegister = async (values, {setSubmitting, setErrors})=>{
-    // //     dispatch(clearMessage())
-    // //     dispatch(asyncRegisterAction(values))
-    // //     if(formError.length){
-    // //         setErrors({
-    // //             email: formError.filter(item => item.param === "email")[0].message,
-    // //             password: formError.filter(item => item.param === "password")[0].message,
-    // //             fullName: formError.filter(item => item.param === "fullName")[0].message,
-    // //             username: formError.filter(item => item.param === "username")[0].message
-    // //         })
-    // //     }
-    // //     setSubmitting(false)
-    // // }
-    // React.useEffect(()=>{
-    //     console.log(token)
-    //     if(token){
-    //         navigate("/")
-    //     }
-    // },[token, navigate]) 
+const validationSchema = Yup.object({
+    fullName: Yup.string().min(3, "Name invalid").required("Email is invalid"),
+    email: Yup.string().email("Email is invalid").required("Email is invalid"),
+    password: Yup.string().required("Password is invalid"),
+    confirmPassword: Yup.string().oneOf([Yup.ref("password"), null], "Password must match").required("Confirm Password is invalid"),
+    checkbox: Yup.boolean().oneOf([true], "You must agree to the terms"),
+})
+
+const FormRegister = ({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) =>{
+    const errorMessage = useSelector(state => state.auth.errorMessage)
+    const warningMessage = useSelector(state => state.auth.warningMessage)
+    return(
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 py-4" >
+            <div>
+                {errorMessage && (<div className="flex flex-row justify-center alert alert-error shadow-lg text-white text-lg"><MdError size={30}/>{errorMessage}</div>)}
+                {warningMessage && (<div className="flex flex-row justify-center alert alert-warning shadow-lg text-white text-lg"><MdError size={30}/>{warningMessage}</div>)}
+            </div>
+            <div className="form-control flex flex-col">
+                <input 
+                    type="fullName" 
+                    name="fullName" 
+                    placeholder="Fullname" 
+                    className= {`input input-bordered ${errors.fullName && touched.fullName && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.fullName}
+                />
+                {errors.fullName && touched.fullName && (
+                    <label className="label">
+                        <span className="label-text-alt text-error">{errors.fullName}</span>
+                    </label>)
+                }
+            </div>
+            <div className="form-control flex flex-col">
+                <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="Email" 
+                    className= {`input input-bordered ${errors.email && touched.email && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                />
+                {errors.email && touched.email && (
+                    <label className="label">
+                        <span className="label-text-alt text-error">{errors.email}</span>
+                    </label>)
+                }
+            </div>
+            <div className="form-control flex flex-col">
+                <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="Password" 
+                    className= {`input input-bordered ${errors.password && touched.password && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
+                />
+                {errors.password && touched.password && (
+                    <label className="label">
+                        <span className="label-text-alt text-error">{errors.password}</span>
+                    </label>)
+                }
+                
+            </div>
+            <div className="form-control flex flex-col">
+                <input 
+                    type="password" 
+                    name="confirmPassword" 
+                    placeholder="Confirm Password" 
+                    className= {`input input-bordered ${errors.confirmPassword && touched.confirmPassword && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.confirmPassword}
+                />
+                {errors.confirmPassword && touched.confirmPassword && (
+                    <label className="label">
+                        <span className="label-text-alt text-error">{errors.confirmPassword}</span>
+                    </label>)
+                }
+                
+            </div>
+            <div className="py-4">
+                <div className="flex gap-2 text-primary"><input 
+                    name="checkbox" 
+                    type="checkbox" 
+                    value={values.checkbox}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="checkbox checkbox-primary w-6 h-6" />
+                    Accept terms and condition
+                </div>
+                {errors.checkbox && touched.checkbox && (
+                    <label className="label">
+                        <span className="label-text-alt text-error">{errors.checkbox}</span>
+                    </label>)
+                }
+            </div>
+            <button disabled={isSubmitting} className="my-2 h-14 w-full btn btn-primary rounded-2xl shadow-lg" type="submit">Sign in</button>
+        </form>
+    )}
+
+FormRegister.propTypes = {
+    values: propTypes.objectOf(propTypes.string),
+    errors: propTypes.objectOf(propTypes.string), 
+    touched: propTypes.objectOf(propTypes.bool), 
+    handleChange: propTypes.func,
+    handleBlur: propTypes.func,
+    handleSubmit: propTypes.func,  
+    isSubmitting: propTypes.bool
+}
+
+function Signup(){
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const token = useSelector(state => state.auth.token)
+
+    const doRegister = async (values, {setSubmitting})=>{
+        dispatch(clearMessage())
+        dispatch(asyncRegisterAction(values))
+        setSubmitting(false)
+    }
+    React.useEffect(()=>{
+        const getProfile = async ()=>{
+            const {data} = await http(token).get("/profile")
+            console.log(data)
+            if(data.results.fullName){
+                navigate("/")
+            }
+        }
+        getProfile()
+    },[token, navigate])
+
     return(
         <div>
          <main className="flex h-[1024px]">
@@ -55,24 +169,21 @@ function Signin(){
                     </Link>
                     <h1 className="text-[24px] font-bold text-secondary" >Sign Up</h1>
                     <p className="flex gap-2 pb-11 pt-3 text-secondary">Already have an account?<Link to="/Login" className="text-accent font-bold">Log in</Link></p>
-                    <form id="form">
-                        <input type="text" placeholder="Fullname" className="input input-bordered input-primary text-secondary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
-                        <input type="email" placeholder="email" className="input input-bordered input-primary text-secondary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
-                        <div className="flex relative">
-                            <input id="password" name="password" type="password" placeholder="Password" className="input text-secondary text-secondary input-bordered input-primary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
-                            <button id="reveal" type="button" className="absolute right-[15px] top-[25px]"><i className="text-black" data-feather="eye"></i></button>
-                        </div>
-                        <div className="flex relative">
-                        <input id="confirm" name="confirm" type="password" placeholder="Password" className="input input-bordered text-secondary input-primary my-2 h-14 w-full border-2 rounded-2xl px-5"  />
-                            <button id="revealConfirm" type="button" className="absolute right-[15px] top-[25px]"><i className="text-black" data-feather="eye"></i></button>
-                        </div>
-                        <div id="alertSignin" className="text-red-600"></div>
-                        <div className="py-4">
-                            <div className="flex"><input type="checkbox" className="checkbox checkbox-primary w-6 h-6" /><p className="px-2 text-primary">Accept terms and condition</p></div>
-                            <div id="accbox" className="text-zinc-400"></div>
-                        </div>
-                        <button className="my-2 h-14 w-full btn btn-primary rounded-2xl shadow-lg" type="submit">Sign in</button>
-                    </form>
+                    <Formik 
+                        initialValues={{ 
+                        fullName: "",
+                        email: "", 
+                        password: "" ,
+                        confirmPassword: "",
+                        checkbox: false
+                        }}
+                    validationSchema = {validationSchema}
+                    onSubmit={doRegister}
+                >
+                    {(props)=>(
+                        <FormRegister {...props}/>
+                    )}
+                    </Formik>
                     
                 </div>
             </main>
@@ -132,4 +243,4 @@ function Signin(){
     )
 }
 
-export default Signin;
+export default Signup;
