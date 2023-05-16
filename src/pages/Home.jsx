@@ -37,7 +37,7 @@ function Home(){
 
     async function getEventCategory(name){
         try {
-            const {data} = await http().get('/events', {params: {category: name}})
+            const {data} = await http().get("/events", {params: {category: name}})
             console.log(data)
             setEventCategory(data.results)
         } catch (error) {
@@ -52,7 +52,7 @@ function Home(){
         getEventCategory()
         async function getDataEvent(){
             try {
-                const {data} = await http().get('/events?limit=10')
+                const {data} = await http().get("/events?limit=10")
                 console.log(data)
                 setEvents(data.results)
             } catch (error) {
@@ -66,7 +66,7 @@ function Home(){
 
         async function getDataCities(){
             try {
-                const {data} = await http().get('/cities?limit=7')
+                const {data} = await http().get("/cities?limit=7")
                 console.log(data)
                 setCities(data.results)
             } catch (error) {
@@ -80,7 +80,7 @@ function Home(){
 
         async function getCategory(){
            try {
-                const {data} = await http().get('/categories?limit=7')
+                const {data} = await http().get("/categories?limit=7")
                 console.log(data)
                 setcategory(data.results)
            } catch (error) {
@@ -94,7 +94,7 @@ function Home(){
 
         async function getDataPartners(){
             try {
-                const {data} = await http().get('/partners?limit=7')
+                const {data} = await http().get("/partners?limit=7")
                 console.log(data)
                 setPartners(data.results)
             } catch (error) {
@@ -295,7 +295,7 @@ function Home(){
                                             {event.picture && <img src={event.picture.startsWith('https')? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover" alt={event.fullName}/>}
                                         </div>
                                         <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
-                                            <div className="text-white">{moment(event.date).format('DD MMMM YYYY')}</div>
+                                            <div className="text-white">{moment(event.date).format('MMMM Do YYYY, h:mm')}</div>
                                             <div className="font-bold text-2xl">{event.title}</div>
                                         </div>
                                     </div>
