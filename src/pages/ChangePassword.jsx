@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom"
-import { BsWhatsapp, BsFacebook } from "react-icons/bs"
+import { BsWhatsapp, BsFacebook, BsCheckCircleFill } from "react-icons/bs"
 import {AiOutlinePlusCircle,
         AiFillEdit, 
         AiFillCreditCard, 
@@ -16,6 +16,105 @@ import { useDispatch, useSelector } from "react-redux"
 import { logout} from "../redux/reducers/auth"
 import http from "../helper/http"
 import { useNavigate } from "react-router-dom"
+import { Formik } from "formik"
+import * as Yup from "yup"
+import propTypes from "prop-types"
+import {MdError} from "react-icons/md"
+
+const validationSchema = Yup.object({
+    oldPassword: Yup.string().required("Old password is invalid"),
+    newPassword: Yup.string().required("New password is invalid"),
+    confirmPassword: Yup.string().oneOf([Yup.ref("newPassword"), null], "Password must match").required("Confirm Password is invalid"),
+})
+
+const FormChangePassword = ({values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    errorMessage,
+    successMessage
+    })=>{
+    return(
+        <form id="form" onSubmit={handleSubmit} className="inline-block md:h-[900px] w-full bg-white px-[20px] md:px-[100px] py-[50px] md:py-[70px] rounded-2xl flex-1">
+            <h1 className="font-bold text-[20px] text-secondary">Change Password</h1>
+            {errorMessage && (<div className="flex flex-row justify-center alert alert-error shadow-lg text-white text-lg my-3"><MdError size={30}/>{errorMessage}</div>)}
+            {successMessage && (<div className="flex flex-row justify-center alert alert-info shadow-lg text-white text-lg my-3"><BsCheckCircleFill size={30}/>{successMessage}</div>)}
+            <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
+                <div className="w-[230px] flex-initial font-[400] text-secondary">Old Password</div>
+                <div className="flex-1 form-control flex flex-col">
+                    <input 
+                        type="password" 
+                        name="oldPassword" 
+                        placeholder="Old Password" 
+                        className= {`input input-bordered ${errors.oldPassword && touched.oldPassword && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.oldPassword}
+                    />
+                    {errors.oldPassword && touched.oldPassword && (
+                        <label className="label">
+                            <span className="label-text-alt text-error">{errors.oldPassword}</span>
+                        </label>)
+                    }
+                </div>
+            </div>
+            <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
+                <div className="w-[230px] flex-initial font-[400] text-secondary">New Password</div>
+                <div className="flex-1 form-control flex flex-col">
+                    <input 
+                        type="password" 
+                        name="newPassword" 
+                        placeholder="New Password" 
+                        className= {`input input-bordered ${errors.newPassword && touched.newPassword && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.newPassword}
+                    />
+                    {errors.newPassword && touched.newPassword && (
+                        <label className="label">
+                            <span className="label-text-alt text-error">{errors.newPassword}</span>
+                        </label>)
+                    }
+                </div>
+            </div>
+            <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
+                <div className="w-[230px] flex-initial font-[400] text-secondary">Confirm New Password</div>
+                <div className="flex-1 form-control flex flex-col">
+                    <input 
+                        type="password" 
+                        name="confirmPassword" 
+                        placeholder="Confirm Password" 
+                        className= {`input input-bordered ${errors.confirmPassword && touched.confirmPassword && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.confirmPassword}
+                    />
+                    {errors.confirmPassword && touched.confirmPassword && (
+                        <label className="label">
+                            <span className="label-text-alt text-error">{errors.confirmPassword}</span>
+                        </label>)
+                    }
+                </div>
+            </div>
+            <button disabled={isSubmitting} className="w-full h-[55px] rounded-2xl md:my-[30px] btn btn-primary shadow-lg my-3" type="submit">Update</button>
+
+        </form>
+    )
+}
+FormChangePassword.propTypes = {
+    values: propTypes.objectOf(propTypes.string),
+    errors: propTypes.objectOf(propTypes.string), 
+    touched: propTypes.objectOf(propTypes.bool), 
+    handleChange: propTypes.func,
+    handleBlur: propTypes.func,
+    handleSubmit: propTypes.func,  
+    isSubmitting: propTypes.bool,
+    errorMessage: propTypes.string, 
+    successMessage: propTypes.string
+}
 
 
 function ChangePassword(){
@@ -24,6 +123,8 @@ function ChangePassword(){
     const token = useSelector(state => state.auth.token)
     const [menuBar, setMenuBar] = React.useState('')
     const [profile, setProfile] = React.useState({})
+    const [successMessage, setSuccessMessage] = React.useState("")
+    const [errorMessage, setErrorMessage] = React.useState("")
     
     React.useEffect(()=>{
         async function getProfileUser(){
@@ -44,6 +145,29 @@ function ChangePassword(){
     function doLogout(){
         dispatch(logout())
         navigate("/")
+    }
+
+    async function doChangePassword(values, {setSubmitting, setErrors}){
+        try {
+            const body = new URLSearchParams(values).toString()
+            const {data} = await http(token).patch("/changePassword", body)
+            console.log(data)
+            setSuccessMessage(data.message)
+            setSubmitting(false)
+        } catch (error) {
+            const message = error?.response?.data?.message
+            if(message){
+                if(error?.response?.data?.results){
+                    setErrors({
+                        oldPassword: error.response.data.results.filter(item => item.param === "email")[0].message,
+                        newPassword: error.response.data.results.filter(item => item.param === "email")[0].message,
+                        confirmPassword: error.response.data.results.filter(item => item.param === "email")[0].message,
+                    })
+                }else{
+                    setErrorMessage(message)
+                }
+            }
+        }
     }
     return(
         <>
@@ -99,24 +223,18 @@ function ChangePassword(){
                         </ul>
                     </div>
                 </aside> 
-
-                <form className="inline-block md:h-[900px] w-full bg-white px-[20px] md:px-[100px] py-[50px] md:py-[70px] rounded-2xl flex-1">
-                    <h1 className="font-bold text-[20px] text-secondary">Change Password</h1>
-                    <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
-                        <div className="w-[230px] flex-initial font-[400] text-secondary">Old Password</div>
-                        <div className="flex-1"><input type="password" placeholder="Old Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
-                    </div>
-                    <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
-                        <div className="w-[230px] flex-initial font-[400] text-secondary">New Password</div>
-                        <div className="flex-1"><input type="password" placeholder="New Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
-                    </div>
-                    <div className="block md:flex justify-start items-center gap-[10px] my-[30px]">
-                        <div className="w-[230px] flex-initial font-[400] text-secondary">Confirm New Password</div>
-                        <div className="flex-1"><input type="password" placeholder="Confirm New Password" className="border-2 h-[55px] w-full px-[28px] input text-secondary border-neutral" /></div>
-                    </div>
-                    <button className="w-full h-[55px] rounded-2xl md:my-[30px] btn btn-primary shadow-lg my-3" type="input">Update</button>
-
-                </form>
+                <Formik
+                        initialValues={{ 
+                            oldPassword: "" ,
+                            newPassword: "",
+                            confirmPassword: ""}}
+                        validationSchema = {validationSchema}
+                        onSubmit={doChangePassword}
+                        >
+                        {(props) => (
+                            <FormChangePassword {...props} errorMessage={errorMessage} successMessage={successMessage} />
+                        )}
+                </Formik>
             </main>
             <footer className="h-[476px] px-[30px] md:px-[20%] w-full md:py-10 md:bg-[#F4F7FF]">
                 <div className="md:flex md:justify-between">
