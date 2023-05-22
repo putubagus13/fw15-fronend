@@ -5,7 +5,7 @@ import { AiFillInstagram,
         AiOutlineHeart,
         AiOutlineClockCircle } from "react-icons/ai"
 import {FiMenu, FiLogOut} from "react-icons/fi"
-import {IoTicketSharp} from "react-icons/io5"
+import {SiArtixlinux} from "react-icons/si"
 import {HiOutlineLocationMarker} from "react-icons/hi"
 import Profile1 from "../assets/pexels-pixabay-220453.jpg"
 import Location1 from "../assets/Rectangle.png"
@@ -20,7 +20,7 @@ function EventDetail(){
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.token)
-    const {id} = useParams()
+    let {id} = useParams()
     const [events, setEvent] = React.useState({})
     const [profile, setProfile] = React.useState({})
 
@@ -60,16 +60,12 @@ function EventDetail(){
         navigate("/")
     }
 
-    function doBuyTicket(){
-        if(token){
-            navigate("/Reservation")
-        }else{
-            navigate("/login")
-        }
-    }
-
     function doSignUp(){
         navigate("/Signin")
+    }
+
+    async function doReservation(){
+        navigate(`/Reservation/${id}`)
     }
     return(
         <>
@@ -80,8 +76,8 @@ function EventDetail(){
                     </button>
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                 </div>
@@ -94,8 +90,8 @@ function EventDetail(){
                 </div>
                 {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
                     <div className="flex items-center gap-3">
-                    <Link to="/Profile"><div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-                        {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+                    <Link to="/Profile"><div className="inline-block w-12 h-12 rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
+                        {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
                         </div></Link>
                         <div>
                             <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>
@@ -177,7 +173,7 @@ function EventDetail(){
                                 <img src={Location1} className="w-full h-auto object-cover" />
                             </div>
                         </div>
-                        <button onClick={doBuyTicket} className="btn btn-primary w-80">Buy Ticket</button>
+                        <button onClick={doReservation} className="btn btn-primary w-80">Buy Ticket</button>
                     </div>
                 </div>
             </main>
@@ -186,8 +182,8 @@ function EventDetail(){
                 <div className="mb-10">
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                     <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>

@@ -5,8 +5,8 @@ import { AiFillTwitterCircle,
         AiFillInstagram } from "react-icons/ai"
 import {FcGoogle} from "react-icons/fc"
 import {Link, useNavigate} from "react-router-dom"
-import {IoTicketSharp} from "react-icons/io5"
 import {MdError} from "react-icons/md"
+import {SiArtixlinux} from "react-icons/si"
 import React from "react"
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -116,8 +116,8 @@ function Login(){
             <div className="px-[30px] w-full md:flex-initial md:pt-[214px] md:w-[516px] md:px-[100px]">
                 <Link to="/">
                 <div className="flex items-center pb-[57px]">
-                    <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                    <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                    <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                    <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                 </div></Link>
                 <h1 className="text-[24px] font-bold text-secondary" >Sign In</h1>
                 <p className="flex gap-2 pb-11 pt-3 text-secondary">Hi, Welcome back to Urticket!</p>
@@ -146,8 +146,8 @@ function Login(){
             <div className="mb-10">
                 <Link to="/">
                     <div className="flex items-center pb-[57px]">
-                        <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                        <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                        <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                        <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                     </div>
                 </Link>
                 <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>

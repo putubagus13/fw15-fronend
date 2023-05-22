@@ -9,7 +9,7 @@ import {AiOutlinePlusCircle,
         AiOutlineSetting,
         AiOutlineUnorderedList, } from "react-icons/ai"
 import {FiUnlock, FiUser, FiLogOut} from "react-icons/fi"
-import {IoTicketSharp} from "react-icons/io5"
+import {SiArtixlinux} from "react-icons/si"
 import MenuBar1 from "../components/MenuBar1"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -50,8 +50,7 @@ const FormChangePassword = ({values,
                         name="oldPassword" 
                         placeholder="Old Password" 
                         className= {`input input-bordered ${errors.oldPassword && touched.oldPassword && "input-error"} text-secondary h-14 w-full border-2 rounded-2xl px-5`}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                        onChange={handleChange} onBlur={handleBlur}
                         value={values.oldPassword}
                     />
                     {errors.oldPassword && touched.oldPassword && (
@@ -148,6 +147,8 @@ function ChangePassword(){
     }
 
     async function doChangePassword(values, {setSubmitting, setErrors}){
+        setErrorMessage("")
+        setSuccessMessage("")
         try {
             const body = new URLSearchParams(values).toString()
             const {data} = await http(token).patch("/changePassword", body)
@@ -159,9 +160,9 @@ function ChangePassword(){
             if(message){
                 if(error?.response?.data?.results){
                     setErrors({
-                        oldPassword: error.response.data.results.filter(item => item.param === "email")[0].message,
-                        newPassword: error.response.data.results.filter(item => item.param === "email")[0].message,
-                        confirmPassword: error.response.data.results.filter(item => item.param === "email")[0].message,
+                        oldPassword: error.response.data.results.filter(item => item.param === "oldPassword")[0].message,
+                        newPassword: error.response.data.results.filter(item => item.param === "newPassword")[0].message,
+                        confirmPassword: error.response.data.results.filter(item => item.param === "confirmPassword")[0].message,
                     })
                 }else{
                     setErrorMessage(message)
@@ -176,8 +177,8 @@ function ChangePassword(){
                     <MenuBar1 showMenuBarFunc ={setMenuBar} />
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                 </div>
@@ -241,8 +242,8 @@ function ChangePassword(){
                 <div className="mb-10">
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                     <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>

@@ -10,7 +10,7 @@ import {AiOutlineMinus,
         AiOutlineArrowRight} from "react-icons/ai"
 import {RxDotFilled} from "react-icons/rx"
 import { BsWhatsapp, BsFacebook } from "react-icons/bs"
-import {IoTicketSharp} from "react-icons/io5"
+import {SiArtixlinux} from "react-icons/si"
 import Elips1 from "../assets/Ellipse-right-1.png"
 import Elips2 from "../assets/center-elips.png"
 import Elips3 from "../assets/top-elips.png"
@@ -52,7 +52,7 @@ function Home(){
         getEventCategory()
         async function getDataEvent(){
             try {
-                const {data} = await http().get("/events?limit=10")
+                const {data} = await http().get("/events?limit=20")
                 console.log(data)
                 setEvents(data.results)
             } catch (error) {
@@ -334,8 +334,8 @@ function Home(){
                 <div className="md:flex md:justify-between">
                 <div className="mb-10">
                     <div className="flex items-center">
-                        <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                        <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                        <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                        <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                     </div>
                     <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>
                     <div>

@@ -1,7 +1,7 @@
 import React from "react"
 import { Link, useNavigate } from "react-router-dom"
 import {FiMenu, FiUser, FiUnlock, FiLogOut } from "react-icons/fi"
-import {IoTicketSharp} from "react-icons/io5"
+import {SiArtixlinux} from "react-icons/si"
 import http from "../helper/http"
 import {AiFillCreditCard, AiFillEdit, AiOutlinePlusCircle, AiOutlineUnorderedList, AiOutlineHeart, AiOutlineSetting} from "react-icons/ai"
 import { useDispatch, useSelector } from "react-redux"
@@ -63,8 +63,8 @@ function MenuBar(){
                     </button>
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                 </div>
@@ -77,8 +77,8 @@ function MenuBar(){
                 </div>
                 {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
                     <div className="flex items-center gap-3">
-                    <Link to="/Profile"><div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-                        {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)} 
+                    <Link to="/Profile"><div className="inline-block w-12 h-12 rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
+                        {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)} 
                         </div></Link>
                         <div>
                             <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>
@@ -92,8 +92,8 @@ function MenuBar(){
                 {token ? 
                     <div>
                         <div className="flex items-center gap-3 mb-8">
-                            <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-                            {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+                            <div className="inline-block w-12 h-12  rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
+                            {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith('https')? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
                             </div>
                             <div><h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p></div>
                         </div>

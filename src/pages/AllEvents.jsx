@@ -8,7 +8,7 @@ import { BsWhatsapp } from "react-icons/bs"
 import { AiFillInstagram } from "react-icons/ai"
 import { AiFillTwitterCircle } from "react-icons/ai"
 import {FiMenu} from "react-icons/fi"
-import {IoTicketSharp} from "react-icons/io5"
+import {SiArtixlinux} from "react-icons/si"
 import {FiLogOut} from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../redux/reducers/auth"
@@ -59,8 +59,8 @@ function AllEvents(){
                     </button>
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                 </div>
@@ -109,8 +109,8 @@ function AllEvents(){
                 <div className="mb-10">
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                     <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>
