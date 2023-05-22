@@ -1,34 +1,27 @@
-import {Link, useNavigate, useParams} from "react-router-dom"
-import { BsWhatsapp, BsFacebook } from "react-icons/bs"
-import {  } from "react-icons/bs"
-import { AiFillInstagram } from "react-icons/ai"
-import { AiFillTwitterCircle } from "react-icons/ai"
-import {FiMenu} from "react-icons/fi"
-import {IoTicketSharp} from "react-icons/io5"
+import {Link, useNavigate} from "react-router-dom"
+import { BsFacebook, BsWhatsapp, BsFillCreditCard2BackFill, BsBank } from "react-icons/bs"
+import { AiFillInstagram,
+        AiFillTwitterCircle,
+        AiOutlinePlus } from "react-icons/ai"
+import {FiMenu, FiLogOut} from "react-icons/fi"
 import {SiArtixlinux} from "react-icons/si"
-import {ImPriceTags} from "react-icons/im"
-import {FiLogOut} from "react-icons/fi"
-import Place from "../assets/place.png"
+import {MdStore, MdAttachMoney} from "react-icons/md"
+import { useParams } from "react-router-dom"
 import React from "react"
 import http from "../helper/http"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../redux/reducers/auth"
-import {MdError} from "react-icons/md"
+import Card from "../assets/card.png"
 
-function Reservation(){
+const Payment = ()=>{
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const {id} = useParams()
     const token = useSelector(state => state.auth.token)
+    let {id} = useParams()
     const [profile, setProfile] = React.useState({})
-    const [message, setMessage] = React.useState('')
-    const [section, setSection] = React.useState([])
-    const [filledSection, setFillSection] = React.useState({
-        id: 0,
-        quantity: 0
-    })
-    const [errorMessage, setErrorMessage] = React.useState("")
-
+    const [ticket, setTicket] = React.useState({})
+    const [paymentMethod, setPaymentMethode] = React.useState([])
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState("")
     React.useEffect(()=>{
         async function getProfileUser(){
             try {
@@ -44,11 +37,11 @@ function Reservation(){
         }
         getProfileUser()
 
-        async function getSection(){
+        async function getTicketDetail(){
             try {
-                const {data} = await http(token).get("/reservation/section")
+                const {data} = await http(token).get(`/payment/${id}`)
                 console.log(data)
-                setSection(data.results)
+                setTicket(data.results)
             } catch (error) {
                 const message = error?.response?.data?.message
                 if(message){
@@ -56,7 +49,21 @@ function Reservation(){
                 }
             }
         }
-        getSection()
+        getTicketDetail()
+
+        async function getAllPaymentMethode(){
+            try {
+                const {data} = await http(token).get(`/payment`)
+                console.log(data)
+                setPaymentMethode(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                    console.log(message)
+                }
+            }
+        }
+        getAllPaymentMethode()
     },[])
 
     function doLogout(){
@@ -66,56 +73,28 @@ function Reservation(){
     function doSignUp(){
         navigate("/Signin")
     }
-    function minusValue(id){
-        const quantityMinus= filledSection.quantity - 1;
-        if(quantityMinus < 0){
-            setMessage("Add quantity")
-        }else{
-            setFillSection({
-                id,
-                quantity: quantityMinus
+    async function doPayment(){
+        try {
+            const body = new URLSearchParams({
+                reservationId: id,
+                paymentMethodId: selectedPaymentMethod
             })
-            setMessage(" ")
-        }
-    }
-
-    function plusValue(id){
-        const quantityPlus = filledSection.quantity + 1;
-        if(quantityPlus > 10){
-            setMessage("Maximum is 10")
-        }else{
-            setFillSection({
-                id,
-                quantity: quantityPlus
-            })
-            setMessage(" ")
-            setErrorMessage("")
-        }
-    }
-
-    const selectSection = filledSection && section.filter(event => event.id === filledSection.id)[0]
-
-    const doRegister = async()=>{
-        const body = new URLSearchParams({
-            eventId: id,
-            sectionId: filledSection.id,
-            quantity: filledSection.quantity
-        })
-        if(filledSection.quantity === 0){
-            setErrorMessage("Ticket cannot be empty")
-        }else{
-            const {data} = await http(token).post("/reservation", body)
+            const {data} = await http(token).post("/payment", body)
             console.log(data)
-            if(token){
-                navigate(`/Payment/${data.results.id}`)
+            if(data.results.id){
+                navigate("/Booking")
+            }
+        } catch (error) {
+            const message = error?.response?.data?.message
+            if(message){
+                console.log(message)
             }
         }
-
-        
     }
+
     return(
         <>
-             <nav className="flex w-full items-center justify-between px-10 py-4">
+            <nav className="flex w-full items-center justify-between px-10 py-4">
                 <div className="flex-1 flex items-center justify-between w-full md:w-0">
                     <button className="lg:hidden btn btn-square rounded-1xl btn-primary">
                         <FiMenu className="text-white" size={30}/>
@@ -148,64 +127,65 @@ function Reservation(){
                 </div>}
             </nav>
             <main className="w-full flex justify-center items-center py-12 px-[5%] md:bg-[#F4F7FF]">
-                <div className="lg:flex sm:py-24 px-[3%] sm:px-24 bg-white rounded-2xl sm:drop-shadow-lg gap-10">
-                    {/* left side */}
-                    <div className="flex-[0.95] flex-col items-center overflow-hidden">
-                        <img src={Place} className="w-full h-auto" alt="place"/>
-                    </div>
-                    {/* right side */}
-                    <div className="flex-1 flex flex-col gap-8 px-[2%] sm:px-0">
-                        <div className="flex justify-between items-center">
-                            <p className="font-bold text-[30px] text-secondary text-sm">Ticket</p>
-                            <p className="text-accent flex gap-2"><ImPriceTags className="drop-shadow-lg" size={20}/>By Price</p>
-                        </div>
-                        {section.map(event =>{
-                            return(
-                            <React.Fragment key={`Section-${event.id}`}>
-                                <div className="flex flex-col gap-2">
-                                    <div className="flex gap-6 justify-between">
-                                        <div className="flex rounded-xl bg-neutral p-2 w-10 h-10 items-center justify-center"><IoTicketSharp className="text-secondary" size={25}/></div>
-                                        <div className="">
-                                            <h1 className="font-bold text-sm text-secondary">{event.name}</h1>
-                                            <p className="text-neutral text-[13px]">12 Seats available</p>
+                <div className="flex flex-col sm:flex-row w-full bg-white border rounded-2xl px-24 py-20 gap-20">
+                    <div className="flex-1 flex flex-col gap-14">
+                        <h1 className="text-secondary font-bold text-2xl">Payment Methode</h1>
+                        <div className="flex flex-col gap-11">
+                            {paymentMethod.map(item =>{
+                                return(
+                                    <div className="flex flex-col gap-3" key={`paymentMethode${item.id}`}>
+                                        <div className="flex gap-6 items-center">
+                                            <input 
+                                                type="radio" 
+                                                name="paymentMethod" 
+                                                className="radio radio-info" 
+                                                value={item.id} 
+                                                onChange={(e) => setSelectedPaymentMethod(e.target.value)}/>
+
+                                            {item.name === "transfer" && (<div className="p-3 bg-[#884DFF] rounded-xl "><BsFillCreditCard2BackFill className="text-white" size={20}/></div>)}
+                                            {item.name === "Bank transfer" && (<div className="p-3 bg-[#FC1055] rounded-xl "><BsBank className="text-white" size={20}/></div>)}
+                                            {item.name === "Retail" && (<div className="p-3 bg-[#FF8900] rounded-xl "><MdStore className="text-white" size={20}/></div>)}
+                                            {item.name === "E-money" && (<div className="p-3 bg-[#3366FF] rounded-xl "><MdAttachMoney className="text-white" size={20}/></div>)}
+                                            <section>
+                                                <option className="text-secondary text-xl font-bold" value="">{item.name}</option>
+                                            </section>
                                         </div>
-                                        <div className="flex flex-col justify-center">
-                                            <p className="text-secondary font-bold text-sm text-center">${event.price}</p>
-                                            <p className="text-neutral text-[13px]">per person</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex">
-                                        <div className="flex-1 text-[14px] text-secondary flex items-center justify-center">Quantity</div>
-                                        <div className="flex flex-col">
-                                            <div className="text-center text-[#be123c]">{message}</div>
-                                            <div className="flex gap-3 justify-end">
-                                                <button onClick={()=> minusValue(event.id)} className="h-8 w-8 rounded-lg border-[2px] border-neutral hover:bg-neutral hover:border-primary h-10 text-lg font-bold text-neutral hover:text-primary">-</button>
-                                                {event.id === filledSection.id ? filledSection.quantity: 0}
-                                                <button onClick={()=>plusValue(event.id)} className="h-8 w-8 rounded-lg border-[2px] border-neutral hover:bg-neutral hover:border-primary h-10 text-lg font-bold text-neutral hover:text-primary">+</button>
+                                        {item.name === "transfer" && (
+                                            <div className="flex gap-6 px-12">
+                                                <img src={Card} className="w-96 h-full object-cover" />
+                                                <div className="flex items-center">
+                                                    <div className="p-3 border-2 border-dashed rounded-xl"><AiOutlinePlus size={20}/></div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
+                                        
                                     </div>
-                                </div>
-                            </React.Fragment>
-                            )
-                        })}
-                        <hr className="h-[0.5px] w-full border"/>
-                        <div className="flex flex-col gap-3">
-                            {errorMessage && (<div className="flex flex-row justify-center alert alert-error shadow-lg text-white text-lg my-3"><MdError size={30}/>{errorMessage}</div>)}
+                                )
+                            })}
+                        </div>
+                    </div>
+                    <hr className="hidden md:block h-[314px] border-[1px] rounded-2xl mx-[50px]"/>
+                    <div className="flex-[0.8] flex flex-col gap-14">
+                        <h1 className="text-secondary font-bold text-2xl">Ticket Detail</h1>
+                        <div className="flex flex-col gap-2">
                             <div className="flex justify-between">
-                                <p className="font-[600] text-lg text-secondary">Ticket Section</p>
-                                <p className="font-[600] text-lg text-accent">{(selectSection?.name || "-")}</p>
+                                <div className="text-primary text-[16px] font-bold">Event</div>
+                                <div className="text-accent text-[16px] font-bold">{ticket?.event}</div>
                             </div>
                             <div className="flex justify-between">
-                                <p className="font-[600] text-lg text-secondary">Quantity</p>
-                                <p className="font-[600] text-lg text-accent">{filledSection.quantity}</p>
+                                <div className="text-primary text-[16px] font-bold">Ticket Section</div>
+                                <div className="text-accent text-[16px] font-bold">{ticket?.sectionName}</div>
                             </div>
                             <div className="flex justify-between">
-                                <p className="font-[600] text-lg text-secondary">Total Payment</p>
-                                <p className="font-[600] text-lg text-accent">${(selectSection?.price * filledSection.quantity) || "0"}</p>
+                                <div className="text-primary text-[16px] font-bold">Quantiry</div>
+                                <div className="text-accent text-[16px] font-bold">{ticket?.quantity}</div>
+                            </div>
+                            <div className="flex justify-between">
+                                <div className="text-primary text-[16px] font-bold">Total Payment</div>
+                                <div className="text-accent text-[16px] font-bold">${ticket?.totalPrice}</div>
                             </div>
                         </div>
-                        <button onClick={doRegister} type="submit" className="btn w-full lg:w-[60%] btn-primary">Checkout</button>
+                        <button onClick={doPayment} type="submit" className="btn btn-primary">Payment</button>
                     </div>
                 </div>
             </main>
@@ -265,4 +245,4 @@ function Reservation(){
     )
 }
 
-export default Reservation
+export default Payment

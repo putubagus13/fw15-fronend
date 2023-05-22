@@ -10,13 +10,14 @@ import {AiOutlinePlusCircle,
         AiOutlineUnorderedList, } from "react-icons/ai"
 import {FiUnlock, FiUser, FiLogOut,} from "react-icons/fi"
 import {AiTwotoneCalendar} from "react-icons/ai"
-import {IoTicketSharp} from "react-icons/io5"
+import {SiArtixlinux} from "react-icons/si"
 import MenuBar1 from "../components/MenuBar1"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { logout} from "../redux/reducers/auth"
 import http from "../helper/http"
 import { useNavigate } from "react-router-dom"
+import moment from "moment"
 
 function MyBooking(){
     const navigate = useNavigate()
@@ -24,6 +25,7 @@ function MyBooking(){
     const token = useSelector(state => state.auth.token)
     const [menuBar, setMenuBar] = React.useState('')
     const [profile, setProfile] = React.useState({})
+    const [historyData, setHistoryData] = React.useState([])
     
     React.useEffect(()=>{
         async function getProfileUser(){
@@ -39,6 +41,21 @@ function MyBooking(){
             }
         }
         getProfileUser()
+
+        async function getHistory(){
+            try {
+                console.log("test")
+                const {data} = await http(token).get("/historys")
+                console.log(data)
+                setHistoryData(data.results)
+            } catch (error) {
+                const message = error?.response?.data?.message
+                if(message){
+                    console.log(message)
+                }
+            }
+        }
+        getHistory()
     },[])
 
     function doLogout(){
@@ -52,8 +69,8 @@ function MyBooking(){
                     <MenuBar1 showMenuBarFunc ={setMenuBar} />
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                 </div>
@@ -107,76 +124,50 @@ function MyBooking(){
                             <button className="px-5 rounded-2xl btn btn-primary shadow-lg flex gap-3 py-3 w-[150px] md:w-full text-white"><AiTwotoneCalendar size={20}/>March</button>
                         </div>
                     </div>
-                    <div className="flex gap-x-10">
-                        <div className="self-center w-[50px] flex-1">
-                            <p className="font-bold text-[24px] text-accent">15</p>
-                            <p className="font-[400] text-[16px] text-primary">Wed</p>
-                        </div>
-                        <div className="flex-initial w-full">
-                            <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-                            <a className="pb-2 font-[400] text-[14px] text-accent" href=" ">Detail</a>
-                        </div>
-                        <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-                    </div>
-                    <hr className="w-full my-6"/>
-                    <div className="flex gap-x-10">
-                        <div className="self-center w-[50px] flex-1">
-                            <p className="font-bold text-[24px] text-accent">15</p>
-                            <p className="font-[400] text-[16px] text-primary">Wed</p>
-                        </div>
-                        <div className="flex-initial w-full">
-                            <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-                            <a className="pb-2 font-[400] text-[14px] text-accent" href=" ">Detail</a>
-                        </div>
-                        <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-                    </div>
-                    <hr className="w-full my-6"/>
-                    <div className="flex gap-x-10">
-                        <div className="self-center w-[50px] flex-1">
-                            <p className="font-bold text-[24px] text-accent">15</p>
-                            <p className="font-[400] text-[16px] text-primary">Wed</p>
-                        </div>
-                        <div className="flex-initial w-full">
-                            <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-                            <a className="pb-2 font-[400] text-[14px] text-accent" href=" ">Detail</a>
-                        </div>
-                        <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-                    </div>
-                    <hr className="w-full my-6"/>
-                    <div className="flex gap-x-10">
-                        <div className="self-center w-[50px] flex-1">
-                            <p className="font-bold text-[24px] text-accent">15</p>
-                            <p className="font-[400] text-[16px] text-primary">Wed</p>
-                        </div>
-                        <div className="flex-initial w-full">
-                            <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-                            <a className="pb-2 font-[400] text-[14px] text-accent" href=" ">Detail</a>
-                        </div>
-                        <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-                    </div>
-                    <hr className="w-full my-6"/>
-                    <div className="flex gap-x-10">
-                        <div className="self-center w-[50px] flex-1">
-                            <p className="font-bold text-[24px] text-accent">15</p>
-                            <p className="font-[400] text-[16px] text-primary">Wed</p>
-                        </div>
-                        <div className="flex-initial w-full">
-                            <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-                            <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-                            <a className="pb-2 font-[400] text-[14px] text-accent" href=" ">Detail</a>
-                        </div>
-                        <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-                    </div>
-                    <hr className="w-full my-6"/>
+                    {historyData.map(event =>{
+                        return(
+                            <div key={`hstory-data${event.id}`}>
+                                <div className="flex gap-x-10" >
+                                    <div className="self-center w-[50px] flex-1">
+                                        <p className="font-bold text-[24px] text-accent">{moment(event.date).format("DD")}</p>
+                                        <p className="font-[400] text-[16px] text-primary">{moment(event.date).format("ddd")}</p>
+                                    </div>
+                                    <div className="flex-initial w-full">
+                                        <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
+                                        <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}</p>
+                                        <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format('MMMM Do YYYY, h:mm')}</p>
+                                        <label htmlFor="my-modal" className="btn border-0 bg-white text-accent">detail</label>
+
+                                        {/* Put this part before </body> tag */}
+                                        <input type="checkbox" id="my-modal" className="modal-toggle" />
+                                        <div className="modal">
+                                            <div className="modal-box flex flex-col gap-6 justify-center items-center">
+                                                <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
+                                                    {event.picture && <img src={event.picture.startsWith('https')? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>}
+                                                    <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
+                                                        <div className="text-white">{moment(event.date).format('MMMM Do YYYY, h:mm')}</div>
+                                                        <div className="font-bold text-2xl text-white">{event.title}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="gap-3">
+                                                    <h1 className="pb-2 font-[500] text-[16px] text-secondary">Status: {event.status}</h1>
+                                                    <h1 className="pb-2 font-[500] text-[16px] text-secondary">Section: {event.section}</h1>
+                                                    <h1 className="pb-2 font-[500] text-[16px] text-secondary">Quantity: {event.quantity}</h1>
+                                                    <h1 className="pb-2 font-[500] text-[16px] text-secondary">Price/Person: {event.price}</h1>
+                                                    <h1 className="pb-2 font-[500] text-[16px] text-secondary">Payment Method: {event.PaymentMetode}</h1>
+                                                </div>
+                                                <div className="modal-action">
+                                                    <label htmlFor="my-modal" className="btn">Close</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
+                                </div>
+                                <hr className="w-full my-6"/>
+                            </div>
+                        )
+                    })}
                 </article>
             </main>
             <footer className="h-[476px] px-[30px] md:px-[20%] w-full md:py-10 md:bg-[#F4F7FF]">
@@ -184,8 +175,8 @@ function MyBooking(){
                 <div className="mb-10">
                     <Link to="/">
                         <div className="flex items-center">
-                            <IoTicketSharp size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                            <div className="text-primary text-[24px] font-bold" >We</div><div className="text-accent text-[24px] font-bold" >tick</div>
+                            <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
+                            <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
                         </div>
                     </Link>
                     <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>
