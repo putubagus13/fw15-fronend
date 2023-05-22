@@ -22,7 +22,7 @@ function AllEvents(){
 
     React.useEffect(()=>{
         async function getSearchEvent(){
-            const {data} = await http().get("/events")
+            const {data} = await http().get("/events?limit=10")
             console.log(data)
             setEvents(data.results)
         }
