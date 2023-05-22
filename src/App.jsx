@@ -21,6 +21,8 @@ import PrivateRouter from "./components/PrivateRoute";
 import AllEvents from "./pages/AllEvents";
 import AllLocation from "./pages/AllCities";
 import Reservation from "./pages/Reservation";
+import Payment from "./pages/Payment";
+import ResetPassword from "./pages/ResetPassword";
 
 function App(){
   return(
@@ -29,7 +31,7 @@ function App(){
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home/>}/>
-            <Route path="/Reservation" element={<Reservation/>} />
+            <Route path="/Reservation/:id" element={<PrivateRouter><Reservation/></PrivateRouter>} />
             <Route path="/EventDetail/:id" element={<EventDetail/>} />
             <Route path="/CreateEvent" element={<CreateEvent/>} />
             <Route path="/Booking" element={<MyBooking/>} />
@@ -44,6 +46,8 @@ function App(){
             <Route path="/Search" element={<Search/>} />
             <Route path="/allEvents" element={<AllEvents/>} />
             <Route path="/allcities" element={<AllLocation/>} />
+            <Route path="/Payment/:id" element={<PrivateRouter><Payment/></PrivateRouter>} />
+            <Route path="/ResetPassword" element={<ResetPassword/>} />
           </Routes>
         </BrowserRouter>
       </PersistGate>
