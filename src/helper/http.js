@@ -7,8 +7,7 @@ const http = (token)=>{
     }
     return axios.create({
         headers,
-        baseURL: "http://localhost:8888"
-        // "https://anxious-boa-moccasins.cyclic.app"
+        baseURL: "https://anxious-boa-moccasins.cyclic.app"
     })
 }
 
