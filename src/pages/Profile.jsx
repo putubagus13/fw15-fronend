@@ -169,7 +169,7 @@ function Profile(){
                                         onBlur={handleBlur}/>
                                 </div>
                                 <div className="my-[30px] md:my-0 block md:flex font-[400] text-[14px] font-[400] text-[14px]">
-                                    <div className="flex w-[153px] text-secondary items-center">Username</div>
+                                    <div className="flex w-[140px] text-secondary items-center">Username</div>
                                     <div className="flex gap-3">
                                         {!editUsername && <span className="flex flex-row h-12 items-center text-left  text-[#777777] border-neutral ">{profile?.username}</span>}
                                         {editUsername && <input name="username" 
@@ -182,7 +182,7 @@ function Profile(){
                                     </div>
                                 </div>
                                 <div className="my-[30px] md:my-0 block flex flex-col md:flex-row font-[400] text-[14px]">
-                                    <div className="flex w-[153px] text-secondary items-center">Email</div>
+                                    <div className="flex w-[140px] text-secondary items-center">Email</div>
                                     <div className="flex gap-3">
                                         {!editEmail && <span className="flex flex-row h-12 items-center text-left  text-[#777777] ">{profile?.email}</span>}
                                         {editEmail && <input 
@@ -196,7 +196,7 @@ function Profile(){
                                     </div>
                                 </div>
                                 <div className="my-[30px] md:my-0 block flex flex-col md:flex-row font-[400] text-[14px]">
-                                    <div className="flex w-[153px] text-secondary items-center">Phone Number</div>
+                                    <div className="flex w-[140px] text-secondary items-center">Phone Number</div>
                                     <div className="flex gap-3">
                                         {!editPhoneNumber && <span className="flex flex-row h-12 items-center text-left  text-[#777777] ">{profile?.phoneNumbe}</span>}
                                         {editPhoneNumber && <input 
@@ -241,7 +241,7 @@ function Profile(){
                                         className="flex border-2 rounded-2xl h-12 text-left w-full px-3 text-[#777777] border-neutral"
                                         onChange={handleChange}
                                         onBlur={handleBlur}>
-                                        <option className="hidden">Select profetion</option>
+                                        {/* <option className="hidden">Select profetion</option> */}
                                         <option>{profile?.profession}</option>
                                     </select>
                                 </div>
@@ -252,7 +252,7 @@ function Profile(){
                                         className="flex border-2 rounded-2xl h-12 w-full px-3 text-[#777777] border-neutral "
                                         onChange={handleChange}
                                         onBlur={handleBlur}>
-                                        <option className="hidden">Select Nationality</option>
+                                        {/* <option className="hidden">Select Nationality</option> */}
                                         <option>{profile?.nasionality}</option>
                                     </select>
                                 </div>
