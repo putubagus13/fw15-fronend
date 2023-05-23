@@ -23,7 +23,6 @@ import * as Yup from "yup"
 
 const validationSchema = Yup.object({
     title: Yup.string().required("title is invalid"),
-    price: Yup.string().required("price is invalid"),
     description: Yup.string().required("description is invalid"),
 })
 
