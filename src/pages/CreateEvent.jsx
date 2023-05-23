@@ -19,12 +19,12 @@ import { useNavigate } from "react-router-dom"
 import moment from "moment"
 import propTypes from "prop-types"
 import { Formik } from "formik"
-import * as Yup from "yup"
+// import * as Yup from "yup"
 
-const validationSchema = Yup.object({
-    title: Yup.string().required("title is invalid"),
-    description: Yup.string().required("description is invalid"),
-})
+// const validationSchema = Yup.object({
+//     title: Yup.string().required("title is invalid"),
+//     description: Yup.string().required("description is invalid"),
+// })
 
 const FormCreateEvent = ( {values,
     errors,
@@ -411,7 +411,7 @@ function CreateEvent(){
                             date: "",
                             price: ""}}
 
-                        validationSchema = {validationSchema}
+                        // validationSchema = {validationSchema}
                         onSubmit={createEvent}
                         >
                         {(props) => (
