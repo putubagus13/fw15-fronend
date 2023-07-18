@@ -153,7 +153,7 @@ function Profile(){
                 <div className="mb-[50px] font-bold text-[20px] text-secondary">Profile</div>
                 <div className="w-full text-center">
                   <div className="md:hidden relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-primary to-secondary hover:from-primary hover:to-accent w-[137px] h-[137px]">
-                    {profile?.picture && (<img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt="change-photo" />)}
+                    {profile?.picture && (<img className="absolute z-20 object-cover rounded-full h-full w-full p-[6px]" src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt="change-photo" />)}
                     <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
                   </div>
                 </div>
