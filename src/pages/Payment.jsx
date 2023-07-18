@@ -142,10 +142,10 @@ const Payment = ()=>{
                                                 value={item.id} 
                                                 onChange={(e) => setSelectedPaymentMethod(e.target.value)}/>
 
-                                            {item.name === "transfer" && (<div className="p-3 bg-[#884DFF] rounded-xl "><BsFillCreditCard2BackFill className="text-white" size={20}/></div>)}
-                                            {item.name === "Bank transfer" && (<div className="p-3 bg-[#FC1055] rounded-xl "><BsBank className="text-white" size={20}/></div>)}
+                                            {item.name === "Transfer" && (<div className="p-3 bg-[#884DFF] rounded-xl "><BsFillCreditCard2BackFill className="text-white" size={20}/></div>)}
+                                            {item.name === "Bank Transfer" && (<div className="p-3 bg-[#FC1055] rounded-xl "><BsBank className="text-white" size={20}/></div>)}
                                             {item.name === "Retail" && (<div className="p-3 bg-[#FF8900] rounded-xl "><MdStore className="text-white" size={20}/></div>)}
-                                            {item.name === "E-money" && (<div className="p-3 bg-[#3366FF] rounded-xl "><MdAttachMoney className="text-white" size={20}/></div>)}
+                                            {item.name === "E-Money" && (<div className="p-3 bg-[#3366FF] rounded-xl "><MdAttachMoney className="text-white" size={20}/></div>)}
                                             <section>
                                                 <option className="text-secondary text-xl font-bold" value="">{item.name}</option>
                                             </section>
