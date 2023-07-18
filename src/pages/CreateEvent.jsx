@@ -19,12 +19,12 @@ import { useNavigate } from "react-router-dom"
 import moment from "moment"
 import propTypes from "prop-types"
 import { Formik } from "formik"
-// import * as Yup from "yup"
+import * as Yup from "yup"
 
-// const validationSchema = Yup.object({
-//     title: Yup.string().required("title is invalid"),
-//     description: Yup.string().required("description is invalid"),
-// })
+const validationSchema = Yup.object({
+    title: Yup.string().required("title is invalid"),
+    desciption: Yup.string().required("description is invalid"),
+})
 
 const FormCreateEvent = ( {values,
     errors,
@@ -179,29 +179,6 @@ const FormCreateEvent = ( {values,
                         <div className="flex-1">
                             <div className="form-control w-full max-w-xs">
                                 <label className="label">
-                                    <span className="label-text font-bold text-[16px] text-primary">Price</span>
-                                </label>
-                                <div className="form-control flex flex-col">
-                                    <input 
-                                        type="text" 
-                                        name="price" 
-                                        placeholder="Input event price" 
-                                        className= {`input input-bordered border-2 ${errors.price && touched.price && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        value={values.price}
-                                    />
-                                    {errors.price && touched.price && (
-                                        <label className="label">
-                                            <span className="label-text-alt text-error">{errors.price}</span>
-                                        </label>)
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <div className="form-control w-full max-w-xs">
-                                <label className="label">
                                     <span className="label-text font-bold text-[16px] text-primary">Image</span>
                                 </label>
                                 <div className="form-control flex flex-col">
@@ -233,14 +210,14 @@ const FormCreateEvent = ( {values,
                                 type="text" 
                                 name="desciption" 
                                 placeholder="Input event detail" 
-                                className= {`input input-bordered border-2 ${errors.description && touched.description && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
+                                className= {`input input-bordered border-2 ${errors.desciption && touched.desciption && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.description}
+                                value={values.desciption}
                             />
-                            {errors.description && touched.description && (
+                            {errors.desciption && touched.desciption && (
                                 <label className="label">
-                                    <span className="label-text-alt text-error">{errors.description}</span>
+                                    <span className="label-text-alt text-error">{errors.desciption}</span>
                                 </label>)
                             }
                         </div>
@@ -325,13 +302,18 @@ function CreateEvent(){
         if(selectedPIcture){
             form.append("picture", selectedPIcture)
         }
-        const {data} = await http(token).post("/events", form, {
-            headers: {
-                "Content-Type" : "multipart/form-data"
-            }
-        })
+        if(token){
+            const {data} = await http(token).post("/events", form, {
+                headers: {
+                    "Content-Type" : "multipart/form-data"
+                }
+            })
+            console.log(data)
+            setSuccessMessage(data.masssage)
+        }
+        const {data} = await http(token).get("/events/manage?limit=5")
         console.log(data)
-        setSuccessMessage(data.masssage)
+        setEvents(data.results)
         // setSuccessMessage(data.result)
         // for (var pair of form.entries()) {
         //     console.log(pair[0]+ ', ' + pair[1]); 
@@ -411,7 +393,7 @@ function CreateEvent(){
                             date: "",
                             price: ""}}
 
-                        // validationSchema = {validationSchema}
+                        validationSchema = {validationSchema}
                         onSubmit={createEvent}
                         >
                         {(props) => (
