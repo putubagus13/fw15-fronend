@@ -164,7 +164,7 @@ function EventDetail(){
                         <hr className="hidden md:block border-[1.5px] h-[0.5px] w-full rounded-2xl"/>
                         <div className="flex flex-col gap-2">
                             <h1 className="pt-10 sm:pt-0 font-bold text-2xl text-secondary">Event Detail</h1>
-                            <p className="text-secondary">{events?.detail}</p>
+                            <p className="text-secondary">{events?.desciption}</p>
                             <Link to=""><p className="text-neutral font-[450] hover:text-accent">Read more</p></Link>
                         </div>
                         <div className="flex flex-col gap-2"> 
