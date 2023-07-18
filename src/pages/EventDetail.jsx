@@ -1,5 +1,5 @@
 import {Link, useNavigate} from "react-router-dom";
-import { AiOutlineHeart, AiOutlineClockCircle } from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineClockCircle, AiFillHeart } from "react-icons/ai";
 import {FiMenu, FiLogOut} from "react-icons/fi";
 import {SiArtixlinux} from "react-icons/si";
 import {HiOutlineLocationMarker} from "react-icons/hi";
@@ -21,11 +21,23 @@ function EventDetail(){
   const [events, setEvent] = React.useState({});
   const [profile, setProfile] = React.useState({});
 
+  async function getDataEvent(){
+    try {
+      const {data} = await http().get(`/events/detail/${id}`);
+      console.log(data.results);
+      setEvent(data.results);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if(message){
+        console.log(message);
+      }
+    }
+  }
+
   React.useEffect(()=>{
     async function getProfileUser(){
       try {
         const {data} = await http(token).get("/profile");
-        console.log(data);
         setProfile(data.results);
       } catch (error) {
         const message = error?.response?.data?.message;
@@ -35,22 +47,9 @@ function EventDetail(){
       }
     }
     getProfileUser();
-
-    async function getDataEvent(){
-      try {
-        const {data} = await http().get(`/events/detail/${id}`);
-        console.log(data);
-        setEvent(data.results);
-      } catch (error) {
-        const message = error?.response?.data?.message;
-        if(message){
-          console.log(message);
-        }
-      }
-    }
     getDataEvent();
 
-  },[]);
+  },[token, id]);
 
   function doLogout(){
     dispatch(logout());
@@ -64,6 +63,26 @@ function EventDetail(){
   async function doReservation(){
     navigate(`/Reservation/${id}`);
   }
+
+  const addRemoveWishlist = async() => {
+    try {
+      const form = new URLSearchParams({eventId: events.id}).toString();
+      const {data} = await http(token).get(`/wishList/${events.id}`);
+      console.log(data.results);
+      if (data.results) {
+        const dltWishlist = await http(token).delete(`/wishList/${events.id}`);
+        console.log(dltWishlist);
+      } else if (data.message === "wishlist not found") {
+        await http(token).post("/wishList", form);
+      }
+      getDataEvent();
+    } catch (err) {
+      const message = err?.response?.data?.message;
+      if (message) {
+        console.log(message);
+      }
+    }
+  };
   return(
     <>
       <nav className="flex w-full items-center justify-between px-10 py-4">
@@ -128,11 +147,21 @@ function EventDetail(){
                       </div>
                     </div>
                   </div>
-                  <AiOutlineHeart size={25} className="text-white hover:text-[#f43f5e]"/>
+                  {events?.id === events?.eventId ? <button onClick={addRemoveWishlist}>
+                    <AiFillHeart size={25} className="text-error hover:text-[#f43f5e]"/>
+                  </button> : <button onClick={addRemoveWishlist}>
+                    <AiOutlineHeart size={25} className="text-white hover:text-[#f43f5e]"/>
+                  </button> }
                 </div>
               </div>
             </div>
-            <p className="hidden sm:flex w-full justify-center gap-3 items-center text-secondary"><AiOutlineHeart size={30} className="text-neutral hover:text-[#f43f5e]"/>Add to Wishlist</p>
+            <div className="hidden sm:flex w-full justify-center gap-3 items-center text-secondary">
+              {events?.id === events?.eventId ? <button onClick={addRemoveWishlist}>
+                <AiFillHeart size={25} className="text-error hover:text-[#f43f5e]"/>
+              </button> : <button onClick={addRemoveWishlist}>
+                <AiOutlineHeart size={25} className="text-neutral hover:text-[#f43f5e]"/>
+              </button> }
+              Add to Wishlist</div>
           </div>
           {/* right side */}
           <div className="flex-1 flex flex-col gap-6 px-[2%] sm:px-0">
