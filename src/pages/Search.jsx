@@ -38,7 +38,7 @@ function Search(){
     } 
 
     React.useEffect(()=>{
-        getSearchEvent(search, limit, sortBy, searchValue)
+        getSearchEvent(searchValue, search, limit, sortBy)
 
         async function getProfileUser(){
             try {
@@ -122,13 +122,15 @@ function Search(){
                         </div>
                         <FiSearch size={25} className="text-neutral absolute left-[80px] top-3"/>
                     </div>
-                    {!search ? <div>{searchResults.length >= 1 && (<div className="font-bold text-secondary text-3xl">search results for &quot;{searchParams.get("search")}&quot; on events</div>)}</div> 
-                    : <div>{searchResults.length >= 1 && (<div className="font-bold text-secondary text-3xl">search results for &quot;{search}&quot; on events</div>)}</div>}
+                    {searchValue || search && <div>
+                        {!search ? <div>{searchResults.length >= 1 && (<div className="font-bold text-secondary text-3xl">search results for &quot;{searchParams.get("search")}&quot; on events</div>)}</div> 
+                        : <div>{searchResults.length >= 1 && (<div className="font-bold text-secondary text-3xl">search results for &quot;{search}&quot; on events</div>)}</div>}
+                    </div>}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-6">
                     {searchResults.map(event =>{
                         return(
                             <Link to={`/EventDetail/${event.id}`} key={`events${event.id}`}>
-                                <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
+                                <div className="w-64 h-96 border rounded-3xl flex-shrink-0 overflow-hidden relative">
                                 {event.picture && <img src={event.picture.startsWith('https')? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover" alt={event.fullName}/>}
                                     <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
                                         <div className="text-white">{moment(event.date).format('MMMM Do YYYY, h:mm')}</div>
