@@ -23,9 +23,6 @@ import MenuBar from "../components/MenuBar"
 import http from "../helper/http"
 import { Formik } from "formik"
 
-
-
-
 function Home(){
     const navigate = useNavigate()
     const [events, setEvents] = React.useState([])
