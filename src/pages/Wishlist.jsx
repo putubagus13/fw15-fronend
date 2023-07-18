@@ -5,7 +5,8 @@ import {
   AiOutlinePlusCircle,
   AiOutlineUnorderedList,
   AiOutlineHeart,
-  AiOutlineSetting } from "react-icons/ai";
+  AiOutlineSetting,
+  AiFillHeart } from "react-icons/ai";
 import {FiLogOut, FiUnlock, FiUser} from "react-icons/fi";
 import {SiArtixlinux} from "react-icons/si";
 import MenuBar1 from "../components/MenuBar1";
@@ -15,6 +16,9 @@ import { logout} from "../redux/reducers/auth";
 import http from "../helper/http";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import moment from "moment";
+import { BsFilterLeft } from "react-icons/bs";
+import {FiSearch} from "react-icons/fi";
 
 function Wishlist(){
   const navigate = useNavigate();
@@ -22,6 +26,26 @@ function Wishlist(){
   const token = useSelector(state => state.auth.token);
   const [menuBar, setMenuBar] = React.useState("");
   const [profile, setProfile] = React.useState({});
+  const [wishlist, setWishlist] = React.useState([]);
+  const [search, setSearch] = React.useState("");
+  const [page, setPage] = React.useState(1);
+  const [sortBy, setSortBy] = React.useState("");
+  const [limit, setLimit] = React.useState(5);
+  const [totalPage, setTotalPage] = React.useState();
+  console.log(wishlist);
+
+  const getWishlist = async(search, page, sortBy, limit)=>{
+    try {
+      const {data} = await http(token).get(`/wishList?search=${search}&page=${page}&sortBy=${sortBy}&limit=${limit}`);
+      setWishlist(data.results);
+      setTotalPage(data.pageInfo.totalPage);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if(message){
+        console.log(message);
+      }
+    }
+  };
     
   React.useEffect(()=>{
     async function getProfileUser(){
@@ -37,12 +61,27 @@ function Wishlist(){
       }
     }
     getProfileUser();
-  },[]);
+    getWishlist(search, page, sortBy, limit);
+  },[token, search, page, limit, sortBy]);
 
   function doLogout(){
     dispatch(logout());
     navigate("/");
   }
+
+  const removeWishlist = async (eventId) => {
+    const id = eventId;
+    try {
+      const {data} = await http(token).delete(`/wishList/${id}`);
+      console.log(data);
+      getWishlist(search, page, sortBy, limit);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if (message) {
+        console.log(message);
+      }
+    }
+  };
   return(
     <>
       <nav className="flex w-full items-center justify-between px-10 py-4">
@@ -98,80 +137,55 @@ function Wishlist(){
           </div>
         </aside>  
 
-        <article className="inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl flex-1">
+        <article className="inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl flex-1 relative">
           <div className="mb-[30px] font-bold text-[20px] text-secondary">My Wishlist</div>
-          <div className="flex gap-x-10">
-            <div className="self-center w-[50px] flex-1">
-              <p className="font-bold text-[24px] text-accent">15</p>
-              <p className="font-[400] text-[16px] text-primary">Wed</p>
+          <div className="w-full relative flex flex-row mb-5">
+            <input onChange={(e)=> setSearch(e.target.value)} type="text" placeholder="Search Wishlist.." className="input input-bordered w-full drop-shadow-lg px-12 text-black" />
+            <div className="dropdown dropdown-bottom dropdown-end">
+              <label tabIndex={0} className="btn m-1 drop-shadow-lg"><BsFilterLeft size={28} className="text-white"/></label>
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 flex flex-col gap-1">
+                <label>Sort</label>
+                <div>
+                  <label className="text-secondary font-medium">SortBy:</label>
+                  <div className="flex gap-1">
+                    <button onClick={(e)=> setSortBy(e.target.value)} value={"ASC"} className="btn btn-active w-[70px] normal-case text-white">ASC</button>
+                    <button onClick={(e)=> setSortBy(e.target.value)} value={"DESC"} className="btn btn-active w-[70px] normal-case text-white">DESC</button>
+                  </div>
+                </div>
+                <label className="text-secondary font-medium">Limit:</label>
+                <select className="select select-ghost w-full max-w-xs text-primary" onChange={(e)=> setLimit(e.target.value)}>
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                </select>
+              </ul>
             </div>
-            <div className="flex-initial w-full">
-              <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-            </div>
-            <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
+            <FiSearch size={25} className="text-neutral absolute left-[10px] top-3"/>
           </div>
-          <hr className="w-full my-6"/>
-          <div className="flex gap-x-10">
-            <div className="self-center w-[50px] flex-1">
-              <p className="font-bold text-[24px] text-accent">15</p>
-              <p className="font-[400] text-[16px] text-primary">Wed</p>
-            </div>
-            <div className="flex-initial w-full">
-              <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-            </div>
-            <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-          </div>
-          <hr className="w-full my-6"/>
-          <div className="flex gap-x-10">
-            <div className="self-center w-[50px] flex-1">
-              <p className="font-bold text-[24px] text-accent">15</p>
-              <p className="font-[400] text-[16px] text-primary">Wed</p>
-            </div>
-            <div className="flex-initial w-full">
-              <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-            </div>
-            <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-          </div>
-          <hr className="w-full my-6"/>
-          <div className="flex gap-x-10">
-            <div className="self-center w-[50px] flex-1">
-              <p className="font-bold text-[24px] text-accent">15</p>
-              <p className="font-[400] text-[16px] text-primary">Wed</p>
-            </div>
-            <div className="flex-initial w-full">
-              <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-            </div>
-            <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-          </div>
-          <hr className="w-full my-6"/>
-          <div className="flex gap-x-10">
-            <div className="self-center w-[50px] flex-1">
-              <p className="font-bold text-[24px] text-accent">15</p>
-              <p className="font-[400] text-[16px] text-primary">Wed</p>
-            </div>
-            <div className="flex-initial w-full">
-              <h1 className="pb-2 font-[600] text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-            </div>
-            <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
-          </div>
-          <hr className="w-full my-6"/>
-          <div className="pl-[75px] flex">
-            <div className="flex-initial w-full">
-              <h1 className="pb-2 font-bold text-[24px] text-secondary">Sights & Sounds Exhibition</h1>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Jakarta, Indonesia</p>
-              <p className="pb-2 font-[400] text-[14px] text-primary">Wed, 15 Nov, 4:00 PM</p>
-            </div>
-            <div className="w-[32px] flex-1 text-amber-600"><i data-feather="heart"></i></div>
+          {wishlist.map(event => (
+            <>
+              <div key={`wishlisit-${event.id}`} className="flex gap-x-10">
+                <div className="self-center w-[50px] flex-1">
+                  <p className="font-bold text-[24px] text-accent">{moment(event.date).format("DD")}</p>
+                  <p className="font-[400] text-[16px] text-primary">{moment(event.date).format("ddd")}</p>
+                </div>
+                <div className="flex-initial w-full">
+                  <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
+                  <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}, Indonesia</p>
+                  <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
+                </div>
+                <button onClick={()=> removeWishlist(event.eventId)} className="w-[32px] flex-1 text-neutral"><AiFillHeart className="text-error" size={30}/></button>
+              </div>
+              <hr className="w-full my-6"/>
+            </>
+          ))}
+          <div className="absolute bottom-6 w-full flex gap-6 items-center">
+            {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
+              : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
+            <p className="font-semibold text-primary text-lg">{page}</p>
+            {page === totalPage ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>
+              : <button onClick={()=> setPage(page + 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>}
           </div>
         </article>
       </main>
