@@ -1,7 +1,4 @@
-import ToyFace2 from "../assets/ToyFaces2.png";
-import ToyFace1 from "../assets/ToyFaces1.png";
-import { BsWhatsapp, BsFacebook, BsCheckCircleFill } from "react-icons/bs";
-import { AiFillTwitterCircle, AiFillInstagram } from "react-icons/ai";
+import { BsCheckCircleFill } from "react-icons/bs";
 import {Link, useNavigate} from "react-router-dom";
 import {SiArtixlinux} from "react-icons/si";
 import React from "react";
@@ -10,6 +7,8 @@ import * as Yup from "yup";
 import http from "../helper/http";
 import {MdError} from "react-icons/md";
 import propTypes from "prop-types";
+import LeftsideAuth from "../components/LeftsideAuth";
+import FooterAuth from "../components/FooterAuth";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Email is invalid").required("Email is invalid")
@@ -98,12 +97,7 @@ function ForgotPassword(){
   return(
     <div>
       <main className="flex h-[1024px]">
-        <div className="hidden md:block md:flex-1 bg-primary relative">
-          <img className="absolute top-[367px] right-[157px]" src={ToyFace2} alt="ToyFaces2"/>
-          <div className="absolute rotate-180 h-[194px] w-[394px] top-[510px] right-[50px] bg-gradient-to-b from-primary to-transparent "></div>
-          <img className="absolute top-[273px] right-[318px]" src={ToyFace1} alt="ToyFaces1"/>
-          <div className="absolute rotate-180 h-[250px] w-[480px] top-[480px] right-[190px] bg-gradient-to-b from-primary to-transparent "></div>
-        </div>
+        <LeftsideAuth />
         <div className="px-[30px] w-full md:flex-initial md:pt-[214px] md:w-[516px] md:px-[100px]">
           <Link to="/">
             <div className="flex items-center pb-[57px]">
@@ -123,57 +117,7 @@ function ForgotPassword(){
           </Formik>
         </div>
       </main>
-      <footer className="h-[476px] px-[30px] md:px-[20%] w-full md:py-[60px]">
-        <div className="md:flex md:justify-between">
-          <div className="mb-10">
-            <Link to="/">
-              <div className="flex items-center pb-[57px]">
-                <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-                <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
-              </div></Link>
-            <div className="flex gap-2 py-3 text-[14px] font-[400]">Find events you love with our</div>
-            <div>
-              <ul className="flex gap-6">
-                <BsFacebook size={20}/>
-                <BsWhatsapp size={20}/>
-                <AiFillInstagram size={25}/>
-                <AiFillTwitterCircle size={25}/>
-              </ul>
-            </div>
-                    
-          </div>
-          <div>
-            <ul className="pb-[10px] ">
-              <li className="text-primary font-bold pb-[10px]">Wetick</li>
-              <li className="text-neutral pb-[10px]">About Us</li>
-              <li className="text-neutral pb-[10px]">Features</li>
-              <li className="text-neutral pb-[10px]">Blog</li>
-              <li className="text-neutral pb-[10px]">Payments</li>
-              <li className="text-neutral pb-[10px]">Mobile App</li>
-            </ul>
-          </div>
-          <div>
-            <ul className="pb-[10px] ">
-              <li className="text-primary font-bold pb-[10px]">Features</li>
-              <li className="text-neutral pb-[10px]">Booking</li>
-              <li className="text-neutral pb-[10px]">Create Event</li>
-              <li className="text-neutral pb-[10px]">Discover</li>
-              <li className="text-neutral pb-[10px]">Register</li>
-            </ul>
-          </div>
-          <div>
-            <ul className="pb-[10px] ">
-              <li className="text-primary font-bold pb-[10px]">Company</li>
-              <li className="text-neutral pb-[10px]">Partnership</li>
-              <li className="text-neutral pb-[10px]">Help</li>
-              <li className="text-neutral pb-[10px]">Terms of Service</li>
-              <li className="text-neutral pb-[10px]">Privacy Policy</li>
-              <li className="text-neutral pb-[10px]">Sitemap</li>
-            </ul>
-          </div>
-        </div>
-        <p className="flex pt-[130px] text-neutral ">© 2020 Wetick All Rights Reserved</p>
-      </footer>
+      <FooterAuth />
     </div>
   );
 }
