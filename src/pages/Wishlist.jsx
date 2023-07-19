@@ -32,7 +32,6 @@ function Wishlist(){
   const [sortBy, setSortBy] = React.useState("");
   const [limit, setLimit] = React.useState(5);
   const [totalPage, setTotalPage] = React.useState();
-  console.log(wishlist);
 
   const getWishlist = async(search, page, sortBy, limit)=>{
     try {
@@ -179,6 +178,7 @@ function Wishlist(){
                     <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
                     <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}, Indonesia</p>
                     <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
+                    <Link to={`/EventDetail/${event.eventId}`} className="border-0 text-accent normal-case">Detail</Link>
                   </div>
                   <button onClick={()=> removeWishlist(event.eventId)} className="w-[32px] flex-1 text-neutral"><AiFillHeart className="text-error" size={30}/></button>
                 </div>

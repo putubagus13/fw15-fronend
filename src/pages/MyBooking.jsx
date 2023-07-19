@@ -29,7 +29,7 @@ function MyBooking(){
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState();
   const [page, setPage] = React.useState(1);
-  const [sortBy, setSortBy] = React.useState();
+  const [sortBy, setSortBy] = React.useState("");
   const [totalPage, setTotalPage] = React.useState();
 
   async function getHistory(search, page, limit, sortBy){
