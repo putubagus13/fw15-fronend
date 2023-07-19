@@ -6,7 +6,7 @@ import {AiFillEdit,
   AiOutlineUnorderedList,
   AiOutlineHeart,
   AiOutlineSetting } from "react-icons/ai";
-import {FiLogOut, FiUnlock, FiUser} from "react-icons/fi";
+import {FiLogOut, FiUnlock, FiUser, FiSearch} from "react-icons/fi";
 import {SiArtixlinux} from "react-icons/si";
 import MenuBar1 from "../components/MenuBar1";
 import React from "react";
@@ -19,6 +19,7 @@ import propTypes from "prop-types";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Footer from "../components/Footer";
+import { BsFilterLeft } from "react-icons/bs";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("title is invalid"),
@@ -254,6 +255,24 @@ function CreateEvent(){
   const [events, setEvents] = React.useState([]);
   const [successMessage, setSuccessMessage] = React.useState("");
   const [selectedPIcture, setSelectedPicture] = React.useState(null);
+  const [search, setSearch] = React.useState("");
+  const [limit, setLimit] = React.useState();
+  const [page, setPage] = React.useState(1);
+  const [sortBy, setSortBy] = React.useState("");
+  const [totalPage, setTotalPage] = React.useState();
+
+  const getEventMenage = async(search, limit, page, sortBy) =>{
+    try {
+      const {data} = await http(token).get(`/events/manage?search=${search}&limit=${limit}&sortBy=${sortBy}&page=${page}`);
+      setEvents(data.results);
+      setTotalPage(data.pageInfo.totalPage);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if(message){
+        console.log(message);
+      }
+    }
+  };
     
   React.useEffect(()=>{
     async function getProfileUser(){
@@ -269,21 +288,8 @@ function CreateEvent(){
       }
     }
     getProfileUser();
-
-    async function getEventMenage(){
-      try {
-        const {data} = await http(token).get("/events/manage?limit=5");
-        console.log(data);
-        setEvents(data.results);
-      } catch (error) {
-        const message = error?.response?.data?.message;
-        if(message){
-          console.log(message);
-        }
-      }
-    }
-    getEventMenage();
-  },[]);
+    getEventMenage(search, limit, page, sortBy);
+  },[token, search, limit, page, sortBy]);
 
   function doLogout(){
     dispatch(logout());
@@ -317,6 +323,16 @@ function CreateEvent(){
     // for (var pair of form.entries()) {
     //     console.log(pair[0]+ ', ' + pair[1]); 
     // }
+  };
+
+  const deleteEventsManage = async id => {
+    try {
+      await http(token).delete(`/events/manage/${id}`);
+      getEventMenage(search, limit, page, sortBy);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      console.log(message);
+    }
   };
 
   return(
@@ -374,7 +390,7 @@ function CreateEvent(){
           </div>
         </aside>  
 
-        <article className="inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl flex-1">
+        <article className="relative inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl flex-1">
           <div className="md:flex md:justify-between mb-6">
             <div className="mb-[30px] font-bold text-[20px] text-secondary">My Manage</div>
             <div className="font-[400] text-[14px]">
@@ -402,6 +418,30 @@ function CreateEvent(){
               </div>
             </div>
           </div>
+          <div className="w-full relative flex flex-row mb-5 items-center">
+            <input onChange={(e)=> setSearch(e.target.value)} type="text" placeholder="Search History.." className="input input-bordered w-full drop-shadow-lg px-12 text-black" />
+            <div className="dropdown dropdown-bottom dropdown-end">
+              <label tabIndex={0} className="btn m-1 drop-shadow-lg"><BsFilterLeft size={28} className="text-white"/></label>
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 flex flex-col gap-1">
+                <label>Sort</label>
+                <div>
+                  <label className="text-secondary font-medium">SortBy:</label>
+                  <div className="flex gap-1">
+                    <button onClick={(e)=> setSortBy(e.target.value)} value={"ASC"} className="btn btn-active w-[70px] normal-case text-white">ASC</button>
+                    <button onClick={(e)=> setSortBy(e.target.value)} value={"DESC"} className="btn btn-active w-[70px] normal-case text-white">DESC</button>
+                  </div>
+                </div>
+                <label className="text-secondary font-medium">Limit:</label>
+                <select className="select select-ghost w-full max-w-xs text-primary" onChange={(e)=> setLimit(e.target.value)}>
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                </select>
+              </ul>
+            </div>
+            <FiSearch size={25} className="text-neutral absolute left-[10px] top-3"/>
+          </div>
           {events.map(event =>{
             return(
               <div key={`eventsMenage-${event.id}`}>
@@ -414,10 +454,22 @@ function CreateEvent(){
                     <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
                     <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}</p>
                     <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
-                    <div className="flex gap-2">
-                      <Link to="" className="pb-2 font-[400] text-[14px] text-accent">Detail</Link>
-                      <Link to="" className="pb-2 font-[400] text-[14px] text-accent">Update</Link>
-                      <Link to="" className="pb-2 font-[400] text-[14px] text-accent">Delete</Link>
+                    <div className="flex gap-3">
+                      <Link to={`/EventDetail/${event.id}`} className="btn w-10 bg-white hover:bg-white border-0 text-accent normal-case">Detail</Link>
+                      <label className="btn w-10 bg-white hover:bg-white border-0 text-accent normal-case">Update</label>
+                      <label htmlFor="my_modal_6" className="btn w-10 bg-white hover:bg-white border-0 text-accent normal-case">Delete</label>
+                      {/* modal */}
+                      <input type="checkbox" id="my_modal_6" className="modal-toggle" />
+                      <div className="modal">
+                        <div className="modal-box">
+                          <h3 className="font-bold text-lg text-black">Delete Booking History!</h3>
+                          <p className="py-4 text-black">Are you sure you want to delete Event with title {event.title}!</p>
+                          <div className="modal-action">
+                            <label htmlFor="my_modal_6" className="btn bg-error normal-case font-md text-white" type="submit" onClick={()=>deleteEventsManage(event?.id)}>Delete</label>
+                            <label htmlFor="my_modal_6" className="btn normal-case font-md text-white">Close!</label>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -425,6 +477,13 @@ function CreateEvent(){
               </div>
             );
           })}
+          <div className="absolute bottom-6 w-full flex gap-6 items-center">
+            {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
+              : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
+            <p className="font-semibold text-primary text-lg">{page}</p>
+            {page === totalPage ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>
+              : <button onClick={()=> setPage(page + 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>}
+          </div>
         </article>
       </main>
       <Footer />
