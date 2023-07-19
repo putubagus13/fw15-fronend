@@ -4,8 +4,9 @@ import {AiOutlinePlusCircle,
   AiFillCreditCard, 
   AiOutlineHeart,
   AiOutlineSetting,
-  AiOutlineUnorderedList, } from "react-icons/ai";
-import {FiUnlock, FiUser, FiLogOut,} from "react-icons/fi";
+  AiOutlineUnorderedList,
+  AiFillHeart } from "react-icons/ai";
+import {FiUnlock, FiUser, FiLogOut, FiSearch} from "react-icons/fi";
 import {AiTwotoneCalendar} from "react-icons/ai";
 import {SiArtixlinux} from "react-icons/si";
 import MenuBar1 from "../components/MenuBar1";
@@ -16,6 +17,7 @@ import http from "../helper/http";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Footer from "../components/Footer";
+import { BsFilterLeft } from "react-icons/bs";
 
 function MyBooking(){
   const navigate = useNavigate();
@@ -24,13 +26,30 @@ function MyBooking(){
   const [menuBar, setMenuBar] = React.useState("");
   const [profile, setProfile] = React.useState({});
   const [historyData, setHistoryData] = React.useState([]);
+  const [search, setSearch] = React.useState("");
+  const [limit, setLimit] = React.useState();
+  const [page, setPage] = React.useState(1);
+  const [sortBy, setSortBy] = React.useState();
+  const [totalPage, setTotalPage] = React.useState();
+
+  async function getHistory(search, page, limit, sortBy){
+    try {
+      const {data} = await http(token).get(`/historys?search=${search}&page=${page}&limit=${limit}&sortBy=${sortBy}`);
+      setHistoryData(data.results);
+      setTotalPage(data.pageInfo.totalPage);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if(message){
+        console.log(message);
+      }
+    }
+  }
     
   React.useEffect(()=>{
     async function getProfileUser(){
       try {
         const {data} = await http(token).get("/profile");
         setProfile(data.results);
-        console(data);
       } catch (error) {
         const message = error?.response?.data?.message;
         if(message){
@@ -39,27 +58,42 @@ function MyBooking(){
       }
     }
     getProfileUser();
-
-    async function getHistory(){
-      try {
-        console.log("test");
-        const {data} = await http(token).get("/historys");
-        console.log(data);
-        setHistoryData(data.results);
-      } catch (error) {
-        const message = error?.response?.data?.message;
-        if(message){
-          console.log(message);
-        }
-      }
-    }
-    getHistory();
-  },[]);
+    getHistory(search, page, limit, sortBy);
+  },[token, search, page, limit, sortBy]);
 
   function doLogout(){
     dispatch(logout());
     navigate("/");
   }
+
+  const deleteHistory = async id => {
+    try {
+      await http(token).delete(`/historys/${id}`);
+      getHistory(search, page, limit, sortBy);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      console.log(message);
+    }
+  };
+
+  const addRemoveWishlist = async id => {
+    try {
+      const form = new URLSearchParams({eventId: id}).toString();
+      const {data} = await http(token).get(`/wishList/${id}`);
+      if (data.results) {
+        await http(token).delete(`/wishList/${id}`);
+        getHistory(search, page, limit, sortBy);
+      } else if (data.message === "wishlist not found") {
+        await http(token).post("/wishList", form);
+        getHistory(search, page, limit, sortBy);
+      }
+    } catch (err) {
+      const message = err?.response?.data?.message;
+      if (message) {
+        console.log(message);
+      }
+    }
+  };
   return(
     <>
       <nav className="flex w-full items-center justify-between px-10 py-4">
@@ -115,57 +149,86 @@ function MyBooking(){
           </div>
         </aside>  
 
-        <article className="inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl flex-1">
+        <article className="relative inline-block w-full bg-white p-[20px] md:px-[100px] md:py-[70px] rounded-2xl flex-1">
           <div className="md:flex md:justify-between mb-6">
             <div className="mb-[30px] font-bold text-[20px] text-secondary">My Booking</div>
             <div className="font-[400] text-[14px]">
               <button className="px-5 rounded-2xl btn btn-primary shadow-lg flex gap-3 py-3 w-[150px] md:w-full text-white"><AiTwotoneCalendar size={20}/>March</button>
             </div>
           </div>
-          {historyData.map(event =>{
-            return(
-              <div key={`hstory-data${event.id}`}>
-                <div className="flex gap-x-10" >
-                  <div className="self-center w-[50px] flex-1">
-                    <p className="font-bold text-[24px] text-accent">{moment(event.date).format("DD")}</p>
-                    <p className="font-[400] text-[16px] text-primary">{moment(event.date).format("ddd")}</p>
+          <div className="w-full relative flex flex-row mb-5 items-center">
+            <input onChange={(e)=> setSearch(e.target.value)} type="text" placeholder="Search History.." className="input input-bordered w-full drop-shadow-lg px-12 text-black" />
+            <div className="dropdown dropdown-bottom dropdown-end">
+              <label tabIndex={0} className="btn m-1 drop-shadow-lg"><BsFilterLeft size={28} className="text-white"/></label>
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 flex flex-col gap-1">
+                <label>Sort</label>
+                <div>
+                  <label className="text-secondary font-medium">SortBy:</label>
+                  <div className="flex gap-1">
+                    <button onClick={(e)=> setSortBy(e.target.value)} value={"ASC"} className="btn btn-active w-[70px] normal-case text-white">ASC</button>
+                    <button onClick={(e)=> setSortBy(e.target.value)} value={"DESC"} className="btn btn-active w-[70px] normal-case text-white">DESC</button>
                   </div>
-                  <div className="flex-initial w-full">
-                    <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
-                    <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}</p>
-                    <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm")}</p>
-                    <label htmlFor="my-modal" className="btn border-0 bg-white text-accent">detail</label>
-
-                    {/* Put this part before </body> tag */}
-                    <input type="checkbox" id="my-modal" className="modal-toggle" />
-                    <div className="modal">
-                      <div className="modal-box flex flex-col gap-6 justify-center items-center">
-                        <div className="w-64 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden relative">
-                          {event.picture && <img src={event.picture.startsWith("https")? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover"/>}
-                          <div className="absolute flex flex-col bg-gradient-to-t from-black/[0.9] to-transparent bottom-0 h-48 w-full px-6 py-10 gap-2">
-                            <div className="text-white">{moment(event.date).format("MMMM Do YYYY, h:mm")}</div>
-                            <div className="font-bold text-2xl text-white">{event.title}</div>
+                </div>
+                <label className="text-secondary font-medium">Limit:</label>
+                <select className="select select-ghost w-full max-w-xs text-primary" onChange={(e)=> setLimit(e.target.value)}>
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                </select>
+              </ul>
+            </div>
+            <FiSearch size={25} className="text-neutral absolute left-[10px] top-3"/>
+          </div>
+          {historyData.length < 1 && <div className="flex flex-col text-center h-full py-[100px] md:py-auto md:px-auto">
+            <div className="font-bold text-[26px] text-secondary">No tickets bought</div>
+            <div className="text-primary justify-center font-[400] text-[16px]">It appears you haven’t bought any tickets yet. Maybe try searching these?</div>
+          </div>}
+          {historyData.length > 0 && <>
+            {historyData.map(event =>{
+              return(
+                <div key={`hstory-data${event.id}`}>
+                  <div className="flex gap-x-10" >
+                    <div className="self-center w-[50px] flex-1">
+                      <p className="font-bold text-[24px] text-accent">{moment(event.date).format("DD")}</p>
+                      <p className="font-[400] text-[16px] text-primary">{moment(event.date).format("ddd")}</p>
+                    </div>
+                    <div className="flex-initial w-full">
+                      <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
+                      <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}</p>
+                      <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm")}</p>
+                      <div className="flex gap-1">
+                        <label className="btn bg-white hover:bg-white border-0 text-accent normal-case">Detail</label>
+                        <label htmlFor="my_modal_6" className="btn bg-white hover:bg-white border-0 text-accent normal-case">Delete</label>
+                        {/* modal */}
+                        <input type="checkbox" id="my_modal_6" className="modal-toggle" />
+                        <div className="modal">
+                          <div className="modal-box">
+                            <h3 className="font-bold text-lg text-black">Delete Booking History!</h3>
+                            <p className="py-4 text-black">Are you sure you want to delete booking history!</p>
+                            <div className="modal-action">
+                              <label htmlFor="my_modal_6" className="btn bg-error normal-case font-md text-white" type="submit" onClick={()=>deleteHistory(event?.id)}>Delete</label>
+                              <label htmlFor="my_modal_6" className="btn normal-case font-md text-white">Close!</label>
+                            </div>
                           </div>
-                        </div>
-                        <div className="gap-3">
-                          <h1 className="pb-2 font-[500] text-[16px] text-secondary">Status: {event.status}</h1>
-                          <h1 className="pb-2 font-[500] text-[16px] text-secondary">Section: {event.section}</h1>
-                          <h1 className="pb-2 font-[500] text-[16px] text-secondary">Quantity: {event.quantity}</h1>
-                          <h1 className="pb-2 font-[500] text-[16px] text-secondary">Price/Person: {event.price}</h1>
-                          <h1 className="pb-2 font-[500] text-[16px] text-secondary">Payment Method: {event.PaymentMetode}</h1>
-                        </div>
-                        <div className="modal-action">
-                          <label htmlFor="my-modal" className="btn">Close</label>
                         </div>
                       </div>
                     </div>
+                    {event.eventId === event.idEvent && <button onClick={() => addRemoveWishlist(event.eventId)} className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></button>}
+                    {event.eventId !== event.idEvent && <button onClick={() => addRemoveWishlist(event.eventId)} className="w-[32px] flex-1 text-error"><AiFillHeart size={30}/></button>}
                   </div>
-                  <div className="w-[32px] flex-1 text-neutral"><AiOutlineHeart size={30}/></div>
+                  <hr className="w-full my-6"/>
                 </div>
-                <hr className="w-full my-6"/>
-              </div>
-            );
-          })}
+              );
+            })}
+            <div className="absolute bottom-6 w-full flex gap-6 items-center">
+              {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
+                : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
+              <p className="font-semibold text-primary text-lg">{page}</p>
+              {page === totalPage ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>
+                : <button onClick={()=> setPage(page + 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>}
+            </div>
+          </>}
         </article>
       </main>
       <Footer />
