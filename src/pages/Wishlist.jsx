@@ -163,30 +163,36 @@ function Wishlist(){
             </div>
             <FiSearch size={25} className="text-neutral absolute left-[10px] top-3"/>
           </div>
-          {wishlist.map(event => (
-            <>
-              <div key={`wishlisit-${event.id}`} className="flex gap-x-10">
-                <div className="self-center w-[50px] flex-1">
-                  <p className="font-bold text-[24px] text-accent">{moment(event.date).format("DD")}</p>
-                  <p className="font-[400] text-[16px] text-primary">{moment(event.date).format("ddd")}</p>
+          {wishlist.length < 1 && <div className="flex flex-col text-center h-full py-[100px] md:py-auto md:px-auto">
+            <div className="font-bold text-[26px] text-secondary">No tickets bought</div>
+            <div className="text-primary justify-center font-[400] text-[16px]">It appears you haven’t bought any tickets yet. Maybe try searching these?</div>
+          </div>}
+          {wishlist.length > 0 && <>
+            {wishlist.map(event => (
+              <>
+                <div key={`wishlisit-${event.id}`} className="flex gap-x-10">
+                  <div className="self-center w-[50px] flex-1">
+                    <p className="font-bold text-[24px] text-accent">{moment(event.date).format("DD")}</p>
+                    <p className="font-[400] text-[16px] text-primary">{moment(event.date).format("ddd")}</p>
+                  </div>
+                  <div className="flex-initial w-full">
+                    <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
+                    <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}, Indonesia</p>
+                    <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
+                  </div>
+                  <button onClick={()=> removeWishlist(event.eventId)} className="w-[32px] flex-1 text-neutral"><AiFillHeart className="text-error" size={30}/></button>
                 </div>
-                <div className="flex-initial w-full">
-                  <h1 className="pb-2 font-[600] text-[24px] text-secondary">{event.title}</h1>
-                  <p className="pb-2 font-[400] text-[14px] text-primary">{event.location}, Indonesia</p>
-                  <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
-                </div>
-                <button onClick={()=> removeWishlist(event.eventId)} className="w-[32px] flex-1 text-neutral"><AiFillHeart className="text-error" size={30}/></button>
-              </div>
-              <hr className="w-full my-6"/>
-            </>
-          ))}
-          <div className="absolute bottom-6 w-full flex gap-6 items-center">
-            {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
-              : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
-            <p className="font-semibold text-primary text-lg">{page}</p>
-            {page === totalPage ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>
-              : <button onClick={()=> setPage(page + 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>}
-          </div>
+                <hr className="w-full my-6"/>
+              </>
+            ))}
+            <div className="absolute bottom-6 w-full flex gap-6 items-center">
+              {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
+                : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
+              <p className="font-semibold text-primary text-lg">{page}</p>
+              {page === totalPage ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>
+                : <button onClick={()=> setPage(page + 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>}
+            </div>
+          </>}
         </article>
       </main>
       <Footer />
