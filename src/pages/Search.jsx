@@ -22,21 +22,24 @@ function Search(){
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("");
   const [sortBy, setSortBy] = React.useState("");
-  console.log(sortBy);
+  const [page, setPage] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState();
 
-  async function getSearchEvent(searchValue, search, limit, sortBy){
+  async function getSearchEvent(searchValue, search, limit, sortBy, page){
     if(!search){
-      const {data} = await http().get(`/events?search=${searchValue}&limit=${limit}&sortBy=${sortBy}`);
+      const {data} = await http().get(`/events?search=${searchValue}&limit=${limit}&sortBy=${sortBy}&page=${page}`);
       setSearcResults(data.results);
+      setTotalPage(data.pageInfo.totalPage);
     }else{
       searchParams.toString("");
-      const {data} = await http().get(`/events?search=${search}&limit=${limit}&sortBy=${sortBy}`);
+      const {data} = await http().get(`/events?search=${search}&limit=${limit}&sortBy=${sortBy}&page=${page}`);
       setSearcResults(data.results);
+      setTotalPage(data.pageInfo.totalPage);
     }
   } 
 
   React.useEffect(()=>{
-    getSearchEvent(searchValue, search, limit, sortBy);
+    getSearchEvent(searchValue, search, limit, sortBy, page);
 
     async function getProfileUser(){
       try {
@@ -51,7 +54,7 @@ function Search(){
       }
     }
     getProfileUser();
-  },[token, search, searchParams, limit, sortBy, searchValue]);
+  },[token, search, searchParams, limit, sortBy, searchValue, page]);
 
   function doLogout(){
     dispatch(logout());
@@ -139,6 +142,14 @@ function Search(){
               );
             })}
           </div>
+          {searchResults.length > 0 && 
+          <div className="bottom-6 w-full flex gap-6 items-center justify-center">
+            {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
+              : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
+            <p className="font-semibold text-primary text-lg">{page}</p>
+            {page === totalPage ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>
+              : <button onClick={()=> setPage(page + 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>}
+          </div>}
           {searchResults.length < 1 && (<div className="font-bold text-secondary text-3xl">search results for &quot;{searchParams.get("search")}&quot; not found</div>)}
         </div>
       </main>

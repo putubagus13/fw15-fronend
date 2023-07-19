@@ -20,14 +20,17 @@ function AllEvents(){
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("");
   const [sortBy, setSortBy] = React.useState("");
+  const [page, setPage] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState();
 
-  async function getSearchEvent(search, limit, sortBy){
-    const {data} = await http().get(`/events?search=${search}&limit=${limit}&sortBy=${sortBy}`);
+  async function getSearchEvent(search, limit, sortBy, page){
+    const {data} = await http().get(`/events?search=${search}&limit=${limit}&sortBy=${sortBy}&page=${page}`);
     setEvents(data.results);
+    setTotalPage(data.pageInfo.totalPage);
   } 
 
   React.useEffect(()=>{
-    getSearchEvent(search, limit, sortBy);
+    getSearchEvent(search, limit, sortBy, page);
     async function getProfileUser(){
       try {
         const {data} = await http(token).get("/profile");
@@ -41,7 +44,7 @@ function AllEvents(){
       }
     }
     getProfileUser();
-  },[token, search, limit, sortBy]);
+  },[token, search, limit, sortBy, page]);
 
   function doLogout(){
     dispatch(logout());
@@ -126,6 +129,14 @@ function AllEvents(){
               );
             })}
           </div>
+          {events.length > 0 && 
+          <div className="bottom-6 w-full flex gap-6 items-center justify-center">
+            {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
+              : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
+            <p className="font-semibold text-primary text-lg">{page}</p>
+            {page === totalPage ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>
+              : <button onClick={()=> setPage(page + 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Next</button>}
+          </div>}
         </div>
       </main>
       <Footer />
