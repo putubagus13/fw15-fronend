@@ -28,7 +28,47 @@ function Profile(){
   const [editPhoneNumber, setEditPhoneNumber] = React.useState(false);
   const [editBirthDate, setEditBirthDate] = React.useState(false);
   const [selectedPIcture, setSelectedPicture] = React.useState({});
-    
+  const [nationalityValue, setNationalityValue] = React.useState("");
+  const [professionValue, setProfessionValue] = React.useState("");
+  const [editGender, setEditGender] = React.useState(false);
+  const profession = [
+    {
+      label: "Developer",
+      value: "Developer",
+    },
+    {
+      label: "Bisnisman",
+      value: "Bisnisman",
+    },
+    {
+      label: "Farmer",
+      value: "Farmer",
+    },
+    {
+      label: "Driver",
+      value: "Driver",
+    },
+  ];
+
+  const nationality = [
+    {
+      label: "Indonesia",
+      value: "Indonesia",
+    },
+    {
+      label: "Malaysia",
+      value: "Malaysia",
+    },
+    {
+      label: "Singapure",
+      value: "Singapure",
+    },
+    {
+      label: "Dubai",
+      value: "Dubai",
+    },
+  ];
+  console.log(nationalityValue, professionValue);
   React.useEffect(()=>{
     async function getProfileUser(){
       try {
@@ -55,6 +95,12 @@ function Profile(){
     });
     if(selectedPIcture){
       form.append("picture", selectedPIcture);
+    }
+    if (professionValue) {
+      form.append("profession", professionValue);
+    }
+    if (nationalityValue) {
+      form.append("nasionality", nationalityValue);
     }
     const {data} = await http(token).patch("/profile", form, {
       headers: {
@@ -135,10 +181,8 @@ function Profile(){
           fullName: profile?.fullName ,
           username: profile?.username,
           email: profile?.email,
-          phoneNumbe: profile?.phoneNumbe,
-          profession: profile?.profession,
+          phoneNumber: profile?.phoneNumber,
           birtDate: profile?.birtDate,
-          nasionality: profile?.nasionality,
           gender: profile?.gender,
         }}
         onSubmit={editProfile}
@@ -197,12 +241,12 @@ function Profile(){
                 <div className="my-[30px] md:my-0 block flex flex-col md:flex-row font-[400] text-[14px]">
                   <div className="flex w-[140px] text-secondary items-center">Phone Number</div>
                   <div className="flex gap-3">
-                    {!editPhoneNumber && <span className="flex flex-row h-12 items-center text-left  text-[#777777] ">{profile?.phoneNumbe}</span>}
+                    {!editPhoneNumber && <span className="flex flex-row h-12 items-center text-left  text-[#777777] ">{profile?.phoneNumber}</span>}
                     {editPhoneNumber && <input 
-                      name="phoneNumbe" 
+                      name="phoneNumber" 
                       type="text" 
                       className="border-2 rounded-2xl h-12 text-left w-full px-[20px] py-[17px] text-[#777777] border-neutral " 
-                      value={values.phoneNumbe}
+                      value={values.phoneNumber}
                       onChange={handleChange}
                       onBlur={handleBlur}/>}
                     {!editPhoneNumber && <button onClick={()=> setEditPhoneNumber(true)} className="text-accent">Edit</button>}
@@ -211,48 +255,79 @@ function Profile(){
                 <div className="my-[30px] md:my-0 block flex flex-col md:flex-row font-[400] text-[14px]">
                   <div className="flex w-[153px] text-secondary items-center">Gender</div>
                   <div className="flex gap-10 h-12 text-left w-full md:px-[20px] py-[17px] text-[#777777] ">
-                    <div className="flex gap-1">
-                      <input 
-                        type="radio" 
-                        name="gender" 
-                        className="radio radio-primary w-4 h-4"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value="0"/>
-                      <span className="pl-[5px]">Male</span>
-                    </div>
-                    <div className="flex gap-1">
-                      <input 
-                        type="radio" 
-                        name="gender" 
-                        className="radio radio-primary w-4 h-4"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value="1"/>
-                      <span className="pl-[5px]">Famale</span>
-                    </div>
+                    {!editGender && 
+                    <>
+                      <div className="flex gap-1">
+                        <input 
+                          type="radio" 
+                        
+                          name="gender" 
+                          className="radio radio-primary w-4 h-4"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={false}
+                          checked={profile?.gender === false}/>
+                        <span className="pl-[5px]">Male</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <input 
+                          type="radio" 
+                          name="gender" 
+                          className="radio radio-primary w-4 h-4"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={true}
+                          checked={profile?.gender === true}/>
+                        <span className="pl-[5px]">Famale</span>
+                      </div>
+                    </>}
+                    {editGender && 
+                    <>
+                      <div className="flex gap-1">
+                        <input 
+                          type="radio" 
+                        
+                          name="gender" 
+                          className="radio radio-primary w-4 h-4"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={false}/>
+                        <span className="pl-[5px]">Male</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <input 
+                          type="radio" 
+                          name="gender" 
+                          className="radio radio-primary w-4 h-4"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={true}/>
+                        <span className="pl-[5px]">Famale</span>
+                      </div>
+                    </>}
+                    {!editGender && <button onClick={()=> setEditGender(!editGender)} className="text-accent">Edit</button>}
                   </div>
                 </div>
                 <div className="my-[30px] md:my-0 block md:flex items-center font-[400] text-[14px]">
                   <div className="w-[153px] text-secondary">Profession</div>
                   <select 
-                    name="profession" 
                     className="flex border-2 rounded-2xl h-12 text-left w-full px-3 text-[#777777] border-neutral"
-                    onChange={handleChange}
-                    onBlur={handleBlur}>
-                    {/* <option className="hidden">Select profetion</option> */}
-                    <option>{profile?.profession}</option>
+                    onChange={(e)=> setProfessionValue(e.target.value)}>
+                    <option className="hidden">{profile?.profession}</option>
+                    {profession.map(items => (
+                      <option className="my-2" key={`profession-${items.value}`}>{items.value}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="my-[30px] md:my-3 block md:flex items-center font-[400] text-[14px]">
                   <div className="w-[153px] text-secondary">Nationality</div>
                   <select 
-                    name="nasionality" 
                     className="flex border-2 rounded-2xl h-12 w-full px-3 text-[#777777] border-neutral "
-                    onChange={handleChange}
-                    onBlur={handleBlur}>
-                    {/* <option className="hidden">Select Nationality</option> */}
-                    <option>{profile?.nasionality}</option>
+                    onChange={(e)=> setNationalityValue(e.target.value)}>
+                    <option className="hidden">{profile?.nasionality}</option>
+                    {nationality.map(items => (
+                      <option key={`nationality-${items.value}`}>{items.value}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="my-[30px] md:my-0 block flex flex-col gap-3 md:flex-row font-[400] text-[14px]">
