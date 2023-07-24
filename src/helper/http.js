@@ -7,7 +7,7 @@ const http = (token)=>{
   }
   return axios.create({
     headers,
-    baseURL: "https://anxious-boa-moccasins.cyclic.app"
+    baseURL: import.meta.env.VITE_BACKEND_URL,
   });
 };
 
