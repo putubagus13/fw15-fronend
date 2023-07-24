@@ -248,7 +248,7 @@ function Home(){
                     <Link to={`/Search?location=${event.name}`} key={`cities${event.id}`}>
                       <div className="flex flex-col justify-between items-center" >
                         <div className="w-60 h-36 overflow-hidden rounded-2xl">
-                          <img src={`http://localhost:8888/uploads/${event.picture}`} className="object-cover"/>
+                          <img src={event?.picture} className="object-cover"/>
                         </div>
                         <p className="text-white">{event.name}</p>
                       </div>
@@ -281,21 +281,27 @@ function Home(){
                 
         <div className="List-Event flex justify-center py-16">
           <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 justify-center gap-4">
-            {eventCategory.map(event =>{
-              return(
-                <Link to={`/EventDetail/${event.id}`} key={`eventssection${event.id}`}>
-                  <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden">
-                    <div className="flex-1 overflow-hidden">
-                      {event.picture && <img src={event.picture.startsWith("https")? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover" alt={event.fullName}/>}
-                    </div>
-                    <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
-                      <div className="text-white">{moment(event.date).format("MMMM Do YYYY, h:mm")}</div>
-                      <div className="font-bold text-2xl">{event.title}</div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+            {eventCategory.length > 0 &&
+             <>
+               {eventCategory.map(event =>{
+                 return(
+                   <Link to={`/EventDetail/${event.id}`} key={`eventssection${event.id}`}>
+                     <div className="flex flex-col w-80 h-96 border rounded-3xl drop-shadow-lg flex-shrink-0 overflow-hidden">
+                       <div className="flex-1 overflow-hidden">
+                         {event.picture && <img src={event.picture.startsWith("https")? event.picture : `http://localhost:8888/uploads/${event.picture}`} className="w-full h-full object-cover" alt={event.fullName}/>}
+                       </div>
+                       <div className="flex-[0.5] flex justify-end gap-3 flex-col bg-primary h-48 w-full text-white p-10">
+                         <div className="text-white">{moment(event.date).format("MMMM Do YYYY, h:mm")}</div>
+                         <div className="font-bold text-2xl">{event.title}</div>
+                       </div>
+                     </div>
+                   </Link>
+                 );
+               })}
+             </>}
+            {eventCategory.length < 1 &&
+             <div className="w-full flex justify-center items-center font-semibold h-20 text-[30px] text-secondary">Event Not Found</div> 
+            }
           </div>
         </div>
 

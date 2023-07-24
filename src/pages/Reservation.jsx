@@ -168,7 +168,7 @@ function Reservation(){
                         <p className="text-neutral text-[13px]">12 Seats available</p>
                       </div>
                       <div className="flex flex-col justify-center">
-                        <p className="text-secondary font-bold text-sm text-center">${event.price}</p>
+                        <p className="text-secondary font-bold text-sm text-center">IDR {event.price}</p>
                         <p className="text-neutral text-[13px]">per person</p>
                       </div>
                     </div>
@@ -200,7 +200,7 @@ function Reservation(){
               </div>
               <div className="flex justify-between">
                 <p className="font-[600] text-lg text-secondary">Total Payment</p>
-                <p className="font-[600] text-lg text-accent">${(selectSection?.price * filledSection.quantity) || "0"}</p>
+                <p className="font-[600] text-lg text-accent">IDR {(selectSection?.price * filledSection.quantity) || "0"}</p>
               </div>
             </div>
             <button onClick={doRegister} type="submit" className="btn w-full lg:w-[60%] btn-primary">Checkout</button>
