@@ -27,13 +27,29 @@ function Home(){
   const [partners, setPartners] = React.useState([]);
   const [category, setcategory] = React.useState([]);
   const [eventCategory, setEventCategory] = React.useState([]);
-
+  const [page, setPage] = React.useState(1);
+  const [pg, setPg] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState();
+  const [totalPg, setTotalPg] = React.useState();
 
   async function getEventCategory(name){
     try {
-      const {data} = await http().get("/events", {params: {category: name}});
-      console.log(data);
+      const {data} = await http().get("/events", {params: {category: name, page: pg, limit: 8}});
       setEventCategory(data.results);
+      setTotalPg(data.pageInfo.totalPage);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if(message){
+        console.log(message);
+      }
+    }
+  }
+
+  async function getDataEvent(page){
+    try {
+      const {data} = await http().get("/events", {params : {page: page, limit: 8}});
+      setEvents(data.results);
+      setTotalPage(data.pageInfo.totalPage);
     } catch (error) {
       const message = error?.response?.data?.message;
       if(message){
@@ -44,24 +60,11 @@ function Home(){
 
   React.useEffect(()=>{
     getEventCategory();
-    async function getDataEvent(){
-      try {
-        const {data} = await http().get("/events?limit=20");
-        console.log(data);
-        setEvents(data.results);
-      } catch (error) {
-        const message = error?.response?.data?.message;
-        if(message){
-          console.log(message);
-        }
-      }
-    }
-    getDataEvent();
+    getDataEvent(page);
 
     async function getDataCities(){
       try {
         const {data} = await http().get("/cities?limit=7");
-        console.log(data);
         setCities(data.results);
       } catch (error) {
         const message = error?.response?.data?.message;
@@ -74,8 +77,7 @@ function Home(){
 
     async function getCategory(){
       try {
-        const {data} = await http().get("/categories?limit=7");
-        console.log(data);
+        const {data} = await http().get("/categories?limit=10");
         setcategory(data.results);
       } catch (error) {
         const message = error?.response?.data?.message;
@@ -88,7 +90,7 @@ function Home(){
 
     async function getDataPartners(){
       try {
-        const {data} = await http().get("/partners?limit=7");
+        const {data} = await http().get("/partners?limit=10");
         console.log(data);
         setPartners(data.results);
       } catch (error) {
@@ -100,7 +102,7 @@ function Home(){
     }
     getDataPartners();
 
-  },[]);
+  },[page, pg]);
 
   function doSearch(values){
     const query = new URLSearchParams(values).toString();
@@ -175,9 +177,11 @@ function Home(){
         </div>
         <h1 className="w-full flex justify-center py-[25px] text-primary font-bold text-[36px]">Event For You</h1>
         <div className="flex gap-10 justify-center items-center py-10 px-10">
-          <button className="btn btn-square rounded-1xl btn-neutral">
+          {page === 1 ? <button className="btn btn-square rounded-1xl btn-neutral">
             <AiOutlineArrowLeft size={20} className="text-white"/>
-          </button>
+          </button> :<button onClick={()=>setPage(page - 1)} className="btn btn-square rounded-1xl btn-primary">
+            <AiOutlineArrowLeft size={20} className="text-white"/>
+          </button>}
           <div className="w-12 h-20 py-2 border-white hover:border-accent rounded-[10px] text-neutral hover:text-accent border-2 text-center">
             <p className="text-[14px] font-bold">13</p>
             <p className="text-[14px]">Mon</p>
@@ -203,9 +207,11 @@ function Home(){
             <p className="text-[14px]">Fri</p>
             <div className="flex justify-center"><RxDotFilled size={20}/></div>
           </div>
-          <button className="btn btn-square rounded-1xl btn-neutral">
+          {page === totalPage ? <button className="btn btn-square rounded-1xl btn-neutral">
             <AiOutlineArrowRight size={20} className="text-white"/>
-          </button>
+          </button> :<button onClick={()=> setPage(page + 1)} className="btn btn-square rounded-1xl btn-primary">
+            <AiOutlineArrowRight size={20} className="text-white"/>
+          </button>}
         </div>
       </header>
       <main>
@@ -245,14 +251,14 @@ function Home(){
                 <h1 className="w-60 font-bold text-white text-4xl ">Discover <br/> Events Near <br/> You</h1>
                 {cities.map(event =>{
                   return (
-                    <Link to={`/Search?location=${event.name}`} key={`cities${event.id}`}>
+                    <div key={`cities${event.id}`}>
                       <div className="flex flex-col justify-between items-center" >
                         <div className="w-60 h-36 overflow-hidden rounded-2xl">
                           <img src={event?.picture} className="object-cover"/>
                         </div>
                         <p className="text-white">{event.name}</p>
                       </div>
-                    </Link>
+                    </div>
                   );
                 })}
               </div>
@@ -279,9 +285,10 @@ function Home(){
           })}
         </div>
                 
-        <div className="List-Event flex justify-center py-16">
-          <div className="flex w-11/12 overflow-x-scroll scrollbar-hidden scrollbar-w-0 justify-center gap-4">
-            {eventCategory.length > 0 &&
+        <div className="List-Event flex flex-col justify-center gap-3 py-16">
+          <div className="px-[5%]">
+            <div className="flex w-full overflow-x-scroll scrollbar-hidden scrollbar-w-0 gap-4">
+              {eventCategory.length > 0 &&
              <>
                {eventCategory.map(event =>{
                  return(
@@ -299,9 +306,22 @@ function Home(){
                  );
                })}
              </>}
-            {eventCategory.length < 1 &&
+              {eventCategory.length < 1 &&
              <div className="w-full flex justify-center items-center font-semibold h-20 text-[30px] text-secondary">Event Not Found</div> 
-            }
+              }
+            </div>
+          </div>
+          <div className="w-full flex gap-3 justify-center">
+            {pg === 1 ? <button className="btn btn-square rounded-1xl btn-neutral">
+              <AiOutlineArrowLeft size={20} className="text-white"/>
+            </button> : <button onClick={()=>setPg(pg - 1)} className="btn btn-square rounded-1xl btn-primary">
+              <AiOutlineArrowLeft size={20} className="text-white"/>
+            </button>}
+            {pg === totalPg ? <button className="btn btn-square rounded-1xl btn-neutral">
+              <AiOutlineArrowRight size={20} className="text-white"/>
+            </button> : <button onClick={()=> setPg(pg + 1)} className="btn btn-square rounded-1xl btn-primary">
+              <AiOutlineArrowRight size={20} className="text-white"/>
+            </button>}
           </div>
         </div>
 
