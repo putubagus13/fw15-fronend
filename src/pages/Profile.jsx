@@ -4,7 +4,8 @@ import {AiOutlinePlusCircle,
   AiFillCreditCard, 
   AiOutlineHeart,
   AiOutlineSetting,
-  AiOutlineUnorderedList, } from "react-icons/ai";
+  AiOutlineUnorderedList,
+  AiFillCamera } from "react-icons/ai";
 import {Link, useNavigate} from "react-router-dom";
 import {FiUnlock, FiUser, FiLogOut} from "react-icons/fi";
 import {SiArtixlinux} from "react-icons/si";
@@ -16,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout} from "../redux/reducers/auth";
 import { Formik } from "formik";
 import Footer from "../components/Footer";
+import User from "../assets/user.png";
 
 function Profile(){
   const navigate = useNavigate();
@@ -31,6 +33,8 @@ function Profile(){
   const [nationalityValue, setNationalityValue] = React.useState("");
   const [professionValue, setProfessionValue] = React.useState("");
   const [editGender, setEditGender] = React.useState(false);
+  const [pictureURI, setPictureURI] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const profession = [
     {
       label: "Developer",
@@ -85,14 +89,29 @@ function Profile(){
     getProfileUser();
   },[]);
 
+  const fileToDataUrl = (file) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      setPictureURI(reader.result);
+    });
+    reader.readAsDataURL(file);
+  };
+
+  const changePicture = (e) => {
+    const file = e.target.files[0];
+    setSelectedPicture(file);
+    fileToDataUrl(file);
+  };
+
   const editProfile = async (values)=>{
+    setLoading(true);
     const form = new FormData();
     Object.keys(values).forEach((key) => {
-      if(values[key]){
+      if (values[key]) {
         form.append(key, values[key]);
       }
-            
     });
+
     if(selectedPIcture){
       form.append("picture", selectedPIcture);
     }
@@ -108,7 +127,7 @@ function Profile(){
       }
     });
     setProfile(data.result);
-    console.log(data.result);
+    setLoading(false);
     setEditUsername(false);
     setEditEmail(false);
     setEditPhoneNumber(false);
@@ -145,7 +164,7 @@ function Profile(){
         <Link to="/Profile" className="hidden lg:flex">
           <div className="hidden lg:flex flex-1">
             <div className="inline-block w-12 h-12 rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
-              {profile?.picture && (<img className='w-full h-full object-cover border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+              {profile?.picture && (<img className='w-full h-full object-cover border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : User} alt={profile?.fullName} />)}
             </div>
             <div className="text-secondary self-center font-bold text-[16px]">{profile?.fullName}</div>
           </div>
@@ -155,7 +174,7 @@ function Profile(){
         <aside id="menuBar" className={menuBar}>
           <div className="flex flex-col xl:flex-row items-center gap-3 mb-[56px]">
             <div className="inline-block w-12 h-12 rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-              {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+              {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : User} alt={profile?.fullName} />)}
             </div>
             <div><h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, {profile?.id}</p></div>
           </div>
@@ -197,8 +216,17 @@ function Profile(){
                 <div className="mb-[50px] font-bold text-[20px] text-secondary">Profile</div>
                 <div className="w-full text-center">
                   <div className="md:hidden relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-primary to-secondary hover:from-primary hover:to-accent w-[137px] h-[137px]">
-                    {profile?.picture && (<img className="absolute z-20 object-cover rounded-full h-full w-full p-[6px]" src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt="change-photo" />)}
+                    <input 
+                      name="picture"
+                      type="file" 
+                      className="hidden"
+                      onChange={changePicture}
+                      onBlur={handleBlur}
+                    />
+                    {selectedPIcture && <img src={pictureURI} alt={profile?.fullName} className="absolute z-10 object-cover rounded-full h-full w-full p-[6px]" />}
+                    {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
                     <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
+                    <AiFillCamera className="absolute z-20 top-12 left-12" size={30} />
                   </div>
                 </div>
                 <div className="my-[30px] md:my-0 flex flex-col md:flex-row gap-2 font-[400] text-[14px]">
@@ -343,14 +371,16 @@ function Profile(){
                     {!editBirthDate && <button onClick={()=> setEditBirthDate(true)} className="text-yellow-600 px-[10px]">Edit</button>}
                   </div>
                 </div>
-                <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg" type="input">Save</button>
+                {!loading && <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg normal-case text-lg" type="input">Save</button>}
+                {loading && <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg normal-case text-lg" type="input"><span className="loading loading-dots loading-sm"></span></button>}
               </div>
             
               <hr className="hidden md:block h-[314px] border-2 rounded-2xl mx-[50px]"/>
             
               <div id="rightside" className="pt-16 text-center hidden md:block">
                 <div className="relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-yellow-500 to-blue-400 hover:from-yellow-500 hover:to-blue-800 truncate w-[137px] h-[137px]">
-                  {profile?.picture && (<img className="absolute object-cover rounded-full h-full w-full p-[6px]" src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+                  {selectedPIcture && <img src={pictureURI} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
+                  {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
                   <div className="absolute top-[50px] left-[50px] text-white  w-[137px] h-[137px]"><i data-feather="camera"></i></div>
                   <label className="md:hidden absolute w-full h-full top-0 left-0 bg-neutral/[0.5]"><BsCameraFill className="absolute top-11 left-11 text-white" size={35}/>
                     <input type="file" className="hidden"/>
@@ -361,9 +391,10 @@ function Profile(){
                     name="picture"
                     type="file" 
                     className="hidden"
-                    onChange={(e)=> setSelectedPicture(e.target.files[0])}
+                    onChange={changePicture}
+                    onBlur={handleBlur}
                   />
-                                        Choose Photo
+                  Choose Photo
                 </label>
                 <ul className="hidden md:block my-[25px] text-left">
                   <li>Image size: max, 2 MB</li>
