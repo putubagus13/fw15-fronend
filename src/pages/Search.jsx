@@ -1,51 +1,50 @@
 import React from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import http from "../helper/http";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { BsFilterLeft } from "react-icons/bs";
-import {FiMenu, FiLogOut, FiSearch} from "react-icons/fi";
-import {SiArtixlinux} from "react-icons/si";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/reducers/auth";
+import {FiSearch} from "react-icons/fi";
+import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
+import MenuBar from "../components/MenuBar";
 
 function Search(){
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
   const [searchParams] = useSearchParams();
   const searchValue = searchParams.get("search");
-  console.log(searchValue);
+  const eventLocation = searchParams.get("location");
+  console.log(eventLocation);
   const [searchResults, setSearcResults] = React.useState([]);
-  const [profile, setProfile] = React.useState({});
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState("");
   const [sortBy, setSortBy] = React.useState("");
   const [page, setPage] = React.useState(1);
+  const [cities, setCities] = React.useState([]);
+  const [citiesValue, setCitiesValue] = React.useState("");
   const [totalPage, setTotalPage] = React.useState();
 
-  async function getSearchEvent(searchValue, search, limit, sortBy, page){
+  async function getSearchEvent(searchValue, eventLocation, search, limit, sortBy, page, citiesValue){
     if(!search){
-      const {data} = await http().get(`/events?search=${searchValue}&limit=${limit}&sortBy=${sortBy}&page=${page}`);
+      const {data} = await http().get(`/events?search=${searchValue}&limit=${limit}&sortBy=${sortBy}&page=${page}&location=${eventLocation}`);
       setSearcResults(data.results);
       setTotalPage(data.pageInfo.totalPage);
     }else{
       searchParams.toString("");
-      const {data} = await http().get(`/events?search=${search}&limit=${limit}&sortBy=${sortBy}&page=${page}`);
+      const {data} = await http().get(`/events?search=${search}&limit=${limit}&sortBy=${sortBy}&page=${page}&location=${citiesValue}`);
       setSearcResults(data.results);
       setTotalPage(data.pageInfo.totalPage);
     }
   } 
 
   React.useEffect(()=>{
-    getSearchEvent(searchValue, search, limit, sortBy, page);
+    getSearchEvent(searchValue, eventLocation, search, limit, sortBy, page, citiesValue);
 
-    async function getProfileUser(){
+    async function getDataCities(){
       try {
-        const {data} = await http(token).get("/profile");
+        const {data} = await http().get("/cities?limit=7");
         console.log(data);
-        setProfile(data.results);
+        setCities(data.results);
       } catch (error) {
         const message = error?.response?.data?.message;
         if(message){
@@ -53,50 +52,12 @@ function Search(){
         }
       }
     }
-    getProfileUser();
-  },[token, search, searchParams, limit, sortBy, searchValue, page]);
+    getDataCities();
+  },[token, search, searchParams, limit, sortBy, searchValue, page, eventLocation, citiesValue]);
 
-  function doLogout(){
-    dispatch(logout());
-    navigate("/");
-  }
-  function doSignUp(){
-    navigate("/Signin");
-  }
   return(
     <>
-      <nav className="flex w-full items-center justify-between px-10 py-4">
-        <div className="flex-1 flex items-center justify-between w-full md:w-0">
-          <button className="lg:hidden btn btn-square rounded-1xl btn-primary">
-            <FiMenu className="text-white" size={30}/>
-          </button>
-          <Link to="/">
-            <div className="flex items-center">
-              <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-              <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
-            </div>
-          </Link>
-        </div>
-        <div className="flex-1 hidden lg:block">
-          <ul className="hidden lg:flex gap-x-10 font-bold text-[16px]">
-            <li className="text-primary hover:text-accent"><Link to="/">Home</Link></li>
-            <li className="text-primary hover:text-accent"><Link to="/CreateEvent">Create Event</Link></li>
-            <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
-          </ul>
-        </div>
-        {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
-          <div className="flex items-center gap-3">
-            <Link to="/Profile"><div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-              {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
-            </div></Link>
-            <div>
-              <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>
-              <button onClick={doLogout} className="flex gap-1 items-center text-secondary font-bold text-[14px] hover:text-accent" type="submit"><FiLogOut size={15}/>Log Out</button>
-            </div></div></div> : <div className="lg:flex gap-6 hidden flex-row items-center">
-          <p className="flex items-center text-primary hover:text-neutral text-[16px] font-bold"><Link to="/Login">Log In</Link></p>
-          <button onClick={doSignUp} className="bg-primary text-white rounded-2xl h-[40px] px-10 shadow-lg font-bold text-[16px] hover:bg-secondary lg-shadow" type="submit">Sign Up</button>
-        </div>}
-      </nav>
+      <MenuBar />
       <main className="w-full flex justify-center items-center py-12 px-[5%] md:bg-[#F4F7FF]">
         <div className="flex flex-col gap-10 items-center sm:py-24 px-[3%] sm:px-24 bg-white rounded-2xl sm:drop-shadow-lg gap-10">
           <div className="w-full items-center px-16 relative flex flex-row">
@@ -112,13 +73,23 @@ function Search(){
                     <button onClick={(e)=> setSortBy(e.target.value)} value={"DESC"} className="btn btn-active w-[70px] normal-case text-white">DESC</button>
                   </div>
                 </div>
-                <label className="text-secondary font-medium">Limit:</label>
-                <select className="select select-ghost w-full max-w-xs text-primary" onChange={(e)=> setLimit(e.target.value)}>
-                  <option>5</option>
-                  <option>10</option>
-                  <option>15</option>
-                  <option>20</option>
-                </select>
+                <div className="flex flex-col gap-1">
+                  <label className="text-secondary font-medium">Limit:</label>
+                  <select className="select select-ghost w-full max-w-xs text-primary" onChange={(e)=> setLimit(e.target.value)}>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>15</option>
+                    <option>20</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-secondary font-medium">Location:</label>
+                  <select className="select select-ghost w-full max-w-xs text-primary" onChange={(e)=> setCitiesValue(e.target.value)}>
+                    {cities.map(city => (
+                      <option key={`cities-${city.id}`}>{city.name}</option>
+                    ))}
+                  </select>
+                </div>
               </ul>
             </div>
             <FiSearch size={25} className="text-neutral absolute left-[80px] top-3"/>
