@@ -372,7 +372,7 @@ function Profile(){
                   </div>
                 </div>
                 {!loading && <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg normal-case text-lg" type="input">Save</button>}
-                {loading && <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg normal-case text-lg" type="input"><span className="loading loading-dots loading-sm"></span></button>}
+                {loading && <button className="h-[61px] w-full md:w-3/12 rounded-2xl md:my-[30px] btn btn-primary shadow-lg normal-case text-lg" type="input"><span className="loading loading-dots loading-sm text-white"></span></button>}
               </div>
             
               <hr className="hidden md:block h-[314px] border-2 rounded-2xl mx-[50px]"/>
