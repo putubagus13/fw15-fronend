@@ -12,6 +12,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/reducers/auth";
 import Footer from "../components/Footer";
+import User from "../assets/user.png";
 
 function EventDetail(){
   const navigate = useNavigate();
@@ -107,7 +108,7 @@ function EventDetail(){
         {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
           <div className="flex items-center gap-3">
             <Link to="/Profile"><div className="inline-block w-12 h-12 rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-              {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+              {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
             </div></Link>
             <div>
               <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>

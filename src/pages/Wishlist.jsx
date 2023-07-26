@@ -19,6 +19,7 @@ import Footer from "../components/Footer";
 import moment from "moment";
 import { BsFilterLeft } from "react-icons/bs";
 import {FiSearch} from "react-icons/fi";
+import User from "../assets/user.png";
 
 function Wishlist(){
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ function Wishlist(){
         <Link to="/Profile" className="hidden lg:flex">
           <div className="hidden lg:flex flex-1">
             <div className="inline-block rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
-              {profile?.picture && (<img className='w-12 h-12 border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+              {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className='w-12 h-12 border-4 border-white rounded-full' />}
             </div>
             <div className="text-secondary self-center font-bold text-[16px]">{profile?.fullName}</div>
           </div>
