@@ -20,6 +20,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Footer from "../components/Footer";
 import { BsFilterLeft } from "react-icons/bs";
+import User from "../assets/user.png";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("title is invalid"),
@@ -357,7 +358,7 @@ function CreateEvent(){
         <Link to="/Profile" className="hidden lg:flex">
           <div className="hidden lg:flex flex-1">
             <div className="inline-block rounded-full w-12 h-12 p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400 mx-3 ">
-              {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+              {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className='object-cover w-full h-full border-4 border-white rounded-full' />}
             </div>
             <div className="text-secondary self-center font-bold text-[16px]">{profile?.fullName}</div>
           </div>
@@ -367,7 +368,7 @@ function CreateEvent(){
         <aside id="menuBar" className={menuBar}>
           <div className="flex flex-col xl:flex-row items-center gap-3 mb-[56px]">
             <div className="inline-block rounded-full w-12 h-12 p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-              {profile?.picture && (<img className='object-cover w-full h-full border-4 border-white rounded-full' src={profile?.picture.startsWith("https")? profile?.picture : `http://localhost:8888/uploads/${profile?.picture}`} alt={profile?.fullName} />)}
+              {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className='object-cover w-full h-full border-4 border-white rounded-full' />}
             </div>
             <div><h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, {profile?.id}</p></div>
           </div>
@@ -397,7 +398,7 @@ function CreateEvent(){
               <label htmlFor="my-modal" className="px-5 rounded-2xl btn btn-primary shadow-lg flex gap-3 py-3 w-[150px] md:w-full text-white">Create</label>
 
               {/* Put this part before </body> tag */}
-              <input type="checkbox" id="my-modal" className="modal-toggle" />
+              <input type="checkbox" id="my-modal" className="modal-toggle bg-black" />
               <div className="modal">
                 <Formik
                   initialValues={{ 
