@@ -223,8 +223,8 @@ function Profile(){
                       onChange={changePicture}
                       onBlur={handleBlur}
                     />
-                    {selectedPIcture && <img src={pictureURI} alt={profile?.fullName} className="absolute z-10 object-cover rounded-full h-full w-full p-[6px]" />}
                     {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
+                    {selectedPIcture && <img src={pictureURI} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
                     <div className="absolute top-[50px] left-[50px] text-white"><i data-feather="camera"></i></div>
                     <AiFillCamera className="absolute z-20 top-12 left-12" size={30} />
                   </div>
@@ -379,8 +379,8 @@ function Profile(){
             
               <div id="rightside" className="pt-16 text-center hidden md:block">
                 <div className="relative inline-block rounded-full border-[6px] cursor-pointer bg-gradient-to-br from-yellow-500 to-blue-400 hover:from-yellow-500 hover:to-blue-800 truncate w-[137px] h-[137px]">
-                  {selectedPIcture && <img src={pictureURI} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
                   {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
+                  {selectedPIcture && <img src={pictureURI} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
                   <div className="absolute top-[50px] left-[50px] text-white  w-[137px] h-[137px]"><i data-feather="camera"></i></div>
                   <label className="md:hidden absolute w-full h-full top-0 left-0 bg-neutral/[0.5]"><BsCameraFill className="absolute top-11 left-11 text-white" size={35}/>
                     <input type="file" className="hidden"/>
