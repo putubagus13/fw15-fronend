@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/reducers/auth";
 import Footer from "../components/Footer";
 import User from "../assets/user.png";
+import MenuBar from "../components/MenuBar";
 
 function EventDetail(){
   const navigate = useNavigate();
@@ -86,38 +87,7 @@ function EventDetail(){
   };
   return(
     <>
-      <nav className="flex w-full items-center justify-between px-10 py-4">
-        <div className="flex-1 flex items-center justify-between w-full md:w-0">
-          <button className="lg:hidden btn btn-square rounded-1xl btn-primary">
-            <FiMenu className="text-white" size={30}/>
-          </button>
-          <Link to="/">
-            <div className="flex items-center">
-              <SiArtixlinux size={50} className="text-primary filter blur-[2.8px] pr-1"/>
-              <div className="text-primary text-[24px] font-bold" >TIX</div><div className="text-accent text-[24px] font-bold" >Event</div>
-            </div>
-          </Link>
-        </div>
-        <div className="flex-1 hidden lg:block">
-          <ul className="hidden lg:flex gap-x-10 font-bold text-[16px]">
-            <li className="text-primary hover:text-accent"><Link to="/">Home</Link></li>
-            <li className="text-primary hover:text-accent"><Link to="/CreateEvent">Create Event</Link></li>
-            <li className="text-primary hover:text-accent"><Link to="/Location">Location</Link></li>
-          </ul>
-        </div>
-        {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
-          <div className="flex items-center gap-3">
-            <Link to="/Profile"><div className="inline-block w-12 h-12 rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-              {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="object-cover w-full h-full border-4 border-white rounded-full" />}
-            </div></Link>
-            <div>
-              <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>
-              <button onClick={doLogout} className="flex gap-1 items-center text-secondary font-bold text-[14px] hover:text-accent" type="submit"><FiLogOut size={15}/>Log Out</button>
-            </div></div></div> : <div className="lg:flex gap-6 hidden flex-row items-center">
-          <p className="flex items-center text-primary hover:text-neutral text-[16px] font-bold"><Link to="/Login">Log In</Link></p>
-          <button onClick={doSignUp} className="bg-primary text-white rounded-2xl h-[40px] px-10 shadow-lg font-bold text-[16px] hover:bg-secondary lg-shadow" type="submit">Sign Up</button>
-        </div>}
-      </nav>
+      <MenuBar />
       <main className="w-full flex justify-center items-center py-12 px-[5%] md:bg-[#F4F7FF]">
         <div className="sm:flex sm:py-24 px-[3%] sm:px-24 bg-white rounded-2xl sm:drop-shadow-lg gap-10">
           {/* left side */}
