@@ -29,7 +29,7 @@ function Profile(){
   const [editUsername, setEditUsername] = React.useState(false);
   const [editPhoneNumber, setEditPhoneNumber] = React.useState(false);
   const [editBirthDate, setEditBirthDate] = React.useState(false);
-  const [selectedPIcture, setSelectedPicture] = React.useState({});
+  const [selectedPIcture, setSelectedPicture] = React.useState(null);
   const [nationalityValue, setNationalityValue] = React.useState("");
   const [professionValue, setProfessionValue] = React.useState("");
   const [editGender, setEditGender] = React.useState(false);

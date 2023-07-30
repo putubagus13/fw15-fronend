@@ -21,10 +21,15 @@ import * as Yup from "yup";
 import Footer from "../components/Footer";
 import { BsFilterLeft } from "react-icons/bs";
 import User from "../assets/user.png";
+import PictureDefault from "../assets/eventpicture.png";
+import UpdateEvent from "./UpdateEvent";
 
 const validationSchema = Yup.object({
-  title: Yup.string().required("title is invalid"),
-  desciption: Yup.string().required("description is invalid"),
+  title: Yup.string().required("title is invalid!"),
+  desciption: Yup.string().required("description is invalid!"),
+  date: Yup.date().required("Date cant be empty!"),
+  categoryId: Yup.string().required("Pilihan harus dipilih."),
+  cityId: Yup.string().required("Pilihan harus dipilih."),
 });
 
 const FormCreateEvent = ( {values,
@@ -35,9 +40,27 @@ const FormCreateEvent = ( {values,
   handleSubmit,
   isSubmitting, 
   successMessage,
-  setSelectedPicture})=>{
+  setSelectedPicture,
+  selectedPIcture,
+  errorMessage})=>{
   const [category, setcategory] = React.useState([]);
   const [locations, setLocations] = React.useState([]);
+  const [pictureURI, setPictureURI] = React.useState("");
+  console.log(errorMessage);
+
+  const fileToDataUrl = (file) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      setPictureURI(reader.result);
+    });
+    reader.readAsDataURL(file);
+  };
+
+  const changePicture = (e) => {
+    const file = e.target.files[0];
+    setSelectedPicture(file);
+    fileToDataUrl(file);
+  };
 
   React.useEffect(()=>{
     const getCategories = async()=>{
@@ -70,166 +93,177 @@ const FormCreateEvent = ( {values,
 
   },[]);
   return(
-    <form className="modal-box" onSubmit={handleSubmit} >
+    <form className="w-[90%] h-[100%] bg-white px-[5%] md:px-[10%] pt-10 rounded-xl flex flex-col" onSubmit={handleSubmit} >
       {successMessage && (<div className="flex flex-row justify-center alert alert-info shadow-lg text-white text-lg my-3"><BsCheckCircleFill size={30}/>{successMessage}</div>)}
-      <h3 className="font-bold text-[24px] text-secondary">Create Event</h3>
-      <div className="flex flex-col gap-6">
+      <h3 className="font-bold text-[24px] text-secondary text-center py-6 md:text-left">Create Event</h3>
+      <div className="flex flex-col md:flex-row gap-8 w-full justify-between items-center">
         <div className="flex flex-col gap-6">
-          <div className="flex gap-10">
-            <div className="flex-1">
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text font-bold text-[16px] text-primary">Title</span>
-                </label>
-                <div className="form-control flex flex-col">
-                  <input 
-                    type="text" 
-                    name="title" 
-                    placeholder="Input event name" 
-                    className= {`input input-bordered ${errors.title && touched.title && "input-error"} border-2 text-[14px] text-secondary w-full max-w-xs`}
+          <div className="flex flex-col gap-6">
+            <div className="flex gap-10">
+              <div className="flex-1">
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text font-bold text-[16px] text-primary">Title</span>
+                  </label>
+                  <div className="form-control flex flex-col">
+                    <input 
+                      type="text" 
+                      name="title" 
+                      placeholder="Input event name" 
+                      className= {`input input-bordered ${errors.title && touched.title && "input-error"} border-2 text-[14px] text-secondary w-full max-w-xs`}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.title}
+                    />
+                    {errors.title && touched.title && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.title}</span>
+                      </label>)
+                    }
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1">
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text font-bold text-[16px] text-primary">Category</span>
+                  </label>
+                  <select 
+                    name="categoryId" 
+                    className={`text-[14px] text-secondary border-2 input input-bordered w-full max-w-xs ${errors.categoryId && touched.categoryId && "input-error"}`}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.title}
-                  />
-                  {errors.title && touched.title && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">{errors.title}</span>
-                    </label>)
-                  }
+                    value={values.category}>
+                    <option className="hidden">choose category</option>
+                    {category.map(event =>{
+                      return(
+                        <option className="text-secondary" key={`Category-createEvent${event.id}`} value={event.id}>{event.name}</option>
+                      );
+                    })}   
+                  </select>
                 </div>
               </div>
             </div>
-            <div className="flex-1">
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text font-bold text-[16px] text-primary">Category</span>
-                </label>
-                <select 
-                  name="categoryId" 
-                  className={`text-[14px] text-secondary border-2 input input-bordered w-full max-w-xs ${errors.category && touched.category && "input-error"}`}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.category}>
-                  <option className="hidden">choose category</option>
-                  {category.map(event =>{
-                    return(
-                      <option className="text-secondary" key={`Category-createEvent${event.id}`} value={event.id}>{event.name}</option>
-                    );
-                  })}   
-                  {errors.category && touched.category && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">{errors.category}</span>
-                    </label>)
-                  }
-                </select>
+            <div className="flex gap-10">
+              <div className="flex-1">
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text font-bold text-[16px] text-primary">Location</span>
+                  </label>
+                  <select
+                    name="cityId" 
+                    placeholder="Input event location" 
+                    className= {`text-[14px] text-secondary border-2 input input-bordered w-full max-w-xs ${errors.cityId && touched.cityId && "input-error"}`}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.location}>
+                    <option className="hidden">Choose Location</option>
+                    {locations.map(event =>{
+                      return(
+                        <option className="text-secondary" key={`Location-createEvent${event.id}`} value={event.id}>{event.name}</option>
+                      );
+                    })}  
+                  </select>
+                </div>
+              </div>
+              <div className="flex-1">
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text font-bold text-[16px] text-primary">Date time show</span>
+                  </label>
+                  <div className="form-control flex flex-col">
+                    <input 
+                      type="date" 
+                      name="date" 
+                      placeholder="YYYY-MM-DD" 
+                      className= {`input input-bordered border-2 ${errors.date && touched.date && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.date}
+                    />
+                    {errors.date && touched.date && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errors.date}</span>
+                      </label>)
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-10">
+              <div className="flex-1">
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text font-bold text-[16px] text-primary">Image</span>
+                  </label>
+                  <div className="md:hidden flex gap-2">
+                    <div className="w-[150px] h-[200px] overflow-hidden rounded-xl border-2 p-2 mb-2">
+                      {selectedPIcture ? <img src={pictureURI} alt='' className="w-full h-full object-cover rounded-xl" /> : 
+                        <img src={PictureDefault} alt='' className="w-full h-full object-cover rounded-xl" />}
+                    </div>
+                    <ul className="md:hidden my-[25px] text-left text-secondary">
+                      <li>Image size: max, 2 MB</li>
+                      <li>Image formats: .JPG, .JPEG, .PNG</li>
+                    </ul>
+                  </div>
+                  <div className="form-control flex flex-col">
+                    <input 
+                      type="file" 
+                      name="picture" 
+                      placeholder="Input event price" 
+                      className= {`file-input file-input-bordered ${errorMessage && "input-border-error"} text-[14px] text-secondary w-full max-w-xs`}
+                      onChange={changePicture}
+                      onBlur={handleBlur}
+                    />
+                    {errorMessage && (
+                      <label className="label">
+                        <span className="label-text-alt text-error">{errorMessage}</span>
+                      </label>)
+                    }
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex gap-10">
-            <div className="flex-1">
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text font-bold text-[16px] text-primary">Location</span>
-                </label>
-                <select
-                  name="cityId" 
-                  placeholder="Input event location" 
-                  className= {`text-[14px] text-secondary border-2 input input-bordered w-full max-w-xs${errors.location && touched.location && "input-error"}`}
+          <div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-bold text-[16px] text-primary">Detail</span>
+              </label>
+              <div className="form-control flex flex-col">
+                <input 
+                  type="text" 
+                  name="desciption" 
+                  placeholder="Input event detail" 
+                  className= {`input input-bordered border-2 ${errors.desciption && touched.desciption && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.location}>
-                  <option className="hidden">Choose Location</option>
-                  {locations.map(event =>{
-                    return(
-                      <option className="text-secondary" key={`Location-createEvent${event.id}`} value={event.id}>{event.name}</option>
-                    );
-                  })}  
-                  {errors.location && touched.location && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">{errors.location}</span>
-                    </label>)
-                  }
-                </select>
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text font-bold text-[16px] text-primary">Date time show</span>
-                </label>
-                <div className="form-control flex flex-col">
-                  <input 
-                    type="date" 
-                    name="date" 
-                    placeholder="YYYY-MM-DD" 
-                    className= {`input input-bordered border-2 ${errors.date && touched.date && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.date}
-                  />
-                  {errors.date && touched.date && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">{errors.date}</span>
-                    </label>)
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-10">
-            <div className="flex-1">
-              <div className="form-control w-full max-w-xs">
-                <label className="label">
-                  <span className="label-text font-bold text-[16px] text-primary">Image</span>
-                </label>
-                <div className="form-control flex flex-col">
-                  <input 
-                    type="file" 
-                    name="picture" 
-                    placeholder="Input event price" 
-                    className= {`file-input file-input-bordered ${errors.picture && touched.picture && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
-                    onChange={(e)=> setSelectedPicture(e.target.files[0])}
-                    onBlur={handleBlur}
-                  />
-                  {errors.picture && touched.picture && (
-                    <label className="label">
-                      <span className="label-text-alt text-error">{errors.picture}</span>
-                    </label>)
-                  }
-                </div>
+                  value={values.desciption}
+                />
+                {errors.desciption && touched.desciption && (
+                  <label className="label">
+                    <span className="label-text-alt text-error">{errors.desciption}</span>
+                  </label>)
+                }
               </div>
             </div>
           </div>
         </div>
-        <div>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-bold text-[16px] text-primary">Detail</span>
-            </label>
-            <div className="form-control flex flex-col">
-              <input 
-                type="text" 
-                name="desciption" 
-                placeholder="Input event detail" 
-                className= {`input input-bordered border-2 ${errors.desciption && touched.desciption && "input-error"} text-[14px] text-secondary w-full max-w-xs`}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.desciption}
-              />
-              {errors.desciption && touched.desciption && (
-                <label className="label">
-                  <span className="label-text-alt text-error">{errors.desciption}</span>
-                </label>)
-              }
-            </div>
+        <div className="hidden md:block">
+          <div className="w-[300px] h-[500px] overflow-hidden rounded-xl border-2 p-2">
+            {selectedPIcture ? <img src={pictureURI} alt='' className="w-full h-full object-cover rounded-xl" /> : 
+              <img src={PictureDefault} alt='' className="w-full h-full object-cover rounded-xl" />}
           </div>
+          <ul className="my-[25px] text-left text-center text-secondary">
+            <li>Image size: max, 2 MB</li>
+            <li>Image formats: .JPG, .JPEG, .PNG</li>
+          </ul>
         </div>
-
       </div>
             
-      <div className="modal-action">
-        <button type="submit" disabled={isSubmitting} className="rounded-2xl btn btn-primary w-3/12">Save</button>
-        <label htmlFor="my-modal" className="rounded-2xl btn btn-neutral w-3/12">Close</label>
+      <div className="modal-action justify-center md:justify-start">
+        <button type="submit" disabled={isSubmitting} className="rounded-2xl btn btn-primary w-3/12 normal-case">Save</button>
+        <label htmlFor="my-modal" className="rounded-2xl btn btn-neutral w-3/12 normal-case">Close</label>
       </div>
     </form>
   );
@@ -244,7 +278,8 @@ FormCreateEvent.propTypes = {
   isSubmitting: propTypes.bool,
   errorMessage: propTypes.string, 
   successMessage: propTypes.string,
-  setSelectedPicture: propTypes.func
+  setSelectedPicture: propTypes.func,
+  selectedPIcture: propTypes.objectOf(propTypes.string)
 };
 
 function CreateEvent(){
@@ -255,12 +290,14 @@ function CreateEvent(){
   const [profile, setProfile] = React.useState({});
   const [events, setEvents] = React.useState([]);
   const [successMessage, setSuccessMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
   const [selectedPIcture, setSelectedPicture] = React.useState(null);
   const [search, setSearch] = React.useState("");
   const [limit, setLimit] = React.useState();
   const [page, setPage] = React.useState(1);
   const [sortBy, setSortBy] = React.useState("");
   const [totalPage, setTotalPage] = React.useState();
+  const [updateData, setUpdateData] = React.useState();
 
   const getEventMenage = async(search, limit, page, sortBy) =>{
     try {
@@ -298,32 +335,29 @@ function CreateEvent(){
   }
 
   const createEvent = async (values)=>{
-    const form = new FormData();
-    Object.keys(values).forEach((key) => {
-      if(values[key]){
-        form.append(key, values[key]);
-      }
-            
-    });
-    if(selectedPIcture){
-      form.append("picture", selectedPIcture);
-    }
-    if(token){
-      const {data} = await http(token).post("/events", form, {
-        headers: {
-          "Content-Type" : "multipart/form-data"
+    if(!selectedPIcture){
+      setErrorMessage("File picture cant be empty!");
+    }else{
+      const form = new FormData();
+      Object.keys(values).forEach((key) => {
+        if(values[key]){
+          form.append(key, values[key]);
         }
+            
       });
-      console.log(data);
-      setSuccessMessage(data.masssage);
+      form.append("picture", selectedPIcture);
+      if(token){
+        const {data} = await http(token).post("/events", form, {
+          headers: {
+            "Content-Type" : "multipart/form-data"
+          }
+        });
+        console.log(data);
+        setSuccessMessage(data.masssage);
+      }
+      const {data} = await http(token).get("/events/manage?limit=5");
+      setEvents(data.results);
     }
-    const {data} = await http(token).get("/events/manage?limit=5");
-    console.log(data);
-    setEvents(data.results);
-    // setSuccessMessage(data.result)
-    // for (var pair of form.entries()) {
-    //     console.log(pair[0]+ ', ' + pair[1]); 
-    // }
   };
 
   const deleteEventsManage = async id => {
@@ -333,6 +367,19 @@ function CreateEvent(){
     } catch (error) {
       const message = error?.response?.data?.message;
       console.log(message);
+    }
+  };
+
+  const getEventForUpdate = async(id) =>{
+    try {
+      const {data} = await http(token).get(`/events/detail/${id}`);
+      setUpdateData(data.results);
+      console.log(data.results);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if(message){
+        console.log(message);
+      }
     }
   };
 
@@ -399,7 +446,7 @@ function CreateEvent(){
 
               {/* Put this part before </body> tag */}
               <input type="checkbox" id="my-modal" className="modal-toggle bg-black" />
-              <div className="modal">
+              <div className="modal py-6">
                 <Formik
                   initialValues={{ 
                     title: "" ,
@@ -413,7 +460,7 @@ function CreateEvent(){
                   onSubmit={createEvent}
                 >
                   {(props) => (
-                    <FormCreateEvent {...props} successMessage={successMessage} setSelectedPicture = {setSelectedPicture}/>
+                    <FormCreateEvent {...props} successMessage={successMessage} setSelectedPicture = {setSelectedPicture} selectedPIcture={selectedPIcture} errorMessage={errorMessage}/>
                   )}
                 </Formik>
               </div>
@@ -457,7 +504,19 @@ function CreateEvent(){
                     <p className="pb-2 font-[400] text-[14px] text-primary">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
                     <div className="flex gap-3">
                       <Link to={`/EventDetail/${event.id}`} className="btn w-10 bg-white hover:bg-white border-0 text-accent normal-case">Detail</Link>
-                      <label className="btn w-10 bg-white hover:bg-white border-0 text-accent normal-case">Update</label>
+
+                      <label onClick={()=> getEventForUpdate(event?.id)} htmlFor="my_modal_7" className="btn w-10 bg-white hover:bg-white border-0 text-accent normal-case">Update</label>
+                      {/* Put this part before </body> tag */}
+                      <input type="checkbox" id="my_modal_7" className="modal-toggle" />
+                      <div className="modal p-6">
+                        <div className="relative w-full h-full flex justify-center">
+                          <UpdateEvent updateData={updateData}/>
+                          <div className="modal-action absolute right-10 md:right-24 top-">
+                            <label htmlFor="my_modal_7" className="btn bg-error border-white shadow-lg text-white font-semibold">✕</label>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <label htmlFor="my_modal_6" className="btn w-10 bg-white hover:bg-white border-0 text-accent normal-case">Delete</label>
                       {/* modal */}
                       <input type="checkbox" id="my_modal_6" className="modal-toggle" />
@@ -478,7 +537,7 @@ function CreateEvent(){
               </div>
             );
           })}
-          <div className="absolute bottom-6 w-full flex gap-6 items-center">
+          <div className="md:absolute bottom-6 w-full flex gap-6 items-center">
             {page === 1 ? <button className="btn btn-neutral w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>
               : <button onClick={()=> setPage(page - 1)} className="btn btn-primary w-[80px] h-[40px] rounded-lg justify-center text-center font-semibold text-white normal-case">Back</button>}
             <p className="font-semibold text-primary text-lg">{page}</p>

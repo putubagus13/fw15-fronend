@@ -108,7 +108,7 @@ function EventDetail(){
         {token ? <div className="hidden flex-1 lg:flex md:gap-10 md:justify-end items-center">
           <div className="flex items-center gap-3">
             <Link to="/Profile"><div className="inline-block w-12 h-12 rounded-full p-0.5 bg-gradient-to-br from-yellow-500 to-blue-400">
-              {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="absolute object-cover rounded-full h-full w-full p-[6px]" />}
+              {profile?.picture && <img src={profile?.picture || User} alt={profile?.fullName} className="object-cover w-full h-full border-4 border-white rounded-full" />}
             </div></Link>
             <div>
               <h1  className="font-bold text-[14px] text-secondary">{profile?.fullName}</h1><p className="text-secondary">{profile?.profession}, ID: {profile?.id}</p>
