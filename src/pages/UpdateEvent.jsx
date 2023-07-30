@@ -13,6 +13,7 @@ const UpdateEvent = ({updateData})=>{
   const [selectedPIcture, setSelectedPicture] = React.useState(null);
   const [successMessage, setSuccessMessage] = React.useState("");
   const [events, setEvents] = React.useState({});
+  console.log(updateData);
   
   const fileToDataUrl = (file) => {
     const reader = new FileReader();
