@@ -374,7 +374,6 @@ function CreateEvent(){
     try {
       const {data} = await http(token).get(`/events/detail/${id}`);
       setUpdateData(data.results);
-      console.log(data.results);
     } catch (error) {
       const message = error?.response?.data?.message;
       if(message){

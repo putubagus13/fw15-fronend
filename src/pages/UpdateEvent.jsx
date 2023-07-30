@@ -13,7 +13,52 @@ const UpdateEvent = ({updateData})=>{
   const [selectedPIcture, setSelectedPicture] = React.useState(null);
   const [successMessage, setSuccessMessage] = React.useState("");
   const [events, setEvents] = React.useState({});
-  console.log(updateData);
+  console.log(events, "test");
+  const id = updateData?.id;
+
+  const getEventManage = async(id) =>{
+    try {
+      const {data} = await http(token).get(`/events/detail/${id}`);
+      setEvents(data.results);
+      console.log(data.results);
+    } catch (error) {
+      const message = error?.response?.data?.message;
+      if(message){
+        console.log(message);
+      }
+    }
+  };
+
+  React.useEffect(()=>{
+    getEventManage(id);
+
+    const getCategories = async()=>{
+      try {
+        const {data} = await http().get("/categories");
+        setcategory(data.results);
+      } catch (error) {
+        const message = error?.response?.data?.message;
+        if(message){
+          console.log(message);
+        }
+      }
+    };
+    getCategories();
+  
+    const getLocaton = async()=>{
+      try {
+        const {data} = await http().get("/cities");
+        setLocations(data.results);
+      } catch (error) {
+        const message = error?.response?.data?.message;
+        if(message){
+          console.log(message);
+        }
+      }
+    };
+    getLocaton();
+  
+  },[id]);
   
   const fileToDataUrl = (file) => {
     const reader = new FileReader();
@@ -53,48 +98,6 @@ const UpdateEvent = ({updateData})=>{
     
   };
 
-  const getEventManage = async() =>{
-    try {
-      const {data} = await http(token).get(`/events/detail/${updateData.id}`);
-      setEvents(data.results);
-    } catch (error) {
-      const message = error?.response?.data?.message;
-      if(message){
-        console.log(message);
-      }
-    }
-  };
-  
-  React.useEffect(()=>{
-    getEventManage();
-
-    const getCategories = async()=>{
-      try {
-        const {data} = await http().get("/categories");
-        setcategory(data.results);
-      } catch (error) {
-        const message = error?.response?.data?.message;
-        if(message){
-          console.log(message);
-        }
-      }
-    };
-    getCategories();
-  
-    const getLocaton = async()=>{
-      try {
-        const {data} = await http().get("/cities");
-        setLocations(data.results);
-      } catch (error) {
-        const message = error?.response?.data?.message;
-        if(message){
-          console.log(message);
-        }
-      }
-    };
-    getLocaton();
-  
-  },[]);
   return(
     <Formik
       initialValues={{ 
@@ -149,7 +152,7 @@ const UpdateEvent = ({updateData})=>{
                         className="text-[14px] text-secondary border-2 input input-bordered w-full max-w-xs"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.category}>
+                        value={values.categoryId}>
                         <option className="hidden">{events?.category}</option>
                         {category.map(event =>{
                           return(
@@ -172,7 +175,7 @@ const UpdateEvent = ({updateData})=>{
                         className= "text-[14px] text-secondary border-2 input input-bordered w-full max-w-xs"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.location}>
+                        value={values.cityId}>
                         <option className="hidden">{events?.location}</option>
                         {locations.map(event =>{
                           return(
@@ -273,7 +276,7 @@ const UpdateEvent = ({updateData})=>{
   );
 };
 UpdateEvent.propTypes = {
-  updateData: propTypes.objectOf(propTypes.string),
+  updateData: propTypes.object
 };
 
 export default UpdateEvent;
