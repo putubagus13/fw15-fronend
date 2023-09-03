@@ -41,7 +41,7 @@ Jika Anda ingin menjalankan Tix Event di lingkungan pengembangan lokal Anda, iku
 
    ```bash
    git clone https://github.com/putubagus13/fw15-frontend.git
-   cd tix-event
+   cd fw15-frontend
    ```
 
 2. Instal semua dependensi:
@@ -55,7 +55,7 @@ Jika Anda ingin menjalankan Tix Event di lingkungan pengembangan lokal Anda, iku
 4. Jalankan server pengembangan:
 
    ```bash
-   npm start
+   npm run dev
    ```
 
 5. Akses aplikasi di [http://localhost:5174](http://localhost:5174) dalam browser Anda.
